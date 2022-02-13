@@ -1,16 +1,18 @@
 version: '3.3'
 
 services:
-  web:
-    build: ./web
-    command: gunicorn --bind 0.0.0.0:5000 traceability:app
-    expose:
-      - 5000
+  api:
+    build: 
+      context: ./api   
+      dockerfile: ../docker/api/Dockerfile
     env_file:
-      - ./.env.prod
-  nginx:
-    build: ./nginx
-    ports:
-      - 80:80
+      - ./.env.prod    
+    command: gunicorn --bind 0.0.0.0:5000 traceability:app
+  frontend:
+    build: 
+      context:  ./frontend
+      dockerfile: ../docker/frontend/Dockerfile.prod
     depends_on:
-      - web
+      - api
+    ports:
+      - "80:80"

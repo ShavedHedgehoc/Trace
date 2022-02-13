@@ -1,5 +1,6 @@
 import operator
 from flask import abort, jsonify
+from flask_cors import cross_origin
 from sqlalchemy.sql import func, case
 
 from . import bp
@@ -23,12 +24,39 @@ from app.models import (
     Trademark,
     Weighting,
 )
+# from flask_cors import CORS, cross_origin
 
 
-@bp.route("/api/v1/boils/summary/<int:batchid>", methods=['GET'])
-def boil_summary_data(batchid):
+@bp.route("/api/v1/test")
+# @cross_origin()
+def test():
+    resp = {'test': "opopoptestjlkjllkjjl"}
+    return jsonify(resp)
 
-    batch_data = Batch.get_name_date_plant_by_id(batchid)
+
+# @bp.route("/api/v1/boils/summary/<int:batchid>", methods=['GET'])
+@bp.route("/api/v1/boils/summary/<string:batch_name>", methods=['GET'])
+# def boil_summary_data(batchid):
+def boil_summary_data(batch_name):
+
+    #  replace batch id by batch name and  inset upper case
+    # batch_data = Batch.get_name_date_plant_by_id(batchid)
+    batch = db.session.query(Batch).filter(
+        Batch.BatchName == batch_name).one_or_none()
+
+    if batch is None:
+        abort(404)
+    else:
+        batchid = batch.BatchPK
+        batch_data = {
+            'name': batch.BatchName,
+            'date': batch.BatchDate,
+            'plant': batch.Plant
+        }
+
+    # refactoring here
+    #  leave models clear and make request by batchname
+    #  if not exists => make abort 404
 
     boil_subqry = db.session.query(
         Boil.BatchPK.label('batch_id'),

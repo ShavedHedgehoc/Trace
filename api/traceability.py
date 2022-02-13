@@ -1,5 +1,4 @@
-from app import create_app, db
-from flask import jsonify
+from app import create_app
 
 app = create_app()
 

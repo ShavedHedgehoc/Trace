@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS, cross_origin
 # from config import Config
 
 db = SQLAlchemy()
@@ -8,6 +9,7 @@ db = SQLAlchemy()
 def create_app():
 
     app = Flask(__name__)
+    cors = CORS(app)
 
     app.config.from_object("config.Config")
     db.init_app(app)
@@ -17,5 +19,5 @@ def create_app():
 
     from app.front import bp as front_bp
     app.register_blueprint(front_bp)
-    
+
     return app

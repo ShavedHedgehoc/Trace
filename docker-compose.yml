@@ -1,13 +1,33 @@
 version: '3.3'
 
 services:
-  web:
-    build: ./web
-    command: python traceability.py run -h 0.0.0.0
+  api:
+    build: 
+      context: ./api   
+      dockerfile: ../docker/api/Dockerfile
+    command: python traceability.py run -h 0.0.0.0:5000
     volumes:
-      - ./web/:/usr/src/app/
+      - ./api/:/usr/src/app/
     ports:
       - 5000:5000
     env_file:
       - ./.env.dev
-    
+    # networks:
+    #   - traceability
+#   front:
+#     build: 
+#       context:  ./front
+#       dockerfile: ./Dockerfile.dev
+#     depends_on:
+#       - web
+#     ports:
+#       - "3000:3000"
+#     networks:
+#       - traceability
+#     links:
+#       - "web"
+#     command: npm start
+
+# networks:
+#     traceability:
+#         driver: bridge
