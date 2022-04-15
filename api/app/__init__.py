@@ -17,7 +17,7 @@ def create_app():
     from app.api import bp as api_bp
     app.register_blueprint(api_bp)
 
-    from app.front import bp as front_bp
-    app.register_blueprint(front_bp)
+    # from app.front import bp as front_bp
+    # app.register_blueprint(front_bp)
 
     return app
