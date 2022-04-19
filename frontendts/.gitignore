@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+frontendts//config
+frontendts/scripts
 /.pnp
 .pnp.js
 
