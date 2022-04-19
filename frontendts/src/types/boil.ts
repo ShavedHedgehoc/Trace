@@ -4,6 +4,7 @@ export interface BoilState {
     error: null | string;
     page: number;
     limit: number;
+    filter: IBoilFilter;
 }
 
 export enum BoilActionTypes {
@@ -15,7 +16,18 @@ export enum BoilActionTypes {
     SET_BOILS_PAGE = "SET_BOILS_PAGE",
     SET_FIRST_BOILS_PAGE = "SET_FIRST_BOILS_PAGE",
     SET_LAST_BOILS_PAGE = "SET_LAST_BOILS_PAGE",
-    CHANGE_LIMIT = "CHANGE_LIMIT"
+    CHANGE_LIMIT = "CHANGE_LIMIT",
+    CHANGE_FILTER = "CHANGE_FILTER",
+    CLEAR_FILTER = "CLEAR_FILTER"
+}
+
+export enum BoilFilterParams {
+    BATCH = "batch",
+    MARKING = "marking",
+    DATE = "date",
+    MONTH = "month",
+    YEAR = "year",
+    PLANT = "plant"
 }
 
 interface FetchBoilsAction {
@@ -58,12 +70,26 @@ interface BoilsChangeLimit {
     payload: number;
 }
 
+interface BoilsChangeFilter {
+    type: BoilActionTypes.CHANGE_FILTER;
+    payload: IBoilFormField
+}
+
+interface BoilsClearFilter {
+    type: BoilActionTypes.CLEAR_FILTER;
+}
+
+export interface IBoilFormField {
+    key: string,
+    value: string
+}
+
+
 export interface IBoil {
     data: IBoilData[];
-
-    // month_selector_options: any[];
-    // year_selector_options: any[];
-    // plant_selector_options: any[];
+    month_selector_options: IMonthData[];
+    year_selector_options: IYearData[];
+    plant_selector_options: IPlantData[];
     total: number;
 }
 
@@ -77,7 +103,30 @@ export interface IBoilData {
     year: number
 }
 
+export interface IMonthData{
+    key:string,
+    value:string
+}
 
+export interface IYearData{
+    key:string,
+    value:string
+}
+
+export interface IPlantData{
+    key:string,
+    value:string
+}
+
+export interface IBoilFilter {
+    batch: string,
+    marking: string,
+    date: string,
+    month: string,
+    year: string,
+    plant: string
+}
 
 export type BoilAction = FetchBoilsAction | FetchBoilsSuccessAction | FetchBoilsErrorAction |
-    BoilsIncreasePage | BoilsDecreasePage | BoilsSetPage | BoilsSetFirstPage | BoilsSetLastPage | BoilsSetPage | BoilsChangeLimit
+    BoilsIncreasePage | BoilsDecreasePage | BoilsSetPage | BoilsSetFirstPage | BoilsSetLastPage |
+    BoilsSetPage | BoilsChangeLimit | BoilsChangeFilter | BoilsClearFilter

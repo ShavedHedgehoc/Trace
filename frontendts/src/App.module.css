@@ -1,0 +1,26 @@
+*{
+    --main-backgroung-color:#f8f8f8;
+    --header-background-color: #263238;
+}
+body, 
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+}
+
+.App {    
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-family: sans-serif;    
+    overflow-y: hidden;   
+    background-color: var(--main-backgroung-color);
+}
+
+.content {    
+    flex:1;
+    overflow-y: auto; 
+    height: calc(100vh - 91px);
+}

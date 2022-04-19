@@ -1,0 +1,24 @@
+.dot {
+    height: 15px;
+    width: 15px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .docCounterContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 10px 0px 10px;
+    width: 300px;    
+  }
+
+  .indicatorContainer{
+      display: flex;
+      flex-direction: row;
+      width: 50px;
+      justify-content: space-between;
+      align-items: center;
+  }

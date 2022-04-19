@@ -1,0 +1,16 @@
+.headerContainer {
+    height: 60px;
+    display: flex;
+    background-color:var(--header-background-color);
+    color:white;    
+    flex: 0 0 auto;
+    justify-content: flex-start;    
+}
+.headerButton{
+    background-color:var(--header-background-color);
+    color:white;
+    font-size:48px;
+    padding-left: 16px;
+    border: 0;
+}
+

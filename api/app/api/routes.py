@@ -64,24 +64,35 @@ month_dict = {
 def doc_count():
     doc_qry = db.session.query(Document.DoctypePK)
     count = doc_qry.count()
-    response = {'data': count}
+    # response = {'data': count}
+    response = count
     return(jsonify(response))
 
 
 @bp.route("/api/v1/boils", methods=['GET'])
 def boils_data():
 
-    page = request.args.get('page', type=int)
-    per_page = request.args.get('per_page', type=int)
-    batch_search = request.args.get('batch_search', type=str)
-    marking_search = request.args.get('marking_search', type=str)
-    date_search = request.args.get('date_search', type=str)
-    month_search = request.args.get('month_search', type=str)
-    year_search = request.args.get('year_search', type=str)
-    plant_search = request.args.get('plant_search', type=str)
+    # page = request.args.get('page', type=int)
+    # per_page = request.args.get('per_page', type=int)
+    # batch_search = request.args.get('batch_search', type=str)
+    # marking_search = request.args.get('marking_search', type=str)
+    # date_search = request.args.get('date_search', type=str)
+    # month_search = request.args.get('month_search', type=str)
+    # year_search = request.args.get('year_search', type=str)
+    # year_search = request.args.get('year_search', type=str)
+    # plant_search = request.args.get('plant_search', type=str)
 
-    offset = page*per_page
-    limit = per_page
+    page = request.args.get('_page', type=int)
+    limit = request.args.get('_limit', type=int)
+    batch_search = request.args.get('_batch', type=str)
+    marking_search = request.args.get('_marking', type=str)
+    date_search = request.args.get('_date', type=str)
+    month_search = request.args.get('_month', type=str)
+    year_search = request.args.get('_year', type=str)
+    plant_search = request.args.get('_plant', type=str)
+
+    offset = page*limit
+    # limit = per_page
 
     boil_qry = db.session.query(
         Batch.BatchPK.label('BatchPK'),
@@ -192,7 +203,8 @@ def boils_data():
     sorted_years = sorted(
         distinct_years, key=operator.attrgetter('batch_year'))
 
-    year_selector_options = []
+    # year_selector_options = []
+    year_selector_options = [{'key': '-', 'value': 'Все'}]
 
     for r in sorted_years:
         option = {'key': r[0], 'value': r[0]}
@@ -209,7 +221,8 @@ def boils_data():
     sorted_months = sorted(
         distinct_months, key=operator.attrgetter('batch_month'))
 
-    month_selector_options = []
+    # month_selector_options = []
+    month_selector_options = [{'key': '-', 'value': 'Все'}]
 
     for r in sorted_months:
         option = {'key': r[0], 'value': month_dict[r[0]]}
@@ -222,7 +235,8 @@ def boils_data():
     ).filter(*plant_selector_filters).subquery()
     distinct_plants = db.session.query(plant_sbqry).distinct()
 
-    plant_selector_options = []
+    # plant_selector_options = []
+    plant_selector_options = [{'key': '-', 'value': 'Все'}]
 
     for r in distinct_plants:
         option = {'key': r[0], 'value': plant_dict[r[0]]}
@@ -250,7 +264,7 @@ def boils_data():
                 'year_selector_options': year_selector_options,
                 }
 
-    print(response)
+    # print(response)
 
     return(jsonify(response))
 
@@ -873,7 +887,7 @@ def trademarks_data():
         })
 
     response = {
-        'data': data,
+        'rows': data,
         'total': total_records,
     }
 

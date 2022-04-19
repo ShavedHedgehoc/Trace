@@ -1,0 +1,76 @@
+.boilFormContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0px 20px 0px 20px;
+    background:white;
+    margin: 2px;
+    width: 100%;
+    /* color:gray; */
+}
+.boilFormElement{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap:5px;
+    padding: 10px 0px; 
+    /* background: yellow; */
+    /* margin: 5px; */
+}
+.boilFormLabel{
+    width: 100%;
+    padding: 5px 0px 5px 0px;
+    text-align: left;   
+    /* background: green; */
+}
+.boilFormField{
+    width: 100%;    
+}
+.boilFormButton {
+    appearance: none;
+    border: 1px solid gray;
+    border-radius: 10px;
+    background: white;
+    color: black;
+    padding: 8px 16px;
+    font-size: 16px;
+    /* width: 50px; */
+    text-align: center;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.boilFormButton:disabled {
+    color: grey;
+}
+
+.boilFormButton:disabled:hover {
+    background: white;
+}
+
+.boilFormButton:hover {
+    background: lightgray;
+}
+
+.boilFormSelect {
+    font-size: 16px;
+    padding: 5px;
+    vertical-align: middle;
+    min-width: 120px;
+    max-width: 150px;
+}
+.boilFormInput {
+    font-size: 16px;
+    padding: 5px;
+    vertical-align: middle;
+    min-width: 120px;
+    max-width: 150px;
+}
+.boilFormDate{
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 2px;
+    min-width: 120px;
+    max-width: 150px;
+}

@@ -1,9 +1,19 @@
 import axios from "axios";
 import { Dispatch } from "react";
-import { BoilAction, BoilActionTypes } from "../../types/boil"
+import { BoilAction, BoilActionTypes, IBoilFilter, IBoilFormField } from "../../types/boil"
 
+const axiosParams = (page: number, limit: number, filter: IBoilFilter) => {
+    const params = new URLSearchParams();
+    params.append('_page', String(page))
+    params.append('_limit', String(limit))
+    Object.entries(filter).forEach(([key, value]) => {
+        params.append("_" + key, value)
+    })
+    return params
+}
 
-export const fetchBoils = (page = 0, limit=10) => {
+export const fetchBoils = (
+    page = 0, limit = 10, filter = { batch: "", marking: "", date: "", month: "-", year: "-", plant: "-" }) => {
     return async (dispatch: Dispatch<BoilAction>) => {
         try {
             dispatch({ type: BoilActionTypes.FETCH_BOILS })
@@ -11,10 +21,8 @@ export const fetchBoils = (page = 0, limit=10) => {
                 axios.get(
                     "/api/v1/boils",
                     {
-                        params: {
-                            page: page,
-                            per_page: limit
-                        }
+                        params: axiosParams(page, limit, filter)
+
                     }
                 ))
             dispatch({
@@ -46,16 +54,27 @@ export function getLastPage(): BoilAction {
     return { type: BoilActionTypes.SET_LAST_BOILS_PAGE }
 }
 
-export function setPage(page=0): BoilAction {
+export function setPage(page = 0): BoilAction {
     return {
         type: BoilActionTypes.SET_BOILS_PAGE,
-        payload: page-1
+        payload: page - 1
     }
 }
 
-export function changeLimit(limit=10): BoilAction {
+export function changeLimit(limit = 10): BoilAction {
     return {
         type: BoilActionTypes.CHANGE_LIMIT,
         payload: limit
     }
+}
+
+export function changeFilter({ key, value }: IBoilFormField): BoilAction {
+    return {
+        type: BoilActionTypes.CHANGE_FILTER,
+        payload: { key, value }
+    }
+}
+
+export function clearFilter(): BoilAction {
+    return { type: BoilActionTypes.CLEAR_FILTER }
 }
