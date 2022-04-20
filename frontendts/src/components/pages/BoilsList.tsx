@@ -3,13 +3,13 @@ import classes from "./Page.module.css"
 import {useActions} from "../../hooks/useActions";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useDebounce} from "../../hooks/useDebounce";
-import BoilForm from "../BoilForm";
-import Table from "../Table";
-import Pagination from "../Pagination";
+import BoilForm from "../forms/BoilForm";
+import BoilTable from "../tables/BoilTable";
+import Pagination from "../utils/Pagination";
 
 const BoilsList: React.FC = () => {
 
-    const {boils, error, loading, page, limit, filter} = useTypedSelector(state => state.boils);
+    const {data, error, loading, page, limit, filter} = useTypedSelector(state => state.boils);
     const {
         fetchBoils, increasePage, decreasePage, getFirstPage,
         getLastPage, changeLimit, changeFilter, clearFilter
@@ -21,15 +21,6 @@ const BoilsList: React.FC = () => {
         fetchBoils(page, limit, filter);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, limit, debouncedFilter])
-
-    const tableWindowHeight = () => {
-        const rowHeight = 45
-        const headerHeight = 65
-        if (boils.data.length !== 0 && boils.data.length < limit) {
-            return headerHeight + boils.data.length * rowHeight
-        }
-        return headerHeight + limit * rowHeight
-    }
 
     if (error) {
         return (
@@ -54,16 +45,15 @@ const BoilsList: React.FC = () => {
                 <BoilForm
                     changeFilter={({key, value}) => changeFilter({key, value})}
                     clearFilter={() => clearFilter()}
-                    months={boils.month_selector_options}
-                    years={boils.year_selector_options}
-                    plants={boils.plant_selector_options}
+                    months={data.month_selector_options}
+                    years={data.year_selector_options}
+                    plants={data.plant_selector_options}
                     filter={filter}
                     loading={loading}
                 />
             </div>
-            <div className={classes.pageTableContainer} style={{height: `${tableWindowHeight()}px`}}>
-                {loading ? <p>Loading...</p> :
-                    boils.data.length === 0 ? <p>No data...</p> : <Table items={boils.data}/>}
+            <div className={classes.pageTableContainer}>
+                {data.rows.length === 0 ? <p>No data...</p> : <BoilTable items={data.rows}/>}
             </div>
             <div>
                 <Pagination
@@ -74,7 +64,7 @@ const BoilsList: React.FC = () => {
                     changeLimit={(limit) => changeLimit(limit)}
                     page={page}
                     limit={limit}
-                    total={boils.total}
+                    total={data.total}
                     loading={loading}
                 />
             </div>

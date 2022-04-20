@@ -1,10 +1,9 @@
 import React from 'react';
 import classes from "./App.module.css";
-import Header from './components/Header';
-import Footer from './components/Footer';
-import SideMenu from './components/SideMenu';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import SideMenu from './components/layout/SideMenu';
 import AppRouter from './components/AppRouter';
-
 
 const App: React.FC = (): JSX.Element => {
   return (

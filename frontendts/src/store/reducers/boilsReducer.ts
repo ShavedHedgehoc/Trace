@@ -1,8 +1,8 @@
-import { BoilState, BoilAction, BoilActionTypes, BoilFilterParams } from "../../types/boil";
+import {BoilState, BoilAction, BoilActionTypes, BoilFilterParams} from "../../types/boil";
 
 const initialState: BoilState = {
-    boils: { //change to 'data'
-        data: [], //change to 'rows'
+    data: {
+        rows: [],
         month_selector_options: [],
         year_selector_options: [],
         plant_selector_options: [],
@@ -23,13 +23,13 @@ const initialState: BoilState = {
 }
 
 export const boilsReducer = (state = initialState, action: BoilAction): BoilState => {
-    const lastPage = <number>(Math.ceil(state.boils.total / state.limit))
+    const lastPage = <number>(Math.ceil(state.data.total / state.limit))
     switch (action.type) {
         case BoilActionTypes.FETCH_BOILS:
             return {
                 loading: true,
                 error: null,
-                boils: state.boils,
+                data: state.data,
                 page: state.page,
                 limit: state.limit,
                 filter: state.filter
@@ -38,7 +38,7 @@ export const boilsReducer = (state = initialState, action: BoilAction): BoilStat
             return {
                 loading: false,
                 error: null,
-                boils: action.payload,
+                data: action.payload,
                 page: state.page,
                 limit: state.limit,
                 filter: state.filter
@@ -47,50 +47,54 @@ export const boilsReducer = (state = initialState, action: BoilAction): BoilStat
             return {
                 loading: false,
                 error: action.payload,
-                boils: initialState.boils,
+                data: initialState.data,
                 page: state.page,
                 limit: state.limit,
                 filter: state.filter
             }
         case BoilActionTypes.INCREASE_BOILS_PAGE:
             if (state.page === lastPage - 1) {
-                return { ...state, page: state.page }
+                return {...state, page: state.page}
             } else {
-                return { ...state, page: state.page + 1 }
+                return {...state, page: state.page + 1}
             }
         case BoilActionTypes.DECREASE_BOILS_PAGE:
             if (state.page === 0) {
-                return { ...state, page: state.page }
+                return {...state, page: state.page}
             } else {
-                return { ...state, page: state.page - 1 }
+                return {...state, page: state.page - 1}
             }
         case BoilActionTypes.SET_FIRST_BOILS_PAGE:
-            return { ...state, page: 0 }
+            return {...state, page: 0}
         case BoilActionTypes.SET_LAST_BOILS_PAGE:
-            return { ...state, page: lastPage - 1 }
+            return {...state, page: lastPage - 1}
         case BoilActionTypes.SET_BOILS_PAGE:
-            return { ...state, page: action.payload }
+            return {...state, page: action.payload}
         case BoilActionTypes.CHANGE_LIMIT:
-            return { ...state, limit: action.payload, page: 0 }
+            return {...state, limit: action.payload, page: 0}
         case BoilActionTypes.CHANGE_FILTER:
             switch (action.payload.key) {
                 case BoilFilterParams.BATCH: {
-                    return { ...state, filter: { ...state.filter, batch: action.payload.value }, page: 0 }
+                    return {...state, filter: {...state.filter, batch: action.payload.value}, page: 0}
                 }
                 case BoilFilterParams.MARKING: {
-                    return { ...state, filter: { ...state.filter, marking: action.payload.value }, page: 0 }
+                    return {...state, filter: {...state.filter, marking: action.payload.value}, page: 0}
                 }
                 case BoilFilterParams.DATE: {
-                    return { ...state, filter: { ...state.filter, date: action.payload.value, month: '-', year: '-' }, page: 0 }
+                    return {
+                        ...state,
+                        filter: {...state.filter, date: action.payload.value, month: '-', year: '-'},
+                        page: 0
+                    }
                 }
                 case BoilFilterParams.MONTH: {
-                    return { ...state, filter: { ...state.filter, month: action.payload.value, date: '' }, page: 0 }
+                    return {...state, filter: {...state.filter, month: action.payload.value, date: ''}, page: 0}
                 }
                 case BoilFilterParams.YEAR: {
-                    return { ...state, filter: { ...state.filter, year: action.payload.value, date: '' }, page: 0 }
+                    return {...state, filter: {...state.filter, year: action.payload.value, date: ''}, page: 0}
                 }
                 case BoilFilterParams.PLANT: {
-                    return { ...state, filter: { ...state.filter, plant: action.payload.value }, page: 0 }
+                    return {...state, filter: {...state.filter, plant: action.payload.value}, page: 0}
                 }
                 default:
 
@@ -99,7 +103,7 @@ export const boilsReducer = (state = initialState, action: BoilAction): BoilStat
         case BoilActionTypes.CLEAR_FILTER: {
             return {
                 ...state,
-                filter: { ...state.filter, batch: '', marking: '', date: '', month: '-', year: '-', plant: '-' }
+                filter: {...state.filter, batch: '', marking: '', date: '', month: '-', year: '-', plant: '-'}
             }
         }
         default:

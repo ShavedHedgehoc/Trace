@@ -72,16 +72,6 @@ def doc_count():
 @bp.route("/api/v1/boils", methods=['GET'])
 def boils_data():
 
-    # page = request.args.get('page', type=int)
-    # per_page = request.args.get('per_page', type=int)
-    # batch_search = request.args.get('batch_search', type=str)
-    # marking_search = request.args.get('marking_search', type=str)
-    # date_search = request.args.get('date_search', type=str)
-    # month_search = request.args.get('month_search', type=str)
-    # year_search = request.args.get('year_search', type=str)
-    # year_search = request.args.get('year_search', type=str)
-    # plant_search = request.args.get('plant_search', type=str)
-
     page = request.args.get('_page', type=int)
     limit = request.args.get('_limit', type=int)
     batch_search = request.args.get('_batch', type=str)
@@ -92,7 +82,6 @@ def boils_data():
     plant_search = request.args.get('_plant', type=str)
 
     offset = page*limit
-    # limit = per_page
 
     boil_qry = db.session.query(
         Batch.BatchPK.label('BatchPK'),
@@ -242,11 +231,11 @@ def boils_data():
         option = {'key': r[0], 'value': plant_dict[r[0]]}
         plant_selector_options.append(option)
 
-    data = []
+    rows = []
 
     for row in boil_data:
-        data.append({
-            'batchid': row.BatchPK,
+        rows.append({
+            'batch_id': row.BatchPK,
             'name': row.BatchName,
             'marking': row.batch_marking if row.batch_marking
             else 'Нет данных',
@@ -257,7 +246,7 @@ def boils_data():
             'month': month_dict[row.batch_month],
             'year': row.batch_year,
         })
-    response = {'data': data,
+    response = {'rows': rows,
                 'total': total_filter_records,
                 'plant_selector_options': plant_selector_options,
                 'month_selector_options': month_selector_options,
@@ -521,13 +510,12 @@ def boil_load_detail(batch_name):
 @bp.route("/api/v1/products", methods=['GET'])
 def products_data():
 
-    page = request.args.get('page', type=int)
-    per_page = request.args.get('per_page', type=int)
-    code_search = request.args.get('code_search', type=str)
-    name_search = request.args.get('name_search', type=str)
+    page = request.args.get('_page', type=int)
+    limit = request.args.get('_limit', type=int)
+    # code_search = request.args.get('code_search', type=str)
+    # name_search = request.args.get('name_search', type=str)
 
-    offset = page*per_page
-    limit = per_page
+    offset = page*limit    
 
     filters = []
 
@@ -540,39 +528,36 @@ def products_data():
         Product.ProductName
     )
 
-    if code_search != '-':
-        filters.append(Product.ProductId.like(
-            "%{}%".format(code_search)))
+    # if code_search != '-':
+    #     filters.append(Product.ProductId.like(
+    #         "%{}%".format(code_search)))
 
-    if name_search != '-':
-        filters.append(Product.ProductName.like(
-            "%{}%".format(name_search)))
+    # if name_search != '-':
+    #     filters.append(Product.ProductName.like(
+    #         "%{}%".format(name_search)))
 
     total_records = product_qry.count()
 
-    if len(filters) > 0:
-        total_filter_records = product_qry.filter(*filters).count()
-        product_data = product_qry.filter(
-            *filters).offset(offset).limit(limit)
-    else:
-        total_filter_records = total_records
-        product_data = product_qry.offset(offset).limit(limit)
+    # if len(filters) > 0:
+    #     total_filter_records = product_qry.filter(*filters).count()
+    #     product_data = product_qry.filter(
+    #         *filters).offset(offset).limit(limit)
+    # else:
+    #     total_filter_records = total_records
+    #     product_data = product_qry.offset(offset).limit(limit)
 
-    if product_data is None:
-        abort(404)
+    # if product_data is None:
+    #     abort(404)
 
-    data = []
-
+    rows = []
+    product_data = product_qry.offset(offset).limit(limit)
     for row in product_data:
-        data.append({
-            'id': row.ProductId,
-            'name': row.ProductName,
+        rows.append({
+            'product_id': row.ProductId,
+            'product_name': row.ProductName,
         })
-    response = {'products': {'data': data,
-                             'total': total_filter_records,
-                             }
-                }
-
+    
+    response = {'rows': rows, 'total': total_records }
     return(jsonify(response))
 
 
@@ -674,11 +659,11 @@ def product_detail(product_id):
 @bp.route("/api/v1/lots", methods=['GET'])
 def lots_data():
     # add filters
-    page = request.args.get('page', type=int)
-    per_page = request.args.get('per_page', type=int)
+    page = request.args.get('_page', type=int)
+    limit = request.args.get('_limit', type=int)
 
-    offset = page*per_page
-    limit = per_page
+    offset = page*limit
+    # limit = per_page
 
     filters = []
 
@@ -712,10 +697,10 @@ def lots_data():
     total_records = lot_qry.count()
     lot_data = lot_qry.offset(offset).limit(limit)
 
-    data = []
+    rows = []
 
     for row in lot_data:
-        data.append({
+        rows.append({
             'lot_id': row.lot_id,
             'lot_name': row.lot_name,
             'lot_date':
@@ -732,7 +717,7 @@ def lots_data():
             'manufacturer_lot_name': row.manufacturer_lot_name,
         })
 
-    response = {'data': data, 'total': total_records, }
+    response = {'rows': rows, 'total': total_records, }
     return(jsonify(response))
 
 

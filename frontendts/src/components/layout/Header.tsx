@@ -1,5 +1,5 @@
 import React from "react";
-import { useActions } from "../hooks/useActions";
+import { useActions } from "../../hooks/useActions";
 // import { useTypedSelector } from "../hooks/useTypedSelector";
 import classes from "./Header.module.css";
 

@@ -1,5 +1,5 @@
 export interface BoilState {
-    boils: IBoil;
+    data: IBoil;
     loading: boolean;
     error: null | string;
     page: number;
@@ -86,7 +86,7 @@ export interface IBoilFormField {
 
 
 export interface IBoil {
-    data: IBoilData[];
+    rows: IBoilData[];
     month_selector_options: IMonthData[];
     year_selector_options: IYearData[];
     plant_selector_options: IPlantData[];
@@ -94,7 +94,7 @@ export interface IBoil {
 }
 
 export interface IBoilData {
-    batchid: string,
+    batch_id: string,
     date: string,
     marking: string,
     month: string,
@@ -128,5 +128,5 @@ export interface IBoilFilter {
 }
 
 export type BoilAction = FetchBoilsAction | FetchBoilsSuccessAction | FetchBoilsErrorAction |
-    BoilsIncreasePage | BoilsDecreasePage | BoilsSetPage | BoilsSetFirstPage | BoilsSetLastPage |
+    BoilsIncreasePage | BoilsDecreasePage |  BoilsSetFirstPage | BoilsSetLastPage |
     BoilsSetPage | BoilsChangeLimit | BoilsChangeFilter | BoilsClearFilter

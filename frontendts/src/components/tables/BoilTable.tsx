@@ -8,7 +8,7 @@ interface TableProps {
     items: IBoilData[];
 }
 
-export default function Table(props: TableProps) {
+export default function BoilTable(props: TableProps) {
 
     let navigate = useNavigate();
     const redirectToBoil = (name: string) => {

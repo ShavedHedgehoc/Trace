@@ -1,5 +1,5 @@
 import React, {FC} from 'react'
-import {BoilFilterParams, IBoilFilter, IBoilFormField, IMonthData, IPlantData, IYearData} from '../types/boil';
+import {BoilFilterParams, IBoilFilter, IBoilFormField, IMonthData, IPlantData, IYearData} from '../../types/boil';
 import classes from "./BoilForm.module.css";
 
 interface BoilFormProps {
