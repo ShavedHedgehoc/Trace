@@ -1,21 +1,19 @@
-import React, { useEffect } from "react";
-import { useActions } from "../hooks/useActions";
-import { useTypedSelector } from "../hooks/useTypedSelector";
-
+import React, {useEffect} from "react";
 import classes from "./Page.module.css"
+import {useActions} from "../../hooks/useActions";
+import {useTypedSelector} from "../../hooks/useTypedSelector";
+import {useDebounce} from "../../hooks/useDebounce";
+import BoilForm from "../BoilForm";
+import Table from "../Table";
+import Pagination from "../Pagination";
 
-import BoilForm from "./BoilForm";
-import Table from "./Table";
-import Pagination from "./Pagination";
-import { useDebounce } from "../hooks/useDebounce";
+const BoilsList: React.FC = () => {
 
-
-
-const Boils: React.FC = () => {
-
-    const { boils, error, loading, page, limit, filter } = useTypedSelector(state => state.boils);
-    const { fetchBoils, increasePage, decreasePage, getFirstPage,
-        getLastPage, changeLimit, changeFilter, clearFilter } = useActions()
+    const {boils, error, loading, page, limit, filter} = useTypedSelector(state => state.boils);
+    const {
+        fetchBoils, increasePage, decreasePage, getFirstPage,
+        getLastPage, changeLimit, changeFilter, clearFilter
+    } = useActions()
 
     const debouncedFilter = useDebounce(filter, 500)
 
@@ -43,11 +41,9 @@ const Boils: React.FC = () => {
 
     if (loading) {
         return (
-
             <div className={classes.centeredMessage}>
                 Loading...
             </div>
-
         )
     }
 
@@ -56,7 +52,7 @@ const Boils: React.FC = () => {
             <div className={classes.pageHeader}>Варки</div>
             <div className={classes.pageFormContainer}>
                 <BoilForm
-                    changeFilter={({ key, value }) => changeFilter({ key, value })}
+                    changeFilter={({key, value}) => changeFilter({key, value})}
                     clearFilter={() => clearFilter()}
                     months={boils.month_selector_options}
                     years={boils.year_selector_options}
@@ -65,9 +61,9 @@ const Boils: React.FC = () => {
                     loading={loading}
                 />
             </div>
-            <div className={classes.pageTableContainer} style={{ height: `${tableWindowHeight()}px` }}>
+            <div className={classes.pageTableContainer} style={{height: `${tableWindowHeight()}px`}}>
                 {loading ? <p>Loading...</p> :
-                    boils.data.length === 0 ? <p>No data...</p> : <Table items={boils.data} />}
+                    boils.data.length === 0 ? <p>No data...</p> : <Table items={boils.data}/>}
             </div>
             <div>
                 <Pagination
@@ -82,8 +78,8 @@ const Boils: React.FC = () => {
                     loading={loading}
                 />
             </div>
-        </div >
+        </div>
     )
 }
 
-export default Boils;
+export default BoilsList;

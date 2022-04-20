@@ -1,5 +1,5 @@
 import React from "react";
-import DocCounter from "./DocCounter";
+import DocCounter from "./layout/DocCounter";
 
 import classes from "./Footer.module.css";
 

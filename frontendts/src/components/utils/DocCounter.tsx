@@ -1,9 +1,9 @@
 import React, { } from "react";
-import { useActions } from "../hooks/useActions";
-import { useInterval } from "../hooks/useInterval";
-import { useTypedSelector } from "../hooks/useTypedSelector";
+import { useActions } from "../../hooks/useActions";
+import { useInterval } from "../../hooks/useInterval";
+import { useTypedSelector } from "../../hooks/useTypedSelector";
 
-import classes from "./DocCounter.module.css"
+import classes from "../DocCounter.module.css"
 
 const DocCounter: React.FC = () => {
 
