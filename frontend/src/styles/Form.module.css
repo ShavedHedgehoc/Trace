@@ -29,7 +29,7 @@
 }
 .boilFormButton {
     appearance: none;
-    border: 1px solid gray;
+    border: 1px solid var(--container-border-color);
     border-radius: 10px;
     background: white;
     color: black;
