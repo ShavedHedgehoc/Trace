@@ -1,6 +1,7 @@
 *{
-    --main-backgroung-color:#f8f8f8;
+    --main-background-color:#f8f8f8;
     --header-background-color: #263238;
+    --container-border-color: gray;
 }
 body, 
 html {

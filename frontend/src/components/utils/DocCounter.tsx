@@ -3,7 +3,7 @@ import { useActions } from "../../hooks/useActions";
 import { useInterval } from "../../hooks/useInterval";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 
-import classes from "./DocCounter.module.css"
+import classes from "../../styles/DocCounter.module.css"
 
 const DocCounter: React.FC = () => {
 

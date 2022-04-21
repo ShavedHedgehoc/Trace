@@ -47,11 +47,11 @@ export function decreaseBoilsPage(): BoilAction {
 }
 
 export function getFirstBoilsPage(): BoilAction {
-    return { type: BoilActionTypes.SET_FIRST_BOILS_PAGE }
+    return { type: BoilActionTypes.GET_FIRST_BOILS_PAGE }
 }
 
 export function getLastBoilsPage(): BoilAction {
-    return { type: BoilActionTypes.SET_LAST_BOILS_PAGE }
+    return { type: BoilActionTypes.GET_LAST_BOILS_PAGE }
 }
 
 export function setBoilsPage(page = 0): BoilAction {

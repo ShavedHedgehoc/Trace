@@ -1,5 +1,5 @@
 import React from 'react';
-import classes from "./App.module.css";
+import classes from "./styles/App.module.css";
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import SideMenu from './components/layout/SideMenu';

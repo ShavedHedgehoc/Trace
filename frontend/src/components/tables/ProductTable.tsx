@@ -1,5 +1,5 @@
 import React from "react";
-import classes from "./Table.module.css"
+import classes from "../../styles/Table.module.css"
 import {IProductRow} from "../../types/product";
 
 interface TableProps {
@@ -29,7 +29,7 @@ export default function ProductTable(props: TableProps) {
                     className={classes.tableRow}
                     key={item.product_id}>
                     <td className={classes.tableTd}>{item.product_id}</td>
-                    <td className={classes.tableTd}>{item.product_name}</td>
+                    <td className={classes.tableTdAlignLeft}>{item.product_name}</td>
                     <td className={classes.tableTd}>
                         <button onClick={() => props.redirect(item.product_id)} className={classes.tableButton}>
                             Данные

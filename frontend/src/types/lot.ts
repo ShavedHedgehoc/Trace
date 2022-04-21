@@ -1,12 +1,12 @@
 export interface LotState {
-    data: ILot;
+    data: ILotData;
     loading: boolean;
     error: null | string;
     page: number;
     limit: number;
 }
 
-export interface ILot {
+export interface ILotData {
     rows: ILotRow[];
     total: number;
 }
@@ -31,11 +31,11 @@ export enum LotActionTypes {
     FETCH_LOTS = "FETCH_LOTS",
     FETCH_LOTS_SUCCESS = "FETCH_LOTS_SUCCESS",
     FETCH_LOTS_ERROR = "FETCH_LOTS_ERROR",
-    INCREASE_PAGE = "INCREASE_PAGE",
-    DECREASE_PAGE = "DECREASE_PAGE",
-    SET_FIRST_PAGE = "SET_FIRST_PAGE",
-    SET_LAST_PAGE = "SET_LAST_PAGE",
-    CHANGE_LIMIT = "CHANGE_LIMIT",
+    INCREASE_LOTS_PAGE = "INCREASE_LOTS_PAGE",
+    DECREASE_LOTS_PAGE = "DECREASE_LOTS_PAGE",
+    GET_FIRST_LOTS_PAGE = "GET_FIRST_LOTS_PAGE",
+    GET_LAST_LOTS_PAGE = "GET_LAST_LOTS_PAGE",
+    CHANGE_LOTS_LIMIT = "CHANGE_LOTS_LIMIT",
 }
 
 interface FetchLotsAction {
@@ -44,7 +44,7 @@ interface FetchLotsAction {
 
 interface FetchLotsSuccessAction {
     type: LotActionTypes.FETCH_LOTS_SUCCESS;
-    payload: ILot;
+    payload: ILotData;
 }
 
 interface FetchLotsErrorAction {
@@ -53,25 +53,32 @@ interface FetchLotsErrorAction {
 }
 
 interface LotsIncreasePage {
-    type: LotActionTypes.INCREASE_PAGE;
+    type: LotActionTypes.INCREASE_LOTS_PAGE;
 }
 
 interface LotsDecreasePage {
-    type: LotActionTypes.DECREASE_PAGE;
+    type: LotActionTypes.DECREASE_LOTS_PAGE;
 }
 
-interface LotsSetFirstPage {
-    type: LotActionTypes.SET_FIRST_PAGE;
+interface LotsGetFirstPage {
+    type: LotActionTypes.GET_FIRST_LOTS_PAGE;
 }
 
-interface LotsSetLastPage {
-    type: LotActionTypes.SET_LAST_PAGE;
+interface LotsGetLastPage {
+    type: LotActionTypes.GET_LAST_LOTS_PAGE;
 }
 
 interface LotsChangeLimit {
-    type: LotActionTypes.CHANGE_LIMIT;
+    type: LotActionTypes.CHANGE_LOTS_LIMIT;
     payload: number;
 }
 
-export type LotAction = FetchLotsAction | FetchLotsSuccessAction | FetchLotsErrorAction | LotsIncreasePage |
-    LotsDecreasePage | LotsSetFirstPage | LotsSetLastPage | LotsChangeLimit
+export type LotAction =
+    FetchLotsAction
+    | FetchLotsSuccessAction
+    | FetchLotsErrorAction
+    | LotsIncreasePage
+    | LotsDecreasePage
+    | LotsGetFirstPage
+    | LotsGetLastPage
+    | LotsChangeLimit

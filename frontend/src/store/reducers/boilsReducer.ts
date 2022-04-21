@@ -23,7 +23,7 @@ const initialState: BoilState = {
 }
 
 export const boilsReducer = (state = initialState, action: BoilAction): BoilState => {
-    const lastPage = <number>(Math.ceil(state.data.total / state.limit))
+    const lastPage = (Math.ceil(state.data.total / state.limit))
     switch (action.type) {
         case BoilActionTypes.FETCH_BOILS:
             return {
@@ -64,9 +64,9 @@ export const boilsReducer = (state = initialState, action: BoilAction): BoilStat
             } else {
                 return {...state, page: state.page - 1}
             }
-        case BoilActionTypes.SET_FIRST_BOILS_PAGE:
+        case BoilActionTypes.GET_FIRST_BOILS_PAGE:
             return {...state, page: 0}
-        case BoilActionTypes.SET_LAST_BOILS_PAGE:
+        case BoilActionTypes.GET_LAST_BOILS_PAGE:
             return {...state, page: lastPage - 1}
         case BoilActionTypes.SET_BOILS_PAGE:
             return {...state, page: action.payload}

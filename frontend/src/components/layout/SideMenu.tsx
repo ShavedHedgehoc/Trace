@@ -1,6 +1,6 @@
 import React from "react";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
-import classes from "./SideMenu.module.css";
+import classes from "../../styles/SideMenu.module.css";
 import {Link} from 'react-router-dom';
 import {useActions} from "../../hooks/useActions";
 import {RouteNames} from "../../router";

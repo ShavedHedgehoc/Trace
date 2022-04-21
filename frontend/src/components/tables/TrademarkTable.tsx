@@ -1,5 +1,5 @@
 import React from "react";
-import classes from "./Table.module.css";
+import classes from "../../styles/Table.module.css";
 import {ITrademarkRow} from "../../types/trademark";
 
 interface TableProps {

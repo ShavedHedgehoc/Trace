@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import classes from "./Page.module.css"
+import classes from "../../styles/Page.module.css"
 import {useActions} from "../../hooks/useActions";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useDebounce} from "../../hooks/useDebounce";
@@ -11,8 +11,14 @@ const BoilsList: React.FC = () => {
 
     const {data, error, loading, page, limit, filter} = useTypedSelector(state => state.boils);
     const {
-        fetchBoils, increaseBoilsPage, decreaseBoilsPage, getFirstBoilsPage,
-        getLastBoilsPage, changeBoilsLimit, changeBoilsFilter, clearBoilsFilter
+        fetchBoils,
+        increaseBoilsPage,
+        decreaseBoilsPage,
+        getFirstBoilsPage,
+        getLastBoilsPage,
+        changeBoilsLimit,
+        changeBoilsFilter,
+        clearBoilsFilter
     } = useActions()
 
     const debouncedFilter = useDebounce(filter, 500)

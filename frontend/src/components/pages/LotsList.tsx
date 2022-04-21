@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import classes from './Page.module.css';
+import classes from '../../styles/Page.module.css';
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useActions} from "../../hooks/useActions";
 import Pagination from "../utils/Pagination";
@@ -8,7 +8,14 @@ import LotTable from "../tables/LotTable";
 const LotsList: React.FC = (): JSX.Element => {
 
     const {data, loading, error, page, limit} = useTypedSelector(state => state.lots);
-    const {fetchLots, increasePage, decreasePage, getFirstPage, getLastPage, changeLimit} = useActions()
+    const {
+        fetchLots,
+        increaseLotsPage,
+        decreaseLotsPage,
+        getFirstLotsPage,
+        getLastLotsPage,
+        changeLotsLimit
+    } = useActions()
 
     useEffect(() => {
         fetchLots(page, limit);
@@ -39,11 +46,11 @@ const LotsList: React.FC = (): JSX.Element => {
             </div>
             <div>
                 <Pagination
-                    increasePage={() => increasePage()}
-                    decreasePage={() => decreasePage()}
-                    getFirstPage={() => getFirstPage()}
-                    getLastPage={() => getLastPage()}
-                    changeLimit={(limit) => changeLimit(limit)}
+                    increasePage={() => increaseLotsPage()}
+                    decreasePage={() => decreaseLotsPage()}
+                    getFirstPage={() => getFirstLotsPage()}
+                    getLastPage={() => getLastLotsPage()}
+                    changeLimit={(limit) => changeLotsLimit(limit)}
                     page={page}
                     limit={limit}
                     total={data.total}

@@ -25,6 +25,12 @@
     border-top: 1px solid gray;
 }
 
+.tableTdAlignLeft{
+    padding: 6px 12px;
+    text-align: left;
+    border-top: 1px solid gray;
+}
+
 .tableButton {
     appearance: none;
     border: 1px solid gray;

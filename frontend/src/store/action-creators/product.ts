@@ -37,24 +37,24 @@ export const fetchProducts = (page = 0, limit = 10) => {
 }
 
 export function increaseProductPage(): ProductAction {
-    return {type: ProductActionTypes.INCREASE_PAGE}
+    return {type: ProductActionTypes.INCREASE_PRODUCTS_PAGE}
 }
 
 export function decreaseProductPage(): ProductAction {
-    return {type: ProductActionTypes.DECREASE_PAGE}
+    return {type: ProductActionTypes.DECREASE_PRODUCTS_PAGE}
 }
 
 export function getFirstProductPage(): ProductAction {
-    return {type: ProductActionTypes.SET_FIRST_PAGE}
+    return {type: ProductActionTypes.GET_FIRST_PRODUCTS_PAGE}
 }
 
 export function getLastProductPage(): ProductAction {
-    return {type: ProductActionTypes.SET_LAST_PAGE}
+    return {type: ProductActionTypes.GET_LAST_PRODUCTS_PAGE}
 }
 
 export function changeProductLimit(limit = 10): ProductAction {
     return {
-        type: ProductActionTypes.CHANGE_LIMIT,
+        type: ProductActionTypes.CHANGE_PRODUCTS_LIMIT,
         payload: limit
     }
 }

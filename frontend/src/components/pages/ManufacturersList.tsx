@@ -1,5 +1,5 @@
 import React from 'react';
-import classes from "./Page.module.css";
+import classes from "../../styles/Page.module.css";
 
 const ManufacturersList: React.FC = (): JSX.Element => {
     return (

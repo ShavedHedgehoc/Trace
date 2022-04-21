@@ -515,7 +515,7 @@ def products_data():
     # code_search = request.args.get('code_search', type=str)
     # name_search = request.args.get('name_search', type=str)
 
-    offset = page*limit    
+    offset = page*limit
 
     filters = []
 
@@ -556,8 +556,8 @@ def products_data():
             'product_id': row.ProductId,
             'product_name': row.ProductName,
         })
-    
-    response = {'rows': rows, 'total': total_records }
+
+    response = {'rows': rows, 'total': total_records}
     return(jsonify(response))
 
 
@@ -721,8 +721,13 @@ def lots_data():
     return(jsonify(response))
 
 
-@bp.route("/api/v1/lots/<string:lot_id>", methods=['GET'])
-def lot_detail(lot_id):
+@bp.route("/api/v1/lots/<string:_lot_id>", methods=['GET'])
+def lot_detail(_lot_id):
+
+    page = request.args.get('_page', type=int)
+    limit = request.args.get('_limit', type=int)
+
+    offset = page*limit
 
     lot = db.session.query(
         Lot.LotName.label('lot_name'),
@@ -741,7 +746,7 @@ def lot_detail(lot_id):
         Lot.ManufacturerLotPK == Manufacturerlot.ManufacturerLotPK,
         isouter=True
     ).filter(
-        Lot.LotPK == lot_id
+        Lot.LotPK == _lot_id
     ).one_or_none()
 
     if lot is None:
@@ -756,12 +761,6 @@ def lot_detail(lot_id):
         'manufacturer_lot_id': lot.manufacturer_lot_id,
         'manufacturer_lot_name': lot.manufacturer_lot_name,
     }
-
-    page = request.args.get('page', type=int)
-    per_page = request.args.get('per_page', type=int)
-
-    offset = page*per_page
-    limit = per_page
 
     # filters = []
 
@@ -784,7 +783,7 @@ def lot_detail(lot_id):
     ).join(
         Product, Btproduct.ProductId == Product.ProductId, isouter=True
     ).filter(
-        Lot.LotPK == lot_id
+        Lot.LotPK == _lot_id
     ).subquery()
 
     lot_qry = db.session.query(
@@ -806,10 +805,10 @@ def lot_detail(lot_id):
 
     lot_data = lot_qry.offset(offset).limit(limit)
 
-    data = []
+    rows = []
 
     for row in lot_data:
-        data.append({
+        rows.append({
             'name': row.batch_name,
             'date':
             row.batch_date.strftime("%d-%m-%Y") if row.batch_date else None,
@@ -817,8 +816,8 @@ def lot_detail(lot_id):
         })
 
     response = {
-        'data': data,
-        'header_data': header_data,
+        'rows': rows,
+        'header': header_data,
         'total': total_records,
     }
     return(jsonify(response))
@@ -828,11 +827,10 @@ def lot_detail(lot_id):
 def trademarks_data():
 
     # add filters
-    page = request.args.get('page', type=int)
-    per_page = request.args.get('per_page', type=int)
+    page = request.args.get('_page', type=int)
+    limit = request.args.get('_limit', type=int)
 
-    offset = page*per_page
-    limit = per_page
+    offset = page*limit
 
     filters = []
 

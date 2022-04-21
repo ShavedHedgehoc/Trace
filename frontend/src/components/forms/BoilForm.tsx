@@ -1,6 +1,6 @@
 import React, {FC} from 'react'
 import {BoilFilterParams, IBoilFilter, IBoilFormField, IMonthData, IPlantData, IYearData} from '../../types/boil';
-import classes from "./BoilForm.module.css";
+import classes from "../../styles/Form.module.css";
 
 interface BoilFormProps {
     changeFilter: ({key, value}: IBoilFormField) => void;

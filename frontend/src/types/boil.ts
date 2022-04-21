@@ -7,6 +7,53 @@ export interface BoilState {
     filter: IBoilFilter;
 }
 
+export interface IBoil {
+    rows: IBoilData[];
+    month_selector_options: IMonthData[];
+    year_selector_options: IYearData[];
+    plant_selector_options: IPlantData[];
+    total: number;
+}
+
+export interface IBoilData {
+    batch_id: string,
+    date: string,
+    marking: string,
+    month: string,
+    name: string,
+    plant: string,
+    year: number
+}
+
+export interface IMonthData {
+    key: string,
+    value: string
+}
+
+export interface IYearData {
+    key: string,
+    value: string
+}
+
+export interface IPlantData {
+    key: string,
+    value: string
+}
+
+export interface IBoilFilter {
+    batch: string,
+    marking: string,
+    date: string,
+    month: string,
+    year: string,
+    plant: string
+}
+
+export interface IBoilFormField {
+    key: string,
+    value: string
+}
+
 export enum BoilActionTypes {
     FETCH_BOILS = "FETCH_BOILS",
     FETCH_BOILS_SUCCESS = "FETCH_BOILS_SUCCESS",
@@ -14,11 +61,12 @@ export enum BoilActionTypes {
     INCREASE_BOILS_PAGE = "INCREASE_BOILS_PAGE",
     DECREASE_BOILS_PAGE = "DECREASE_BOILS_PAGE",
     SET_BOILS_PAGE = "SET_BOILS_PAGE",
-    SET_FIRST_BOILS_PAGE = "SET_FIRST_BOILS_PAGE",
-    SET_LAST_BOILS_PAGE = "SET_LAST_BOILS_PAGE",
+    GET_FIRST_BOILS_PAGE = "GET_FIRST_BOILS_PAGE",
+    GET_LAST_BOILS_PAGE = "GET_LAST_BOILS_PAGE",
     CHANGE_BOILS_LIMIT = "CHANGE_BOILS_LIMIT",
     CHANGE_BOILS_FILTER = "CHANGE_BOILS_FILTER",
-    CLEAR_BOILS_FILTER = "CLEAR_BOILS_FILTER"
+    CLEAR_BOILS_FILTER = "CLEAR_BOILS_FILTER",
+    SET_BOILS_INIT_STATE = "SET_BOILS_INIT_STATE"
 }
 
 export enum BoilFilterParams {
@@ -58,11 +106,11 @@ interface BoilsSetPage {
 }
 
 interface BoilsSetFirstPage {
-    type: BoilActionTypes.SET_FIRST_BOILS_PAGE;
+    type: BoilActionTypes.GET_FIRST_BOILS_PAGE;
 }
 
 interface BoilsSetLastPage {
-    type: BoilActionTypes.SET_LAST_BOILS_PAGE;
+    type: BoilActionTypes.GET_LAST_BOILS_PAGE;
 }
 
 interface BoilsChangeLimit {
@@ -79,54 +127,15 @@ interface BoilsClearFilter {
     type: BoilActionTypes.CLEAR_BOILS_FILTER;
 }
 
-export interface IBoilFormField {
-    key: string,
-    value: string
-}
-
-
-export interface IBoil {
-    rows: IBoilData[];
-    month_selector_options: IMonthData[];
-    year_selector_options: IYearData[];
-    plant_selector_options: IPlantData[];
-    total: number;
-}
-
-export interface IBoilData {
-    batch_id: string,
-    date: string,
-    marking: string,
-    month: string,
-    name: string,
-    plant: string,
-    year: number
-}
-
-export interface IMonthData{
-    key:string,
-    value:string
-}
-
-export interface IYearData{
-    key:string,
-    value:string
-}
-
-export interface IPlantData{
-    key:string,
-    value:string
-}
-
-export interface IBoilFilter {
-    batch: string,
-    marking: string,
-    date: string,
-    month: string,
-    year: string,
-    plant: string
-}
-
-export type BoilAction = FetchBoilsAction | FetchBoilsSuccessAction | FetchBoilsErrorAction |
-    BoilsIncreasePage | BoilsDecreasePage |  BoilsSetFirstPage | BoilsSetLastPage |
-    BoilsSetPage | BoilsChangeLimit | BoilsChangeFilter | BoilsClearFilter
+export type BoilAction =
+    FetchBoilsAction
+    | FetchBoilsSuccessAction
+    | FetchBoilsErrorAction
+    | BoilsIncreasePage
+    | BoilsDecreasePage
+    | BoilsSetFirstPage
+    | BoilsSetLastPage
+    | BoilsSetPage
+    | BoilsChangeLimit
+    | BoilsChangeFilter
+    | BoilsClearFilter

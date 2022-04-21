@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import classes from "./Pagination.module.css";
+import classes from "../../styles/Pagination.module.css";
 
 const limitValues = [5, 10, 15, 20]
 

@@ -20,11 +20,11 @@ export enum ProductActionTypes {
     FETCH_PRODUCTS = "FETCH_PRODUCTS",
     FETCH_PRODUCTS_SUCCESS = "FETCH_PRODUCTS_SUCCESS",
     FETCH_PRODUCTS_ERROR = "FETCH_PRODUCTS_ERROR",
-    INCREASE_PAGE = "INCREASE_PAGE",
-    DECREASE_PAGE = "DECREASE_PAGE",
-    SET_FIRST_PAGE = "SET_FIRST_PAGE",
-    SET_LAST_PAGE = "SET_LAST_PAGE",
-    CHANGE_LIMIT = "CHANGE_LIMIT",
+    INCREASE_PRODUCTS_PAGE = "INCREASE_PRODUCTS_PAGE",
+    DECREASE_PRODUCTS_PAGE = "DECREASE_PRODUCTS_PAGE",
+    GET_FIRST_PRODUCTS_PAGE = "GET_FIRST_PRODUCTS_PAGE",
+    GET_LAST_PRODUCTS_PAGE = "GET_LAST_PRODUCTS_PAGE",
+    CHANGE_PRODUCTS_LIMIT = "CHANGE_PRODUCTS_LIMIT",
 }
 
 interface FetchProductsAction {
@@ -42,25 +42,32 @@ interface FetchProductsErrorAction {
 }
 
 interface ProductsIncreasePage {
-    type: ProductActionTypes.INCREASE_PAGE;
+    type: ProductActionTypes.INCREASE_PRODUCTS_PAGE;
 }
 
 interface ProductsDecreasePage {
-    type: ProductActionTypes.DECREASE_PAGE;
+    type: ProductActionTypes.DECREASE_PRODUCTS_PAGE;
 }
 
 interface ProductsSetFirstPage {
-    type: ProductActionTypes.SET_FIRST_PAGE;
+    type: ProductActionTypes.GET_FIRST_PRODUCTS_PAGE;
 }
 
 interface ProductsSetLastPage {
-    type: ProductActionTypes.SET_LAST_PAGE;
+    type: ProductActionTypes.GET_LAST_PRODUCTS_PAGE;
 }
 
 interface ProductsChangeLimit {
-    type: ProductActionTypes.CHANGE_LIMIT;
+    type: ProductActionTypes.CHANGE_PRODUCTS_LIMIT;
     payload: number;
 }
 
-export type ProductAction = FetchProductsAction | FetchProductsSuccessAction | FetchProductsErrorAction |
-    ProductsIncreasePage | ProductsDecreasePage | ProductsSetFirstPage | ProductsSetLastPage | ProductsChangeLimit
+export type ProductAction =
+    FetchProductsAction
+    | FetchProductsSuccessAction
+    | FetchProductsErrorAction
+    | ProductsIncreasePage
+    | ProductsDecreasePage
+    | ProductsSetFirstPage
+    | ProductsSetLastPage
+    | ProductsChangeLimit

@@ -38,25 +38,25 @@ export const fetchLots = (
     }
 }
 
-export function increasePage(): LotAction {
-    return {type: LotActionTypes.INCREASE_PAGE}
+export function increaseLotsPage(): LotAction {
+    return {type: LotActionTypes.INCREASE_LOTS_PAGE}
 }
 
-export function decreasePage(): LotAction {
-    return {type: LotActionTypes.DECREASE_PAGE}
+export function decreaseLotsPage(): LotAction {
+    return {type: LotActionTypes.DECREASE_LOTS_PAGE}
 }
 
-export function getFirstPage(): LotAction {
-    return {type: LotActionTypes.SET_FIRST_PAGE}
+export function getFirstLotsPage(): LotAction {
+    return {type: LotActionTypes.GET_LAST_LOTS_PAGE}
 }
 
-export function getLastPage(): LotAction {
-    return {type: LotActionTypes.SET_LAST_PAGE}
+export function getLastLotsPage(): LotAction {
+    return {type: LotActionTypes.GET_LAST_LOTS_PAGE}
 }
 
-export function changeLimit(limit = 10): LotAction {
+export function changeLotsLimit(limit = 10): LotAction {
     return {
-        type: LotActionTypes.CHANGE_LIMIT,
+        type: LotActionTypes.CHANGE_LOTS_LIMIT,
         payload: limit
     }
 }

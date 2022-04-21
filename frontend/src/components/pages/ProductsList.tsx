@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import classes from "./Page.module.css";
+import classes from "../../styles/Page.module.css";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useActions} from "../../hooks/useActions";
 import Pagination from "../utils/Pagination";

@@ -1,5 +1,5 @@
 import React from "react";
-import classes from "./Table.module.css"
+import classes from "../../styles/Table.module.css"
 import {useNavigate} from 'react-router-dom'
 import {RouteNames} from "../../router";
 import {ILotRow} from "../../types/lot";

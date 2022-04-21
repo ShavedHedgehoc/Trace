@@ -12,7 +12,7 @@ const initialState: LotState = {
 }
 
 export const lotsReducer = (state = initialState, action: LotAction): LotState => {
-    const lastPage = <number>(Math.ceil(state.data.total / state.limit))
+    const lastPage = (Math.ceil(state.data.total / state.limit))
     switch (action.type) {
         case LotActionTypes.FETCH_LOTS:
             return {
@@ -38,23 +38,23 @@ export const lotsReducer = (state = initialState, action: LotAction): LotState =
                 page: state.page,
                 limit: state.limit
             }
-        case LotActionTypes.INCREASE_PAGE:
+        case LotActionTypes.INCREASE_LOTS_PAGE:
             if (state.page === lastPage - 1) {
                 return {...state, page: state.page}
             } else {
                 return {...state, page: state.page + 1}
             }
-        case LotActionTypes.DECREASE_PAGE:
+        case LotActionTypes.DECREASE_LOTS_PAGE:
             if (state.page === 0) {
                 return {...state, page: state.page}
             } else {
                 return {...state, page: state.page - 1}
             }
-        case LotActionTypes.SET_FIRST_PAGE:
+        case LotActionTypes.GET_FIRST_LOTS_PAGE:
             return {...state, page: 0}
-        case LotActionTypes.SET_LAST_PAGE:
+        case LotActionTypes.GET_LAST_LOTS_PAGE:
             return {...state, page: lastPage - 1}
-        case LotActionTypes.CHANGE_LIMIT:
+        case LotActionTypes.CHANGE_LOTS_LIMIT:
             return {...state, limit: action.payload, page: 0}
         default:
             return state

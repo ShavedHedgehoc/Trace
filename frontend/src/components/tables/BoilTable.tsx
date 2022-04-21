@@ -1,6 +1,7 @@
 import React from "react";
+
 import {IBoilData} from "../../types/boil";
-import classes from "./Table.module.css"
+import classes from "../../styles/Table.module.css"
 import {useNavigate} from 'react-router-dom'
 import {RouteNames} from "../../router";
 
@@ -13,7 +14,7 @@ export default function BoilTable(props: TableProps) {
     let navigate = useNavigate();
     const redirectToBoil = (name: string) => {
         navigate(`${RouteNames.BOILS}/${name}`)
-    }
+    };
 
     const columns = [
         {id: '1', label: 'Варка', align: 'center', width: '140px', value: 'name'},
@@ -55,4 +56,4 @@ export default function BoilTable(props: TableProps) {
             </tbody>
         </table>
     )
-}
+};

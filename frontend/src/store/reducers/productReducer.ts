@@ -12,7 +12,7 @@ const initialState: ProductState = {
 }
 
 export const productReducer =(state=initialState,action:ProductAction):ProductState=>{
-    const lastPage = <number>(Math.ceil(state.data.total / state.limit))
+    const lastPage = (Math.ceil(state.data.total / state.limit))
     switch (action.type) {
         case ProductActionTypes.FETCH_PRODUCTS:
             return{
@@ -38,26 +38,25 @@ export const productReducer =(state=initialState,action:ProductAction):ProductSt
                 page:state.page,
                 limit:state.limit
             }
-        case ProductActionTypes.INCREASE_PAGE:
+        case ProductActionTypes.INCREASE_PRODUCTS_PAGE:
             if (state.page === lastPage - 1) {
                 return {...state, page: state.page}
             } else {
                 return {...state, page: state.page + 1}
             }
-        case ProductActionTypes.DECREASE_PAGE:
+        case ProductActionTypes.DECREASE_PRODUCTS_PAGE:
             if (state.page === 0) {
                 return {...state, page: state.page}
             } else {
                 return {...state, page: state.page - 1}
             }
-        case ProductActionTypes.SET_FIRST_PAGE:
+        case ProductActionTypes.GET_FIRST_PRODUCTS_PAGE:
             return {...state, page: 0}
-        case ProductActionTypes.SET_LAST_PAGE:
+        case ProductActionTypes.GET_LAST_PRODUCTS_PAGE:
             return {...state, page: lastPage - 1}
-        case ProductActionTypes.CHANGE_LIMIT:
+        case ProductActionTypes.CHANGE_PRODUCTS_LIMIT:
             return {...state, limit: action.payload, page: 0}
         default:
             return state
-
     }
 }
