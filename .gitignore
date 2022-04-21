@@ -8,3 +8,4 @@ __pycache
 node_modules
 frontendts/scripts
 frontendts/config
+.idea
