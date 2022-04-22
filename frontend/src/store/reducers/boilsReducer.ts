@@ -97,7 +97,6 @@ export const boilsReducer = (state = initialState, action: BoilAction): BoilStat
                     return {...state, filter: {...state.filter, plant: action.payload.value}, page: 0}
                 }
                 default:
-
                     return state
             }
         case BoilActionTypes.CLEAR_BOILS_FILTER: {

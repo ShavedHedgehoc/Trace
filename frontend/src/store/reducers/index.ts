@@ -6,6 +6,7 @@ import {lotsReducer} from "./lotsReducer";
 import {productReducer} from "./productReducer";
 import {trademarksReducer} from "./trademarksReducer";
 import {lotItemReducer} from "./lotItemReducer";
+import {convergenceReducer} from "./convergenceReducer";
 
 export const rootReducer = combineReducers({
     boils: boilsReducer,
@@ -15,7 +16,7 @@ export const rootReducer = combineReducers({
     trademarks: trademarksReducer,
     docCounter: docCounterReducer,
     sideMenu: sideMenuReducer,
-
+    convergence:convergenceReducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>;

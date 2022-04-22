@@ -5,6 +5,7 @@ import * as LotActionCreators from "./lot";
 import * as ProductActionCreators from "./product";
 import * as TrademarkActionCreators from "./trademark";
 import * as LotItemActionCreators from "./lotItem";
+import * as ConvergenceActionCreators from "./convergence";
 
 
 export default {
@@ -14,5 +15,6 @@ export default {
     ...ProductActionCreators,
     ...LotActionCreators,
     ...TrademarkActionCreators,
-    ...LotItemActionCreators
+    ...LotItemActionCreators,
+    ...ConvergenceActionCreators
 }

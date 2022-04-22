@@ -1065,15 +1065,20 @@ def manufacturer_detail(manufacturer_id):
 def boil_report():
 
     # insert check arguments
-    plant_arg = request.args.get('plant', type=str)
-    start_arg = request.args.get('start_date', type=str)
-    end_arg = request.args.get('end_date', type=str)
-    page = request.args.get('page', type=int)
-    per_page = request.args.get('per_page', type=int)
+    plant_arg = request.args.get('_plant', type=str)
+    start_arg = request.args.get('_start_date', type=str)
+    end_arg = request.args.get('_end_date', type=str)
+    # page = request.args.get('page', type=int)
+    page = request.args.get('_page', type=int)
+    # per_page = request.args.get('per_page', type=int)
+    limit = request.args.get('_limit', type=int)
+
+    offset = page*limit
+    # limit = per_page
 
     filters = []
 
-    if None in (plant_arg, start_arg, end_arg, page, per_page):
+    if None in (plant_arg, start_arg, end_arg, page, limit):
         abort(500, 'Missing required request argument(s)')
 
     if (plant_arg not in plant_dict) and plant_arg != '-':
@@ -1095,9 +1100,6 @@ def boil_report():
         abort(500, 'Can`t parse end date')
 
     filters.append(Batch.BatchDate <= end_date)
-
-    offset = page*per_page
-    limit = per_page
 
     wght_total_sbqry = db.session.query(
         Weighting.BatchPK.label('batch_id'),
@@ -1154,10 +1156,10 @@ def boil_report():
         option = {'key': rec, 'value': plant_dict_for_report[rec]}
         plant_selector_options.append(option)
 
-    data = []
+    rows = []
 
     for row in report_data:
-        data.append({
+        rows.append({
             'batch_id': row.batch_id,
             'batch_name': row.batch_name,
             'batch_date':
@@ -1166,8 +1168,8 @@ def boil_report():
         })
 
     response = {
-        'data': data,
-        'header_data': '',
+        'rows': rows,
+
         'plant_selector_options': plant_selector_options,
         'total': total_records,
     }

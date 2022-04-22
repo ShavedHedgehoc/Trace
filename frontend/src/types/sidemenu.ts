@@ -10,4 +10,4 @@ interface SwitchMenuAction {
     type: SideMenuActionTypes.SWITCH_MENU;
 }
 
-export type SideMenuAction = SwitchMenuAction//OpenSideMenuAction | CloseSideMenuAction
+export type SideMenuAction = SwitchMenuAction

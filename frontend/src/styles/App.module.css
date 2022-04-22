@@ -17,11 +17,13 @@ html {
     height: 100vh;
     font-family: sans-serif;    
     overflow-y: hidden;   
-    background-color: var(--main-backgroung-color);
+    background-color: var(--main-background-color);
 }
 
 .content {    
     flex:1;
+    max-width: 1500px;
     overflow-y: auto; 
     height: calc(100vh - 91px);
+
 }
