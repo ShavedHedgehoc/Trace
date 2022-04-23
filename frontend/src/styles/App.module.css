@@ -22,7 +22,9 @@ html {
 
 .content {    
     flex:1;
-    max-width: 1500px;
+    align-self: center;
+    width: 95%;
+    max-width: 1800px;
     overflow-y: auto; 
     height: calc(100vh - 91px);
 

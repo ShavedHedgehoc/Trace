@@ -3,6 +3,7 @@ from crypt import methods
 from datetime import datetime
 import operator
 from sqlite3 import Date
+from xmlrpc.client import boolean
 from flask import abort, jsonify, request
 from flask_cors import cross_origin
 from sqlalchemy import distinct, select
@@ -1068,21 +1069,23 @@ def boil_report():
     plant_arg = request.args.get('_plant', type=str)
     start_arg = request.args.get('_start_date', type=str)
     end_arg = request.args.get('_end_date', type=str)
+    exactly=request.args.get('_exactly', type=str)
     # page = request.args.get('page', type=int)
     page = request.args.get('_page', type=int)
     # per_page = request.args.get('per_page', type=int)
     limit = request.args.get('_limit', type=int)
+    print(exactly)
 
     offset = page*limit
     # limit = per_page
 
     filters = []
 
-    if None in (plant_arg, start_arg, end_arg, page, limit):
+    if None in (plant_arg, start_arg, end_arg, exactly, page, limit):
         abort(500, 'Missing required request argument(s)')
 
-    if (plant_arg not in plant_dict) and plant_arg != '-':
-        abort(500, 'Plant isn`t in plant list')
+    # if (plant_arg not in plant_dict) and plant_arg != '-':
+    #     abort(500, 'Plant isn`t in plant list')
 
     if plant_arg != '-':
         filters.append(Batch.Plant == plant_arg)
@@ -1100,6 +1103,7 @@ def boil_report():
         abort(500, 'Can`t parse end date')
 
     filters.append(Batch.BatchDate <= end_date)
+    
 
     wght_total_sbqry = db.session.query(
         Weighting.BatchPK.label('batch_id'),
@@ -1110,22 +1114,32 @@ def boil_report():
         Weighting.ProductId
     ).subquery()
 
+    if exactly == 'true':
+        filters.append(wght_total_sbqry.c.total != Boil.Quantity)
+    else:
+        filters.append(wght_total_sbqry.c.total.is_(None))
+
     report_sbqry = db.session.query(
-        Boil.BatchPK.label('batch_id'),
+        Boil.BatchPK.label('batch_id'),        
         Batch.Plant.label('plant'),
         Batch.BatchName.label('batch_name'),
         Batch.BatchDate.label('batch_date'),
         Batch.batch_year.label('batch_year'),
         Batch.batch_month.label('batch_month'),
         Batch.batch_number.label('batch_number'),
-        Batch.plant_letter.label('plant_letter')
+        Batch.plant_letter.label('plant_letter'),      
+        Product.ProductMarking.label('marking'),  
     ).outerjoin(
         wght_total_sbqry, ((wght_total_sbqry.c.batch_id == Boil.BatchPK) & (
             wght_total_sbqry.c.product_id == Boil.ProductId))
     ).join(
-        Batch, Batch.BatchPK == Boil.BatchPK
-    ).filter(
-        wght_total_sbqry.c.total.is_(None)
+        Batch, Batch.BatchPK == Boil.BatchPK  
+    ).join(
+        Btproduct, Btproduct.BatchPK==Boil.BatchPK
+    ).join(
+        Product, Product.ProductId==Btproduct.ProductId  
+    # ).filter(
+    #     wght_total_sbqry.c.total.is_(None)
     ).filter(
         *filters
     ).subquery()
@@ -1136,21 +1150,22 @@ def boil_report():
         report_sbqry.c.batch_date.label('batch_date'),
         report_sbqry.c.batch_year,
         report_sbqry.c.batch_month,
-        report_sbqry.c.batch_number,
+        report_sbqry.c.batch_number,        
+        report_sbqry.c.marking.label('marking'),        
         report_sbqry.c.plant_letter.label('plant_letter'),
     ).distinct(
-        report_sbqry.c.batch_id
+        report_sbqry.c.batch_id    
     ).order_by(
         report_sbqry.c.batch_year,
         report_sbqry.c.batch_month,
         report_sbqry.c.batch_number
-    )
+    )    
 
     total_records = report_qry.count()
 
     report_data = report_qry.offset(offset).limit(limit)
 
-    plant_selector_options = []
+    plant_selector_options = [{'key':'-','value':'Все'}]
 
     for rec in plant_dict_for_report:
         option = {'key': rec, 'value': plant_dict_for_report[rec]}
@@ -1162,6 +1177,7 @@ def boil_report():
         rows.append({
             'batch_id': row.batch_id,
             'batch_name': row.batch_name,
+            'marking':row.marking,
             'batch_date':
             row.batch_date.strftime("%d-%m-%Y") if row.batch_date else None,
             'plant': plant_dict_for_report[row.plant_letter]

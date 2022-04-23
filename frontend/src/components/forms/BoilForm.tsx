@@ -20,49 +20,48 @@ const BoilForm: FC<BoilFormProps> = (
         months,
         years,
         plants,
-        loading
     }
 ) => {
     return (
-        <div className={classes.boilFormContainer}>
-            <div className={classes.boilFormElement}>
-                <div className={classes.boilFormLabel}>Варка</div>
-                <div className={classes.boilFormField}>
-                    <input type="text" className={classes.boilFormInput}
-                           disabled={loading}
+        <div className={classes.formContainer}>
+            <div className={classes.formElement}>
+                <div className={classes.formLabel}>Варка</div>
+                <div className={classes.formField}>
+                    <input type="text" className={classes.formInput}
+                           // disabled={loading}
                            id={BoilFilterParams.BATCH}
                            value={filter.batch}
                            onChange={(e) => (changeFilter({key: e.target.id, value: e.target.value}))}
                     />
                 </div>
             </div>
-            <div className={classes.boilFormElement}>
-                <div className={classes.boilFormLabel}>Артикул</div>
-                <div className={classes.boilFormField}>
-                    <input type="text" className={classes.boilFormInput}
-                           disabled={loading}
+            <div className={classes.formElement}>
+                <div className={classes.formLabel}>Артикул</div>
+                <div className={classes.formField}>
+                    <input type="text" className={classes.formInput}
+                           // disabled={loading}
                            id={BoilFilterParams.MARKING}
                            value={filter.marking}
                            onChange={(e) => (changeFilter({key: e.target.id, value: e.target.value}))}
                     />
                 </div>
             </div>
-            <div className={classes.boilFormElement}>
-                <div className={classes.boilFormLabel}>Дата</div>
-                <div className={classes.boilFormField}>
-                    <input type="date" className={classes.boilFormDate}
-                           disabled={loading}
+            <div className={classes.formElement}>
+                <div className={classes.formLabel}>Дата</div>
+                <div className={classes.formField}>
+                    <input type="date" className={classes.formDate}
+                           // disabled={loading}
                            id={BoilFilterParams.DATE}
                            value={filter.date}
                            onChange={(e) => (changeFilter({key: e.target.id, value: e.target.value}))}
                     />
                 </div>
             </div>
-            <div className={classes.boilFormElement}>
-                <div className={classes.boilFormLabel}>Месяц</div>
-                <div className={classes.boilFormField}>
-                    <select className={classes.boilFormSelect}
-                            disabled={loading}
+            <div className={classes.formElement}>
+                <div className={classes.formLabel}>Месяц</div>
+                <div className={classes.formField}>
+                    <select className={classes.formSelect}
+                            // disabled={loading}
                             id={BoilFilterParams.MONTH}
                             value={filter.month}
                             onChange={(e) => (changeFilter({key: e.target.id, value: e.target.value}))}
@@ -74,11 +73,11 @@ const BoilForm: FC<BoilFormProps> = (
 
                 </div>
             </div>
-            <div className={classes.boilFormElement}>
-                <div className={classes.boilFormLabel}>Год</div>
-                <div className={classes.boilFormField}>
-                    <select className={classes.boilFormSelect}
-                            disabled={loading}
+            <div className={classes.formElement}>
+                <div className={classes.formLabel}>Год</div>
+                <div className={classes.formField}>
+                    <select className={classes.formSelect}
+                            // disabled={loading}
                             id={BoilFilterParams.YEAR}
                             value={filter.year}
                             onChange={(e) => (changeFilter({key: e.target.id, value: e.target.value}))}
@@ -89,11 +88,11 @@ const BoilForm: FC<BoilFormProps> = (
                     </select>
                 </div>
             </div>
-            <div className={classes.boilFormElement}>
-                <div className={classes.boilFormLabel}>Площадка</div>
-                <div className={classes.boilFormField}>
-                    <select className={classes.boilFormSelect}
-                            disabled={loading}
+            <div className={classes.formElement}>
+                <div className={classes.formLabel}>Площадка</div>
+                <div className={classes.formField}>
+                    <select className={classes.formSelect}
+                            // disabled={loading}
                             id={BoilFilterParams.PLANT}
                             value={filter.plant}
                             onChange={(e) => (changeFilter({key: e.target.id, value: e.target.value}))}
@@ -104,8 +103,8 @@ const BoilForm: FC<BoilFormProps> = (
                     </select>
                 </div>
             </div>
-            <div className={classes.boilFormElement}>
-                <button className={classes.boilFormButton} onClick={() => clearFilter()} disabled={loading}>Очистить
+            <div className={classes.formElement}>
+                <button className={classes.formButton} onClick={() => clearFilter()} >Очистить
                 </button>
             </div>
         </div>

@@ -38,10 +38,10 @@ export default function LotTable(props: TableProps) {
                     className={classes.tableRow}
                     key={item.lot_id}>
                     <td className={classes.tableTd}>{item.lot_name}</td>
-                    <td className={classes.tableTd}>{item.product_name}</td>
-                    <td className={classes.tableTd}>{item.trademark_name}</td>
+                    <td className={classes.tableTdAlignLeft}>{item.product_name}</td>
+                    <td className={classes.tableTdAlignLeft}>{item.trademark_name}</td>
                     <td className={classes.tableTd}>{item.lot_date}</td>
-                    <td className={classes.tableTd}>{item.manufacturer_name}</td>
+                    <td className={classes.tableTdAlignLeft}>{item.manufacturer_name}</td>
                     <td className={classes.tableTd}>{item.manufacturer_lot_name}</td>
                     <td className={classes.tableTd}>
                         <button onClick={() => redirectToLot(item.lot_id)} className={classes.tableButton}>

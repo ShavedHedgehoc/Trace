@@ -1,7 +1,7 @@
 export interface ConvergenceState {
     data: IConvergenceData;
     loading: boolean;
-    error: string | null;
+    error: null | string;
     page: number;
     limit: number;
     filter: IConvergenceFilter;
@@ -9,11 +9,11 @@ export interface ConvergenceState {
 
 export interface IConvergenceData {
     rows: IConvergenceRow[];
-    plant_selector_options: IPlantsOptions[]
+    plant_selector_options: IPlantSelectorOption[]
     total: number;
 }
 
-export interface IPlantsOptions {
+export interface IPlantSelectorOption {
     key: string;
     value: string;
 }
@@ -22,14 +22,26 @@ export interface IConvergenceRow {
     batch_id: string;
     batch_name: string;
     batch_date: string;
+    marking: string;
     plant: string;
 }
 
 export interface IConvergenceFilter {
     start_date: string;
     end_date: string;
+    exactly: string; // fix it to boolean!!!
     plant: string;
 }
+
+export interface IConvergenceFormField {
+    key: string;
+    value: string;
+}
+
+// export interface IConvergenceFormBooleanField {
+//     key: string;
+//     value: boolean;
+// }
 
 export enum ConvergenceActionTypes {
     FETCH_CONVERGENCE = "FETCH_CONVERGENCE",
@@ -41,6 +53,14 @@ export enum ConvergenceActionTypes {
     GET_LAST_CONVERGENCE_PAGE = "GET_LAST_CONVERGENCE_PAGE",
     CHANGE_CONVERGENCE_LIMIT = "CHANGE_CONVERGENCE_LIMIT",
     CHANGE_CONVERGENCE_FILTER = "CHANGE_CONVERGENCE_FILTER",
+    RESET_CONVERGENCE_FILTER = "RESET_CONVERGENCE_FILTER",
+}
+
+export enum ConvergenceFilterParams {
+    START_DATE = "start_date",
+    END_DATE = "end_date",
+    EXACTLY = "exactly",
+    PLANT = "plant"
 }
 
 interface FetchConvergenceAction {
@@ -80,10 +100,21 @@ interface ConvergenceChangeLimit {
 
 interface ConvergenceChangeFilter {
     type: ConvergenceActionTypes.CHANGE_CONVERGENCE_FILTER;
-    payload: IConvergenceFilter;
+    payload: IConvergenceFormField;
+}
+
+interface ConvergenceResetFilter {
+    type: ConvergenceActionTypes.RESET_CONVERGENCE_FILTER;
 }
 
 export type ConvergenceAction =
-    FetchConvergenceAction | FetchConvergenceSuccessAction | FetchConvergenceErrorAction |
-    ConvergenceIncreasePage | ConvergenceDecreasePage | ConvergenceSetFirstPage |
-    ConvergenceSetLastPage | ConvergenceChangeLimit | ConvergenceChangeFilter
+    FetchConvergenceAction
+    | FetchConvergenceSuccessAction
+    | FetchConvergenceErrorAction
+    | ConvergenceIncreasePage
+    | ConvergenceDecreasePage
+    | ConvergenceSetFirstPage
+    | ConvergenceSetLastPage
+    | ConvergenceChangeLimit
+    | ConvergenceChangeFilter
+    | ConvergenceResetFilter

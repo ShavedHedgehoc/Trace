@@ -1,4 +1,9 @@
-import {ConvergenceAction, ConvergenceState, ConvergenceActionTypes} from "../../types/convergence";
+import {
+    ConvergenceAction,
+    ConvergenceState,
+    ConvergenceActionTypes,
+    ConvergenceFilterParams
+} from "../../types/convergence";
 
 function setDates() {
     let today = new Date();
@@ -23,6 +28,7 @@ const initialState: ConvergenceState = {
     filter: {
         start_date: setDates()[0],
         end_date: setDates()[1],
+        exactly: 'false',
         plant: '-'
     }
 }
@@ -78,6 +84,34 @@ export const convergenceReducer = (state = initialState, action: ConvergenceActi
             return {...state, page: lastPage - 1}
         case ConvergenceActionTypes.CHANGE_CONVERGENCE_LIMIT:
             return {...state, limit: action.payload, page: 0}
+        case ConvergenceActionTypes.CHANGE_CONVERGENCE_FILTER:
+            switch (action.payload.key) {
+                case ConvergenceFilterParams.START_DATE: {
+                    return {...state, filter: {...state.filter, start_date: action.payload.value}, page: 0}
+                }
+                case ConvergenceFilterParams.END_DATE: {
+                    return {...state, filter: {...state.filter, end_date: action.payload.value}, page: 0}
+                }
+                case ConvergenceFilterParams.EXACTLY:{
+                    return {...state, filter: {...state.filter, exactly: action.payload.value}, page: 0}
+                }
+                case ConvergenceFilterParams.PLANT:{
+                    return {...state, filter: {...state.filter, plant: action.payload.value}, page: 0}
+                }
+                default:
+                    return state
+            }
+        case ConvergenceActionTypes.RESET_CONVERGENCE_FILTER:
+            return {
+                ...state,
+                filter: {
+                    ...state.filter,
+                    start_date: setDates()[0],
+                    end_date: setDates()[1],
+                    exactly: 'false',
+                    plant: '-'
+                }
+            }
         default:
             return state
     }
