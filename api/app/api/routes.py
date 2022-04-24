@@ -6,7 +6,7 @@ from sqlite3 import Date
 from xmlrpc.client import boolean
 from flask import abort, jsonify, request
 from flask_cors import cross_origin
-from sqlalchemy import distinct, select
+from sqlalchemy import distinct, select, or_
 from sqlalchemy.sql import func, case
 from sqlalchemy.sql.sqltypes import String
 from sqlalchemy.sql.functions import coalesce
@@ -67,12 +67,11 @@ def doc_count():
     count = doc_qry.count()
     # response = {'data': count}
     response = count
-    return(jsonify(response))
+    return jsonify(response)
 
 
 @bp.route("/api/v1/boils", methods=['GET'])
 def boils_data():
-
     page = request.args.get('_page', type=int)
     limit = request.args.get('_limit', type=int)
     batch_search = request.args.get('_batch', type=str)
@@ -82,7 +81,7 @@ def boils_data():
     year_search = request.args.get('_year', type=str)
     plant_search = request.args.get('_plant', type=str)
 
-    offset = page*limit
+    offset = page * limit
 
     boil_qry = db.session.query(
         Batch.BatchPK.label('BatchPK'),
@@ -241,8 +240,8 @@ def boils_data():
             'marking': row.batch_marking if row.batch_marking
             else 'Нет данных',
             'date':
-            row.BatchDate.strftime(
-                "%d-%m-%Y") if row.BatchDate else 'Нет данных',
+                row.BatchDate.strftime(
+                    "%d-%m-%Y") if row.BatchDate else 'Нет данных',
             'plant': plant_dict[row.plant],
             'month': month_dict[row.batch_month],
             'year': row.batch_year,
@@ -256,7 +255,7 @@ def boils_data():
 
     # print(response)
 
-    return(jsonify(response))
+    return (jsonify(response))
 
 
 @bp.route("/api/v1/boils/boildata/<string:batch_name>", methods=['GET'])
@@ -278,20 +277,19 @@ def boil_detail(batch_name):
         batch_data = {
             'name': batch_name,
             'date':
-            batch.BatchDate.strftime(
-                "%d-%m-%Y") if batch.BatchDate else 'Нет данных',
+                batch.BatchDate.strftime(
+                    "%d-%m-%Y") if batch.BatchDate else 'Нет данных',
 
             'plant': plant_dict[batch.Plant] if batch else 'no data',
             'marking': batch_marking.ProductMarking if batch_marking else 'no data'
         }
 
     response = {'batch_data': batch_data}
-    return(jsonify(response))
+    return (jsonify(response))
 
 
 @bp.route("/api/v1/boils/summary/<string:batch_name>", methods=['GET'])
 def boil_summary_detail(batch_name):
-
     batch = db.session.query(Batch).filter(
         Batch.BatchName == batch_name).one_or_none()
 
@@ -344,7 +342,7 @@ def boil_summary_detail(batch_name):
     ).order_by(case(
         [(boil_subqry.c.product_name != '', boil_subqry.c.product_name), ],
         else_=wght_subqry.c.product_name
-    ) .asc())
+    ).asc())
 
     boil_rows = boil_qry.all()
 
@@ -354,9 +352,9 @@ def boil_summary_detail(batch_name):
     data = []
 
     for row in boil_rows:
-        product_id = row.b_product_id if row.b_product_id\
+        product_id = row.b_product_id if row.b_product_id \
             else row.w_product_id
-        product_name = row.b_product_name if row.b_product_name\
+        product_name = row.b_product_name if row.b_product_name \
             else row.w_product_name
         state = (row.plan is not None) and (row.fact is not None)
         data.append({
@@ -364,7 +362,7 @@ def boil_summary_detail(batch_name):
             'product_name': product_name,
             'state': state,
             'plan': row.plan,
-            'fact':  row.fact
+            'fact': row.fact
         })
 
     response = {'boil': {'data': data, }}
@@ -374,7 +372,6 @@ def boil_summary_detail(batch_name):
 
 @bp.route("/api/v1/boils/weighting/<string:batch_name>", methods=['GET'])
 def boil_weighting_detail(batch_name):
-
     batch = db.session.query(Batch).filter(
         Batch.BatchName == batch_name).one_or_none()
 
@@ -419,7 +416,7 @@ def boil_weighting_detail(batch_name):
             'lot': row.lot,
             'user': row.user,
             'date':
-            row.date.strftime("%d-%m-%Y") if row.date else None,
+                row.date.strftime("%d-%m-%Y") if row.date else None,
             'time': row.date.strftime("%H:%M:%S") if row.date else None,
         })
 
@@ -430,7 +427,6 @@ def boil_weighting_detail(batch_name):
 
 @bp.route("/api/v1/boils/load/<string:batch_name>", methods=['GET'])
 def boil_load_detail(batch_name):
-
     batch = db.session.query(Batch).filter(
         Batch.BatchName == batch_name).one_or_none()
 
@@ -499,7 +495,7 @@ def boil_load_detail(batch_name):
             'lot_id': row.lot_id,
             'user': row.user,
             'date':
-            row.date.strftime("%d-%m-%Y") if row.date else None,
+                row.date.strftime("%d-%m-%Y") if row.date else None,
             'time': row.date.strftime("%H:%M:%S") if row.date else None,
         })
 
@@ -510,13 +506,12 @@ def boil_load_detail(batch_name):
 
 @bp.route("/api/v1/products", methods=['GET'])
 def products_data():
-
     page = request.args.get('_page', type=int)
     limit = request.args.get('_limit', type=int)
     # code_search = request.args.get('code_search', type=str)
     # name_search = request.args.get('name_search', type=str)
 
-    offset = page*limit
+    offset = page * limit
 
     filters = []
 
@@ -559,7 +554,7 @@ def products_data():
         })
 
     response = {'rows': rows, 'total': total_records}
-    return(jsonify(response))
+    return (jsonify(response))
 
 
 @bp.route("/api/v1/products/product_data/<string:product_id>", methods=['GET'])
@@ -575,12 +570,11 @@ def product_id_name_data(product_id):
         }
 
     response = {'product_data': product_data}
-    return(jsonify(response))
+    return (jsonify(response))
 
 
 @bp.route("/api/v1/products/<string:product_id>", methods=['GET'])
 def product_detail(product_id):
-
     product = db.session.query(Product).filter(
         Product.ProductId == product_id).one_or_none()
     if product is None:
@@ -592,7 +586,7 @@ def product_detail(product_id):
     # code_search = request.args.get('code_search', type=str)
     # name_search = request.args.get('name_search', type=str)
 
-    offset = page*per_page
+    offset = page * per_page
     limit = per_page
 
     # filters = []
@@ -639,7 +633,7 @@ def product_detail(product_id):
             'lot_id': row.lot_id,
             'lot_name': row.lot_name,
             'lot_date':
-            row.lot_date.strftime("%d-%m-%Y") if row.lot_date else None,
+                row.lot_date.strftime("%d-%m-%Y") if row.lot_date else None,
             'seller_id': row.seller_id,
             'seller_name': row.seller_name,
             'manufacturer_id': row.manufacturer_id,
@@ -654,7 +648,7 @@ def product_detail(product_id):
         'data': data,
         'total': total_records,
     }}
-    return(jsonify(response))
+    return (jsonify(response))
 
 
 @bp.route("/api/v1/lots", methods=['GET'])
@@ -663,7 +657,7 @@ def lots_data():
     page = request.args.get('_page', type=int)
     limit = request.args.get('_limit', type=int)
 
-    offset = page*limit
+    offset = page * limit
     # limit = per_page
 
     filters = []
@@ -705,7 +699,7 @@ def lots_data():
             'lot_id': row.lot_id,
             'lot_name': row.lot_name,
             'lot_date':
-            row.lot_date.strftime("%d-%m-%Y") if row.lot_date else None,
+                row.lot_date.strftime("%d-%m-%Y") if row.lot_date else None,
             'product_id': row.product_id,
             'product_name': row.product_name,
             'trademark_id': row.trademark_id,
@@ -719,16 +713,15 @@ def lots_data():
         })
 
     response = {'rows': rows, 'total': total_records, }
-    return(jsonify(response))
+    return (jsonify(response))
 
 
 @bp.route("/api/v1/lots/<string:_lot_id>", methods=['GET'])
 def lot_detail(_lot_id):
-
     page = request.args.get('_page', type=int)
     limit = request.args.get('_limit', type=int)
 
-    offset = page*limit
+    offset = page * limit
 
     lot = db.session.query(
         Lot.LotName.label('lot_name'),
@@ -812,7 +805,7 @@ def lot_detail(_lot_id):
         rows.append({
             'name': row.batch_name,
             'date':
-            row.batch_date.strftime("%d-%m-%Y") if row.batch_date else None,
+                row.batch_date.strftime("%d-%m-%Y") if row.batch_date else None,
             'product_name': row.product_name,
         })
 
@@ -821,17 +814,16 @@ def lot_detail(_lot_id):
         'header': header_data,
         'total': total_records,
     }
-    return(jsonify(response))
+    return (jsonify(response))
 
 
 @bp.route("/api/v1/trademarks", methods=['GET'])
 def trademarks_data():
-
     # add filters
     page = request.args.get('_page', type=int)
     limit = request.args.get('_limit', type=int)
 
-    offset = page*limit
+    offset = page * limit
 
     filters = []
 
@@ -875,12 +867,11 @@ def trademarks_data():
         'total': total_records,
     }
 
-    return(jsonify(response))
+    return (jsonify(response))
 
 
-@ bp.route("/api/v1/trademarks/<string:trademark_id>", methods=['GET'])
+@bp.route("/api/v1/trademarks/<string:trademark_id>", methods=['GET'])
 def trademark_detail(trademark_id):
-
     trademark = db.session.query(
         Trademark.TrademarkName
     ).filter(
@@ -893,7 +884,7 @@ def trademark_detail(trademark_id):
     page = request.args.get('page', type=int)
     per_page = request.args.get('per_page', type=int)
 
-    offset = page*per_page
+    offset = page * per_page
     limit = per_page
 
     trademark_sbqry = db.session.query(
@@ -945,7 +936,7 @@ def trademark_detail(trademark_id):
         data.append({
             'name': row.batch_name,
             'date':
-            row.batch_date.strftime("%d-%m-%Y") if row.batch_date else None,
+                row.batch_date.strftime("%d-%m-%Y") if row.batch_date else None,
             'product_name': row.product_name,
         })
 
@@ -954,12 +945,11 @@ def trademark_detail(trademark_id):
         # 'header_data': header_data,
         'total': total_records,
     }
-    return(jsonify(response))
+    return (jsonify(response))
 
 
-@ bp.route("/api/v1/products_trademarks/<string:product_id>", methods=['GET'])
+@bp.route("/api/v1/products_trademarks/<string:product_id>", methods=['GET'])
 def product_trademark_detail(product_id):
-
     product = db.session.query(
         Product.ProductId
     ).filter(
@@ -972,7 +962,7 @@ def product_trademark_detail(product_id):
     page = request.args.get('page', type=int)
     per_page = request.args.get('per_page', type=int)
 
-    offset = page*per_page
+    offset = page * per_page
     limit = per_page
 
     product_sbqry = db.session.query(
@@ -1028,7 +1018,7 @@ def product_trademark_detail(product_id):
         data.append({
             'batch_name': row.batch_name,
             'date':
-            row.batch_date.strftime("%d-%m-%Y") if row.batch_date else None,
+                row.batch_date.strftime("%d-%m-%Y") if row.batch_date else None,
             'lot_name': row.lot_name,
             'product_name': row.product_name,
             'trademark': row.trademark_name
@@ -1039,53 +1029,45 @@ def product_trademark_detail(product_id):
         'header_data': '',
         'total': total_records,
     }
-    return(jsonify(response))
+    return (jsonify(response))
 
 
-@ bp.route("/api/v1/sellers", methods=['GET'])
+@bp.route("/api/v1/sellers", methods=['GET'])
 def sellers_data():
     pass
 
 
-@ bp.route("/api/v1/sellers/<string:seller_id>", methods=['GET'])
+@bp.route("/api/v1/sellers/<string:seller_id>", methods=['GET'])
 def seller_detail(seller_id):
     pass
 
 
-@ bp.route("/api/v1/manufacturers", methods=['GET'])
+@bp.route("/api/v1/manufacturers", methods=['GET'])
 def manufacturers_data():
     pass
 
 
-@ bp.route("/api/v1/manufacturers/<string:manufacturer_id>", methods=['GET'])
+@bp.route("/api/v1/manufacturers/<string:manufacturer_id>", methods=['GET'])
 def manufacturer_detail(manufacturer_id):
     pass
 
 
-@ bp.route("/api/v1/boils_report", methods=['GET'])
+@bp.route("/api/v1/boils_report", methods=['GET'])
 def boil_report():
-
     # insert check arguments
     plant_arg = request.args.get('_plant', type=str)
     start_arg = request.args.get('_start_date', type=str)
     end_arg = request.args.get('_end_date', type=str)
-    exactly=request.args.get('_exactly', type=str)
-    # page = request.args.get('page', type=int)
+    exactly = request.args.get('_exactly', type=str)
     page = request.args.get('_page', type=int)
-    # per_page = request.args.get('per_page', type=int)
-    limit = request.args.get('_limit', type=int)
-    print(exactly)
+    limit = request.args.get('_limit', type=int)    
 
-    offset = page*limit
-    # limit = per_page
+    offset = page * limit
 
     filters = []
 
     if None in (plant_arg, start_arg, end_arg, exactly, page, limit):
-        abort(500, 'Missing required request argument(s)')
-
-    # if (plant_arg not in plant_dict) and plant_arg != '-':
-    #     abort(500, 'Plant isn`t in plant list')
+        abort(500, 'Missing required request argument(s)')    
 
     if plant_arg != '-':
         filters.append(Batch.Plant == plant_arg)
@@ -1103,7 +1085,6 @@ def boil_report():
         abort(500, 'Can`t parse end date')
 
     filters.append(Batch.BatchDate <= end_date)
-    
 
     wght_total_sbqry = db.session.query(
         Weighting.BatchPK.label('batch_id'),
@@ -1120,26 +1101,24 @@ def boil_report():
         filters.append(wght_total_sbqry.c.total.is_(None))
 
     report_sbqry = db.session.query(
-        Boil.BatchPK.label('batch_id'),        
+        Boil.BatchPK.label('batch_id'),
         Batch.Plant.label('plant'),
         Batch.BatchName.label('batch_name'),
         Batch.BatchDate.label('batch_date'),
         Batch.batch_year.label('batch_year'),
         Batch.batch_month.label('batch_month'),
         Batch.batch_number.label('batch_number'),
-        Batch.plant_letter.label('plant_letter'),      
-        Product.ProductMarking.label('marking'),  
+        Batch.plant_letter.label('plant_letter'),
+        Product.ProductMarking.label('marking'),
     ).outerjoin(
         wght_total_sbqry, ((wght_total_sbqry.c.batch_id == Boil.BatchPK) & (
-            wght_total_sbqry.c.product_id == Boil.ProductId))
+                wght_total_sbqry.c.product_id == Boil.ProductId))
     ).join(
-        Batch, Batch.BatchPK == Boil.BatchPK  
+        Batch, Batch.BatchPK == Boil.BatchPK
     ).join(
-        Btproduct, Btproduct.BatchPK==Boil.BatchPK
+        Btproduct, Btproduct.BatchPK == Boil.BatchPK
     ).join(
-        Product, Product.ProductId==Btproduct.ProductId  
-    # ).filter(
-    #     wght_total_sbqry.c.total.is_(None)
+        Product, Product.ProductId == Btproduct.ProductId
     ).filter(
         *filters
     ).subquery()
@@ -1150,22 +1129,20 @@ def boil_report():
         report_sbqry.c.batch_date.label('batch_date'),
         report_sbqry.c.batch_year,
         report_sbqry.c.batch_month,
-        report_sbqry.c.batch_number,        
-        report_sbqry.c.marking.label('marking'),        
+        report_sbqry.c.batch_number,
+        report_sbqry.c.marking.label('marking'),
         report_sbqry.c.plant_letter.label('plant_letter'),
     ).distinct(
-        report_sbqry.c.batch_id    
+        report_sbqry.c.batch_id
     ).order_by(
         report_sbqry.c.batch_year,
         report_sbqry.c.batch_month,
         report_sbqry.c.batch_number
-    )    
+    )
 
     total_records = report_qry.count()
-
     report_data = report_qry.offset(offset).limit(limit)
-
-    plant_selector_options = [{'key':'-','value':'Все'}]
+    plant_selector_options = [{'key': '-', 'value': 'Все'}]
 
     for rec in plant_dict_for_report:
         option = {'key': rec, 'value': plant_dict_for_report[rec]}
@@ -1177,23 +1154,24 @@ def boil_report():
         rows.append({
             'batch_id': row.batch_id,
             'batch_name': row.batch_name,
-            'marking':row.marking,
+            'marking': row.marking,
             'batch_date':
-            row.batch_date.strftime("%d-%m-%Y") if row.batch_date else None,
+                row.batch_date.strftime("%d-%m-%Y") if row.batch_date else None,
             'plant': plant_dict_for_report[row.plant_letter]
         })
 
     response = {
         'rows': rows,
-
         'plant_selector_options': plant_selector_options,
         'total': total_records,
     }
-    return(jsonify(response))
+    return jsonify(response)
 
 
 @bp.route("/api/v1/boils_report/<string:batch_name>", methods=['GET'])
 def boil_card(batch_name):
+
+    exactly = request.args.get('_exactly', type=str)
 
     batch = db.session.query(Batch).filter(
         Batch.BatchName == batch_name).one_or_none()
@@ -1233,6 +1211,16 @@ def boil_card(batch_name):
         Product.ProductName
     ).subquery()
 
+    filters = []
+
+    if exactly == 'true':
+        filters.append(
+            or_(wght_subqry.c.fact != boil_subqry.c.plan, wght_subqry.c.fact.is_(None))
+        )
+
+    else:
+        filters.append(wght_subqry.c.fact.is_(None))
+
     boil_qry = db.session.query(
         boil_subqry.c.product_id.label('b_product_id'),
         boil_subqry.c.product_name.label('b_product_name'),
@@ -1245,32 +1233,33 @@ def boil_card(batch_name):
         boil_subqry.c.product_id == wght_subqry.c.product_id,
         full=True
     ).filter(
-        wght_subqry.c.fact.is_(None)
+        *filters
+        # wght_subqry.c.fact.is_(None)
     ).order_by(case(
         [(boil_subqry.c.product_name != '', boil_subqry.c.product_name), ],
         else_=wght_subqry.c.product_name
-    ) .asc())
+    ).asc())
 
     boil_rows = boil_qry.all()
 
     if boil_rows is None:
         abort(404)
 
-    data = []
+    rows = []
 
     for row in boil_rows:
-        product_id = row.b_product_id if row.b_product_id\
+        product_id = row.b_product_id if row.b_product_id \
             else row.w_product_id
-        product_name = row.b_product_name if row.b_product_name\
+        product_name = row.b_product_name if row.b_product_name \
             else row.w_product_name
 
-        data.append({
+        rows.append({
             'product_id': product_id,
             'product_name': product_name,
             'plan': row.plan,
-            'fact':  0
+            'fact': row.fact or 0
         })
 
-    response = {'boil': {'data': data, }}
+    response = {'rows': rows}
 
     return jsonify(response)
