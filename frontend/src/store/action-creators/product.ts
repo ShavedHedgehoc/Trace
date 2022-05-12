@@ -1,18 +1,18 @@
 import {Dispatch} from "react";
-import {ProductAction, ProductActionTypes} from "../../types/product";
+import {IProductFilter, IProductFormField, ProductAction, ProductActionTypes} from "../../types/product";
 import axios from "axios";
 
-const axiosParams = (page: number, limit: number) => {
+const axiosParams = (page: number, limit: number, filter: IProductFilter) => {
     const params = new URLSearchParams();
     params.append('_page', String(page))
     params.append('_limit', String(limit))
-    // Object.entries(filter).forEach(([key, value]) => {
-    //     params.append("_" + key, value)
-    // })
+    Object.entries(filter).forEach(([key, value]) => {
+        params.append("_" + key, value)
+    })
     return params
 }
 
-export const fetchProducts = (page = 0, limit = 10) => {
+export const fetchProducts = (page = 0, limit = 10, filter = {product_id: '', product_name: ''}) => {
     return async (dispatch: Dispatch<ProductAction>) => {
         try {
             dispatch({type: ProductActionTypes.FETCH_PRODUCTS})
@@ -20,7 +20,7 @@ export const fetchProducts = (page = 0, limit = 10) => {
                 axios.get(
                     "/api/v1/products",
                     {
-                        params: axiosParams(page, limit)
+                        params: axiosParams(page, limit, filter)
                     }
                 ))
             dispatch({
@@ -57,4 +57,15 @@ export function changeProductLimit(limit = 10): ProductAction {
         type: ProductActionTypes.CHANGE_PRODUCTS_LIMIT,
         payload: limit
     }
+}
+
+export function changeProductFilter({key, value}: IProductFormField): ProductAction {
+    return {
+        type: ProductActionTypes.CHANGE_PRODUCTS_FILTER,
+        payload: {key, value}
+    }
+}
+
+export function clearProductFilter(): ProductAction {
+    return {type: ProductActionTypes.CLEAR_PRODUCTS_FILTER}
 }

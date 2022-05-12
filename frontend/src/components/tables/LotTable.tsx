@@ -1,26 +1,22 @@
 import React from "react";
 import classes from "../../styles/Table.module.css"
-import {useNavigate} from 'react-router-dom'
-import {RouteNames} from "../../router";
 import {ILotRow} from "../../types/lot";
+import {RouteNames} from "../../router";
+import {Link} from "react-router-dom";
 
 interface TableProps {
     items: ILotRow[];
 }
 
 export default function LotTable(props: TableProps) {
-    let navigate = useNavigate();
-    const redirectToLot = (id: string) => {
-        navigate(`${RouteNames.LOTS}/${id}`)
-    }
     const columns = [
-        { id: '1', label: 'Квазипартия', align: 'center', width: '200px', },
-        { id: '2', label: 'Наименование', align: 'center' },
-        { id: '3', label: 'Торговое название', align: 'center' },
-        { id: '4', label: 'Дата прихода', align: 'center', width: '100px', },
-        { id: '5', label: 'Производитель', align: 'center' },
-        { id: '6', label: 'Партия производителя', align: 'center', width: '100px', },
-        {id: '7', label: 'Переход', align: 'center', width: '140px',},
+        { id: '1', label: 'Квазипартия'},
+        { id: '2', label: 'Наименование'},
+        { id: '3', label: 'Торговое название'},
+        { id: '4', label: 'Дата прихода' },
+        { id: '5', label: 'Производитель'},
+        { id: '6', label: 'Партия производителя'},
+        {id: '7', label: 'Переход'},
     ];
 
     return (
@@ -44,9 +40,7 @@ export default function LotTable(props: TableProps) {
                     <td className={classes.tableTdAlignLeft}>{item.manufacturer_name}</td>
                     <td className={classes.tableTd}>{item.manufacturer_lot_name}</td>
                     <td className={classes.tableTd}>
-                        <button onClick={() => redirectToLot(item.lot_id)} className={classes.tableButton}>
-                            Данные
-                        </button>
+                        <Link className={classes.tableLink} to={`${RouteNames.LOTS}/${item.lot_id}`}>Данные</Link>
                     </td>
                 </tr>
             ))}

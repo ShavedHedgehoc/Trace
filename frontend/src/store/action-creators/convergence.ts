@@ -76,3 +76,7 @@ export function changeConvergenceFilter({key, value}: IConvergenceFormField): Co
 export function resetConvergenceFilter(): ConvergenceAction {
     return {type: ConvergenceActionTypes.RESET_CONVERGENCE_FILTER}
 }
+
+export function resetConvergenceState(): ConvergenceAction {
+    return {type:ConvergenceActionTypes.RESET_CONVERGENCE_STATE}
+}

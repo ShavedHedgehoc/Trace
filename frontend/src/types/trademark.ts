@@ -1,13 +1,14 @@
 export interface TrademarkState {
-    data: ITrademark;
+    data: ITrademarkData;
     loading: boolean;
     error: null | string;
     page: number;
     limit: number;
-    // filter: ;
+    filter: ITrademarkFilter;
+    init: boolean;
 }
 
-export interface ITrademark {
+export interface ITrademarkData {
     rows: ITrademarkRow[];
     total: number;
 }
@@ -17,6 +18,17 @@ export interface ITrademarkRow {
     trademark_name: string,
     product_id: string,
     product_name: string,
+}
+
+export interface ITrademarkFilter {
+    trademark_name: string;
+    product_id: string;
+    product_name: string;
+}
+
+export interface ITrademarkFormField {
+    key: string;
+    value: string;
 }
 
 export enum TrademarkActionTypes {
@@ -32,13 +44,19 @@ export enum TrademarkActionTypes {
     CLEAR_TRADEMARKS_FILTER = "CLEAR_TRADEMARKS_FILTER"
 }
 
+export enum TrademarkFilterParams {
+    TRADEMARK_NAME = "trademark_name",
+    PRODUCT_ID = "product_id",
+    PRODUCT_NAME = "product_name"
+}
+
 interface FetchTrademarksAction {
     type: TrademarkActionTypes.FETCH_TRADEMARKS;
 }
 
 interface FetchTrademarksSuccessAction {
     type: TrademarkActionTypes.FETCH_TRADEMARKS_SUCCESS;
-    payload: ITrademark;
+    payload: ITrademarkData;
 }
 
 interface FetchTrademarksErrorAction {
@@ -67,6 +85,15 @@ interface TrademarksChangeLimitAction {
     payload: number;
 }
 
+interface TrademarksChangeFilter {
+    type: TrademarkActionTypes.CHANGE_TRADEMARKS_FILTER;
+    payload: ITrademarkFormField;
+}
+
+interface TrademarksClearFilter {
+    type: TrademarkActionTypes.CLEAR_TRADEMARKS_FILTER;
+}
+
 export type TrademarkAction =
     FetchTrademarksAction
     | FetchTrademarksSuccessAction
@@ -76,3 +103,5 @@ export type TrademarkAction =
     | TrademarkGetFirstPageAction
     | TrademarksGetLastPageAction
     | TrademarksChangeLimitAction
+    | TrademarksChangeFilter
+    | TrademarksClearFilter

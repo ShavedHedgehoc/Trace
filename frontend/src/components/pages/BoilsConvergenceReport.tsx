@@ -4,15 +4,18 @@ import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useActions} from "../../hooks/useActions";
 import {fetchConvergence} from "../../store/action-creators/convergence";
 import {useDebounce} from "../../hooks/useDebounce";
-import Pagination from "../utils/Pagination";
-import {useNavigate} from "react-router-dom";
-import {RouteNames} from "../../router";
+import Pagination, {PaginationProps} from "../utils/Pagination";
 import ConvergenceTable from "../tables/ConvergenceTable";
-import ConvergenceForm from "../forms/ConvergenceForm";
+import ConvergenceForm, {ConvergenceFormProps} from "../forms/ConvergenceForm";
+import LoadingHandler from "../utils/LoadingHandler";
+import Modal from "../utils/Modal";
+import NoDataHandler from "../utils/NoDataHandler";
+import {useLocation} from "react-router-dom";
 
 const ConvergenceConvergenceReport = () => {
 
-    const {data, loading, error, page, limit, filter} = useTypedSelector(state => state.convergence)
+    const location = useLocation()
+    const {data, loading, error, page, limit, filter, init} = useTypedSelector(state => state.convergence)
     const {
         fetchConvergence,
         increaseConvergencePage,
@@ -22,24 +25,38 @@ const ConvergenceConvergenceReport = () => {
         changeConvergenceLimit,
         changeConvergenceFilter,
         resetConvergenceFilter,
+        resetConvergenceState,
     } = useActions()
 
     const debouncedFilter = useDebounce(filter, 500)
+
+    const paginationProps: PaginationProps = {
+        increasePage: () => increaseConvergencePage(),
+        decreasePage: () => decreaseConvergencePage(),
+        getFirstPage: () => getFirstConvergencePage(),
+        getLastPage: () => getLastConvergencePage(),
+        changeLimit: (limit) => changeConvergenceLimit(limit),
+        loading: loading,
+        page: page,
+        limit: limit,
+        total: data.total
+    }
+
+    const convergenceFormProps: ConvergenceFormProps = {
+        filter: filter,
+        plants_select_options: data.plant_selector_options,
+        changeFilter: ({key, value}) => changeConvergenceFilter({key, value}),
+        resetFilter: () => resetConvergenceFilter()
+    }
+
+    useEffect(() => {
+        resetConvergenceState();
+    }, [location])
 
     useEffect(() => {
         fetchConvergence(page, limit, filter);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, limit, debouncedFilter])
-
-    let navigate = useNavigate();
-
-    const redirectToBoil = (boil_name: string) => {
-        navigate(`${RouteNames.BOILS}/${boil_name}`)
-    }
-
-    const redirectToCard = (boil_name: string) => {
-        navigate(`${RouteNames.BOILS_CONVERGENCE_REPORT}/${boil_name}`)
-    }
 
     if (error) {
         return (
@@ -49,49 +66,29 @@ const ConvergenceConvergenceReport = () => {
         )
     }
 
-    if (loading) {
+    if (loading && init) {
         return (
             <div className={classes.centeredMessage}>
-                Loading...
+                <LoadingHandler/>
             </div>
         )
     }
 
     return (
         <div className={classes.pageContainer}>
+            <Modal visible={loading}><LoadingHandler/></Modal>
             <div className={classes.pageHeader}>Отчет по варкам</div>
             <div className={classes.pageFormContainer}>
-                <ConvergenceForm
-                    filter={filter}
-                    plants_select_options={data.plant_selector_options}
-                    changeFilter={
-                        ({key, value}) => changeConvergenceFilter({key, value})
-                    }
-                    resetFilter={() => resetConvergenceFilter()}
-                />
+                <ConvergenceForm {...convergenceFormProps}/>
             </div>
             <div className={classes.pageTableContainer}>
                 {data.rows.length === 0
-                    ? <p>No data...</p>
-                    : <ConvergenceTable
-                        items={data.rows}
-                        redirect_to_boil={(boil_name) => redirectToBoil(boil_name)}
-                        redirect_to_card={(boil_name) => redirectToCard(boil_name)}
-                    />
+                    ? <NoDataHandler/>
+                    : <ConvergenceTable items={data.rows} exactly={filter.exactly}/>
                 }
             </div>
             <div>
-                <Pagination
-                    increasePage={() => increaseConvergencePage()}
-                    decreasePage={() => decreaseConvergencePage()}
-                    getFirstPage={() => getFirstConvergencePage()}
-                    getLastPage={() => getLastConvergencePage()}
-                    changeLimit={(limit) => changeConvergenceLimit(limit)}
-                    page={page}
-                    limit={limit}
-                    total={data.total}
-                    loading={loading}
-                />
+                <Pagination {...paginationProps}/>
             </div>
         </div>
     )

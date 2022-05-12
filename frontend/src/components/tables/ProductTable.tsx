@@ -1,17 +1,18 @@
 import React from "react";
 import classes from "../../styles/Table.module.css"
 import {IProductRow} from "../../types/product";
+import {Link} from "react-router-dom";
+import {RouteNames} from "../../router";
 
 interface TableProps {
     items: IProductRow[];
-    redirect: (product_id: string) => void;
 }
 
 export default function ProductTable(props: TableProps) {
     const columns = [
-        {id: '1', label: 'Код 1С', align: 'center', width: '140px',},
-        {id: '2', label: 'Наименование', align: 'left',},
-        {id: '3', label: 'Переход', align: 'center', width: '140px',},
+        {id: '1', label: 'Код 1С'},
+        {id: '2', label: 'Наименование'},
+        {id: '3', label: 'Переход'},
     ];
 
     return (
@@ -31,9 +32,8 @@ export default function ProductTable(props: TableProps) {
                     <td className={classes.tableTd}>{item.product_id}</td>
                     <td className={classes.tableTdAlignLeft}>{item.product_name}</td>
                     <td className={classes.tableTd}>
-                        <button onClick={() => props.redirect(item.product_id)} className={classes.tableButton}>
-                            Данные
-                        </button>
+                        <Link className={classes.tableLink} to={`${RouteNames.PRODUCTS}/${item.product_id}`}>Квазипартии</Link>
+                        <Link className={classes.tableLink} to={`${RouteNames.PRODUCT_TMS}/${item.product_id}`}>Варки</Link>
                     </td>
                 </tr>
             ))}

@@ -14,12 +14,14 @@ const SideMenu: React.FC = ({}) => {
             <div className={classes.blur}>
                 <div className={classes.menu__content} onClick={e => e.stopPropagation()}>
                     <div className={classes.menu__ul}>
-                        <Link to={RouteNames.HOME} onClick={() => switchMenu()}>Home</Link>
-                        <Link to={RouteNames.BOILS} onClick={() => switchMenu()}>Boils</Link>
-                        <Link to={RouteNames.PRODUCTS} onClick={() => switchMenu()}>Products</Link>
-                        <Link to={RouteNames.LOTS} onClick={() => switchMenu()}>Lots</Link>
-                        <Link to={RouteNames.TRADEMARKS} onClick={() => switchMenu()}>Trademarks</Link>
-                        <Link to={RouteNames.BOILS_CONVERGENCE_REPORT} onClick={() => switchMenu()}>Report</Link>
+                        <Link to={RouteNames.HOME} onClick={() => switchMenu()}>Главная</Link>
+                        <Link to={RouteNames.BOILS} onClick={() => switchMenu()}>Варки</Link>
+                        <Link to={RouteNames.PRODUCTS} onClick={() => switchMenu()}>Сырье</Link>
+                        {/*<Link to={RouteNames.LOTS} onClick={() => switchMenu()}>Квазипартии</Link>*/}
+                        <Link to={RouteNames.TRADEMARKS} onClick={() => switchMenu()}>Торговые названия</Link>
+                        {/*<Link to={RouteNames.SELLERS} onClick={() => switchMenu()}>Поставщики</Link>*/}
+                        {/*<Link to={RouteNames.MANUFACTURERS} onClick={() => switchMenu()}>Производители</Link>*/}
+                        <Link to={RouteNames.BOILS_CONVERGENCE_REPORT} onClick={() => switchMenu()}>Отчет по варкам</Link>
                     </div>
                 </div>
             </div>

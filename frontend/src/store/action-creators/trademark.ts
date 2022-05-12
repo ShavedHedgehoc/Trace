@@ -1,19 +1,26 @@
 import {Dispatch} from "react";
-import {TrademarkAction, TrademarkActionTypes} from "../../types/trademark";
+import {ITrademarkFilter, ITrademarkFormField, TrademarkAction, TrademarkActionTypes} from "../../types/trademark";
 import axios from "axios";
 
 
-const axiosParams = (page: number, limit: number) => {
+const axiosParams = (
+    page: number,
+    limit: number,
+    filter: ITrademarkFilter) => {
     const params = new URLSearchParams();
     params.append('_page', String(page))
     params.append('_limit', String(limit))
-    // Object.entries(filter).forEach(([key, value]) => {
-    //     params.append("_" + key, value)
-    // })
+    Object.entries(filter).forEach(([key, value]) => {
+        params.append("_" + key, value)
+    })
     return params
 }
 
-export const fetchTrademarks = (page = 0, limit = 10) => {
+export const fetchTrademarks = (
+    page = 0,
+    limit = 10,
+    filter = {trademark_name: '', product_id: '', product_name: ''}
+) => {
     return async (dispatch: Dispatch<TrademarkAction>) => {
         try {
             dispatch({type: TrademarkActionTypes.FETCH_TRADEMARKS})
@@ -21,7 +28,7 @@ export const fetchTrademarks = (page = 0, limit = 10) => {
                 axios.get(
                     "/api/v1/trademarks",
                     {
-                        params: axiosParams(page, limit)
+                        params: axiosParams(page, limit, filter)
                     }
                 ))
             dispatch({
@@ -58,4 +65,15 @@ export function changeTrademarkLimit(limit = 10): TrademarkAction {
         type: TrademarkActionTypes.CHANGE_TRADEMARKS_LIMIT,
         payload: limit
     }
+}
+
+export function changeTrademarkFilter({key, value}: ITrademarkFormField): TrademarkAction {
+    return {
+        type: TrademarkActionTypes.CHANGE_TRADEMARKS_FILTER,
+        payload: {key, value}
+    }
+}
+
+export function clearTrademarkFilter(): TrademarkAction {
+    return {type: TrademarkActionTypes.CLEAR_TRADEMARKS_FILTER}
 }

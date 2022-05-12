@@ -17,7 +17,8 @@ const initialState: LotItemState = {
     loading: false,
     error: null,
     page: 0,
-    limit: 10
+    limit: 10,
+    init: true,
 }
 
 export const lotItemReducer = (state = initialState, action: LotItemAction): LotItemState => {
@@ -29,7 +30,8 @@ export const lotItemReducer = (state = initialState, action: LotItemAction): Lot
                 error: null,
                 data: state.data,
                 page: state.page,
-                limit: state.limit
+                limit: state.limit,
+                init: state.init,
             }
         case LotItemActionTypes.FETCH_LOT_ITEM_SUCCESS:
             return {
@@ -37,7 +39,8 @@ export const lotItemReducer = (state = initialState, action: LotItemAction): Lot
                 error: null,
                 data: action.payload,
                 page: state.page,
-                limit: state.limit
+                limit: state.limit,
+                init: false,
             }
         case LotItemActionTypes.FETCH_LOT_ITEM_ERROR:
             return {
@@ -45,7 +48,8 @@ export const lotItemReducer = (state = initialState, action: LotItemAction): Lot
                 error: action.payload,
                 data: initialState.data,
                 page: state.page,
-                limit: state.limit
+                limit: state.limit,
+                init: true,
             }
         case LotItemActionTypes.INCREASE_LOT_ITEM_PAGE:
             if (state.page === lastPage - 1) {
@@ -65,6 +69,8 @@ export const lotItemReducer = (state = initialState, action: LotItemAction): Lot
             return {...state, page: lastPage - 1}
         case LotItemActionTypes.CHANGE_LOT_ITEM_LIMIT:
             return {...state, limit: action.payload, page: 0}
+        case LotItemActionTypes.RESET_LOT_ITEM_STATE:
+            return initialState
         default:
             return state
     }

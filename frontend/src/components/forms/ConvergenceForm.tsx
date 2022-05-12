@@ -7,7 +7,7 @@ import {
     IPlantSelectorOption
 } from "../../types/convergence";
 
-interface ConvergenceFormProps {
+ export interface ConvergenceFormProps {
     filter: IConvergenceFilter;
     plants_select_options: IPlantSelectorOption[];
     changeFilter: ({key, value}: IConvergenceFormField) => void;
@@ -29,7 +29,7 @@ const ConvergenceForm: FC<ConvergenceFormProps> = (
                 <div className={classes.formLabel}>Дата начала:</div>
                 <div className={classes.formField}>
                     <input type="date"
-                           className={classes.formInput}
+                           className={classes.formDate}
                            id={ConvergenceFilterParams.START_DATE}
                            value={filter.start_date}
                            onChange={(e) => changeFilter({key: e.target.id, value: e.target.value})}
@@ -40,7 +40,7 @@ const ConvergenceForm: FC<ConvergenceFormProps> = (
                 <div className={classes.formLabel}>Дата окончания:</div>
                 <div className={classes.formField}>
                     <input type="date"
-                           className={classes.formInput}
+                           className={classes.formDate}
                            id={ConvergenceFilterParams.END_DATE}
                            value={filter.end_date}
                            onChange={(e) => changeFilter({key: e.target.id, value: e.target.value})}
@@ -62,10 +62,10 @@ const ConvergenceForm: FC<ConvergenceFormProps> = (
                     </select>
                 </div>
             </div>
-            <div className={classes.formElement}>
-                <div className={classes.formLabel}>Точное совпадение:</div>
+            <div className={classes.formInlineElement}>
+                <label className={classes.formLabel}>Точное совпадение:</label>
                 <input type="checkbox"
-                       className={classes.formField}
+                       className={classes.formCheckbox}
                        id={ConvergenceFilterParams.EXACTLY}
                        checked={filter.exactly === 'true'}
                        onChange={(e) => changeFilter({
@@ -75,7 +75,7 @@ const ConvergenceForm: FC<ConvergenceFormProps> = (
                 />
             </div>
             <div className={classes.formElement}>
-                <button className={classes.formButton} onClick={() => resetFilter()}>Сбросить</button>
+                <a className={classes.formButton} onClick={() => resetFilter()}>Сбросить</a>
             </div>
         </div>
     );

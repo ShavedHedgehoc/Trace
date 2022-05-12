@@ -60,3 +60,7 @@ export function changeLotItemLimit(limit = 10): LotItemAction {
         payload: limit
     }
 }
+
+export function resetLotItemState(): LotItemAction {
+    return {type:LotItemActionTypes.RESET_LOT_ITEM_STATE}
+}

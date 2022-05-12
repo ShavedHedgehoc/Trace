@@ -5,6 +5,7 @@ export interface ConvergenceState {
     page: number;
     limit: number;
     filter: IConvergenceFilter;
+    init: boolean;
 }
 
 export interface IConvergenceData {
@@ -38,11 +39,6 @@ export interface IConvergenceFormField {
     value: string;
 }
 
-// export interface IConvergenceFormBooleanField {
-//     key: string;
-//     value: boolean;
-// }
-
 export enum ConvergenceActionTypes {
     FETCH_CONVERGENCE = "FETCH_CONVERGENCE",
     FETCH_CONVERGENCE_SUCCESS = "FETCH_CONVERGENCE_SUCCESS",
@@ -54,6 +50,7 @@ export enum ConvergenceActionTypes {
     CHANGE_CONVERGENCE_LIMIT = "CHANGE_CONVERGENCE_LIMIT",
     CHANGE_CONVERGENCE_FILTER = "CHANGE_CONVERGENCE_FILTER",
     RESET_CONVERGENCE_FILTER = "RESET_CONVERGENCE_FILTER",
+    RESET_CONVERGENCE_STATE = "RESET_CONVERGENCE_STATE",
 }
 
 export enum ConvergenceFilterParams {
@@ -107,6 +104,10 @@ interface ConvergenceResetFilter {
     type: ConvergenceActionTypes.RESET_CONVERGENCE_FILTER;
 }
 
+interface ConvergenceResetState {
+    type: ConvergenceActionTypes.RESET_CONVERGENCE_STATE;
+}
+
 export type ConvergenceAction =
     FetchConvergenceAction
     | FetchConvergenceSuccessAction
@@ -118,3 +119,4 @@ export type ConvergenceAction =
     | ConvergenceChangeLimit
     | ConvergenceChangeFilter
     | ConvergenceResetFilter
+    | ConvergenceResetState

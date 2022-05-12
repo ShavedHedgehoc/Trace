@@ -23,9 +23,9 @@ const DocCounter: React.FC = () => {
 
         <div className={classes.docCounterContainer}>
             <div className={classes.indicatorContainer}>
-                <span className={classes.dot} style={{backgroundColor: error === null ?'lightgray':'coral'}}></span>
-                <span className={classes.dot} style={{backgroundColor: loading ?'yellow':'lightgray'}}></span>
-                <span className={classes.dot} style={{backgroundColor: error === null ? count !== 0 ? 'lightgreen':'lightgray':'lightgray'}}></span>
+                <span className={classes.dot} style={{backgroundColor: error === null ?'#7b7b7b':'red'}}></span>
+                <span className={classes.dot} style={{backgroundColor: loading ?'yellow':'#7b7b7b'}}></span>
+                <span className={classes.dot} style={{backgroundColor: error === null ? count !== 0 ? 'green':'#7b7b7b':'#7b7b7b'}}></span>
             </div>            
             <div>
                 {error

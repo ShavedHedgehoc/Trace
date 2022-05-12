@@ -19,7 +19,8 @@ const initialState: BoilState = {
         plant: "-"
     },
     loading: false,
-    error: null
+    error: null,
+    init: true
 }
 
 export const boilsReducer = (state = initialState, action: BoilAction): BoilState => {
@@ -32,7 +33,8 @@ export const boilsReducer = (state = initialState, action: BoilAction): BoilStat
                 data: state.data,
                 page: state.page,
                 limit: state.limit,
-                filter: state.filter
+                filter: state.filter,
+                init: state.init
             }
         case BoilActionTypes.FETCH_BOILS_SUCCESS:
             return {
@@ -41,7 +43,8 @@ export const boilsReducer = (state = initialState, action: BoilAction): BoilStat
                 data: action.payload,
                 page: state.page,
                 limit: state.limit,
-                filter: state.filter
+                filter: state.filter,
+                init: false
             }
         case BoilActionTypes.FETCH_BOILS_ERROR:
             return {
@@ -50,7 +53,8 @@ export const boilsReducer = (state = initialState, action: BoilAction): BoilStat
                 data: initialState.data,
                 page: state.page,
                 limit: state.limit,
-                filter: state.filter
+                filter: state.filter,
+                init: true
             }
         case BoilActionTypes.INCREASE_BOILS_PAGE:
             if (state.page === lastPage - 1) {

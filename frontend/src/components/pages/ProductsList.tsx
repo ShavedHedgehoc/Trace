@@ -2,32 +2,53 @@ import React, {useEffect} from 'react';
 import classes from "../../styles/Page.module.css";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useActions} from "../../hooks/useActions";
-import Pagination from "../utils/Pagination";
+import ProductForm, {ProductFormProps} from "../forms/ProductForm";
 import ProductTable from "../tables/ProductTable";
-import LotTable from "../tables/LotTable";
-import {useNavigate} from "react-router-dom";
-import {RouteNames} from "../../router";
+import Pagination, {PaginationProps} from "../utils/Pagination";
+import {useDebounce} from "../../hooks/useDebounce";
+import LoadingHandler from "../utils/LoadingHandler";
+import Modal from "../utils/Modal";
+import NoDataHandler from "../utils/NoDataHandler";
 
 const ProductsList: React.FC = (): JSX.Element => {
-    const {data, loading, error, page, limit} = useTypedSelector(state => state.products)
+
+    const {data, loading, error, page, limit, filter, init} = useTypedSelector(state => state.products)
+
     const {
         fetchProducts,
         increaseProductPage,
         decreaseProductPage,
         getFirstProductPage,
         getLastProductPage,
-        changeProductLimit
+        changeProductLimit,
+        changeProductFilter,
+        clearProductFilter,
     } = useActions()
 
-    useEffect(() => {
-        fetchProducts(page, limit);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, limit])
+    const debouncedFilter = useDebounce(filter, 500)
 
-    let navigate = useNavigate();
-    const redirectToProduct = (id: string) => {
-        navigate(`${RouteNames.PRODUCTS}/${id}`)
+    const paginationProps: PaginationProps = {
+        increasePage: () => increaseProductPage(),
+        decreasePage: () => decreaseProductPage(),
+        getFirstPage: () => getFirstProductPage(),
+        getLastPage: () => getLastProductPage(),
+        changeLimit: (limit) => changeProductLimit(limit),
+        loading: loading,
+        page: page,
+        limit: limit,
+        total: data.total
     }
+
+    const productFormProps: ProductFormProps = {
+        changeFilter: ({key, value}) => changeProductFilter({key, value}),
+        clearFilter: () => clearProductFilter(),
+        filter: filter
+    }
+
+    useEffect(() => {
+        fetchProducts(page, limit, filter);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page, limit, debouncedFilter])
 
     if (error) {
         return (
@@ -37,38 +58,25 @@ const ProductsList: React.FC = (): JSX.Element => {
         )
     }
 
-    if (loading) {
+    if (loading && init) {
         return (
             <div className={classes.centeredMessage}>
-                Loading...
+                <LoadingHandler/>
             </div>
         )
     }
+
     return (
         <div className={classes.pageContainer}>
-            <div className={classes.pageHeader}>Сырье</div>
+            <Modal visible={loading}><LoadingHandler/></Modal>
+            <div className={classes.pageHeader}>Список сырья</div>
+            <div className={classes.pageFormContainer}>
+                <ProductForm {...productFormProps} />
+            </div>
             <div className={classes.pageTableContainer}>
-                {data.rows.length === 0
-                    ? <p>No data...</p>
-                    : <ProductTable
-                        items={data.rows}
-                        redirect={(product_id) => redirectToProduct(product_id)}
-                    />
-                }
+                {data.rows.length === 0 ? <NoDataHandler limit={limit}/> : <ProductTable items={data.rows}/>}
             </div>
-            <div>
-                <Pagination
-                    increasePage={() => increaseProductPage()}
-                    decreasePage={() => decreaseProductPage()}
-                    getFirstPage={() => getFirstProductPage()}
-                    getLastPage={() => getLastProductPage()}
-                    changeLimit={(limit) => changeProductLimit(limit)}
-                    page={page}
-                    limit={limit}
-                    total={data.total}
-                    loading={loading}
-                />
-            </div>
+            <Pagination {...paginationProps} />
         </div>
     );
 };

@@ -8,7 +8,8 @@ const initialState: LotState = {
     page: 0,
     limit: 10,
     loading: false,
-    error: null
+    error: null,
+    init: true,
 }
 
 export const lotsReducer = (state = initialState, action: LotAction): LotState => {
@@ -20,7 +21,8 @@ export const lotsReducer = (state = initialState, action: LotAction): LotState =
                 error: null,
                 data: state.data,
                 page: state.page,
-                limit: state.limit
+                limit: state.limit,
+                init: state.init,
             }
         case LotActionTypes.FETCH_LOTS_SUCCESS:
             return {
@@ -28,7 +30,8 @@ export const lotsReducer = (state = initialState, action: LotAction): LotState =
                 error: null,
                 data: action.payload,
                 page: state.page,
-                limit: state.limit
+                limit: state.limit,
+                init: false,
             }
         case LotActionTypes.FETCH_LOTS_ERROR:
             return {
@@ -36,7 +39,8 @@ export const lotsReducer = (state = initialState, action: LotAction): LotState =
                 error: action.payload,
                 data: initialState.data,
                 page: state.page,
-                limit: state.limit
+                limit: state.limit,
+                init: true,
             }
         case LotActionTypes.INCREASE_LOTS_PAGE:
             if (state.page === lastPage - 1) {

@@ -1,19 +1,21 @@
 import React from "react";
 import classes from "../../styles/Table.module.css"
 import {ILotItemRow} from "../../types/lotItem";
+import {RouteNames} from "../../router";
+import {Link} from "react-router-dom";
 
 interface TableProps {
     items: ILotItemRow[];
-    redirect: (boil_name: string) => void;
 }
 
 export default function LotItemTable(props: TableProps) {
 
     const columns = [
-        {id: '1', label: 'Варка'},
-        {id: '2', label: 'Артикул'},
-        {id: '3', label: 'Дата варки'},
-        {id: '4', label: 'Переход'},
+        {id: '1', label: 'Дата варки'},
+        {id: '2', label: 'Варка'},
+        {id: '3', label: 'Артикул'},
+        {id: '4', label: 'Площадка'},
+        {id: '5', label: 'Переход'},
     ];
 
     return (
@@ -27,16 +29,14 @@ export default function LotItemTable(props: TableProps) {
             </thead>
             <tbody>
             {props.items.map((item) => (
-                <tr
-                    className={classes.tableRow}
-                    key={item.name}>
-                    <td className={classes.tableTd}>{item.name}</td>
-                    <td className={classes.tableTd}>{item.product_name}</td>
+                <tr className={classes.tableRow}
+                    key={item.boil_name}>
                     <td className={classes.tableTd}>{item.date}</td>
+                    <td className={classes.tableTd}>{item.boil_name}</td>
+                    <td className={classes.tableTd}>{item.product_name}</td>
+                    <td className={classes.tableTd}>{item.plant}</td>
                     <td className={classes.tableTd}>
-                        <button onClick={() => props.redirect(item.name)} className={classes.tableButton}>
-                            Данные
-                        </button>
+                        <Link className={classes.tableLink} to={`${RouteNames.BOILS}/${item.boil_id}`}>Варка</Link>
                     </td>
                 </tr>
             ))}

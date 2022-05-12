@@ -3,13 +3,16 @@ import classes from "../../styles/Page.module.css"
 import {useActions} from "../../hooks/useActions";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useDebounce} from "../../hooks/useDebounce";
-import BoilForm from "../forms/BoilForm";
+import BoilForm, {BoilFormProps} from "../forms/BoilForm";
 import BoilTable from "../tables/BoilTable";
-import Pagination from "../utils/Pagination";
+import Pagination, {PaginationProps} from "../utils/Pagination";
+import Modal from "../utils/Modal";
+import LoadingHandler from "../utils/LoadingHandler";
+import NoDataHandler from "../utils/NoDataHandler";
 
 const BoilsList: React.FC = () => {
 
-    const {data, error, loading, page, limit, filter} = useTypedSelector(state => state.boils);
+    const {data, error, loading, page, limit, filter, init} = useTypedSelector(state => state.boils);
     const {
         fetchBoils,
         increaseBoilsPage,
@@ -21,7 +24,29 @@ const BoilsList: React.FC = () => {
         clearBoilsFilter
     } = useActions()
 
-    const debouncedFilter = useDebounce(filter, 500)
+    const debouncedFilter = useDebounce(filter, 800)
+
+    const paginationProps: PaginationProps = {
+        increasePage: () => increaseBoilsPage(),
+        decreasePage: () => decreaseBoilsPage(),
+        getFirstPage: () => getFirstBoilsPage(),
+        getLastPage: () => getLastBoilsPage(),
+        changeLimit: (limit) => changeBoilsLimit(limit),
+        loading: loading,
+        page: page,
+        limit: limit,
+        total: data.total
+    }
+
+    const boilFormProps: BoilFormProps = {
+        changeFilter: ({key, value}) => changeBoilsFilter({key, value}),
+        clearFilter: () => clearBoilsFilter(),
+        months: data.month_selector_options,
+        years: data.year_selector_options,
+        plants: data.plant_selector_options,
+        filter: filter,
+        loading: loading
+    }
 
     useEffect(() => {
         fetchBoils(page, limit, filter);
@@ -36,44 +61,25 @@ const BoilsList: React.FC = () => {
         )
     }
 
-    if (loading) {
+    if (loading && init) {
         return (
             <div className={classes.centeredMessage}>
-                Loading...
+                <LoadingHandler/>
             </div>
         )
     }
 
     return (
         <div className={classes.pageContainer}>
-            <div className={classes.pageHeader}>Варки</div>
+            <Modal visible={loading}><LoadingHandler/></Modal>
+            <div className={classes.pageHeader}>Список варок</div>
             <div className={classes.pageFormContainer}>
-                <BoilForm
-                    changeFilter={({key, value}) => changeBoilsFilter({key, value})}
-                    clearFilter={() => clearBoilsFilter()}
-                    months={data.month_selector_options}
-                    years={data.year_selector_options}
-                    plants={data.plant_selector_options}
-                    filter={filter}
-                    loading={loading}
-                />
+                <BoilForm {...boilFormProps} />
             </div>
             <div className={classes.pageTableContainer}>
-                {data.rows.length === 0 ? <p>No data...</p> : <BoilTable items={data.rows}/>}
+                {data.rows.length === 0 ? <NoDataHandler limit={limit}/> : <BoilTable items={data.rows}/>}
             </div>
-            <div>
-                <Pagination
-                    increasePage={() => increaseBoilsPage()}
-                    decreasePage={() => decreaseBoilsPage()}
-                    getFirstPage={() => getFirstBoilsPage()}
-                    getLastPage={() => getLastBoilsPage()}
-                    changeLimit={(limit) => changeBoilsLimit(limit)}
-                    page={page}
-                    limit={limit}
-                    total={data.total}
-                    loading={loading}
-                />
-            </div>
+            <Pagination {...paginationProps}/>
         </div>
     )
 }

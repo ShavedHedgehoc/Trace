@@ -9,12 +9,6 @@ export const sideMenuReducer = (state = initialState, action: SideMenuAction): S
         case SideMenuActionTypes.SWITCH_MENU:{
             return {isOpen:!state.isOpen}
         }
-        // case SideMenuActionTypes.OPEN_MENU: {
-        //     return { isOpen: true }
-        // }
-        // case SideMenuActionTypes.CLOSE_MENU: {
-        //     return { isOpen: false }
-        // }
         default:
             return state
     }

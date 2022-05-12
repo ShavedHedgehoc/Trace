@@ -1,9 +1,8 @@
-import React, { FC } from 'react';
+import React, {FC} from 'react';
 import classes from "../../styles/Pagination.module.css";
+import {limitValues} from "../constants";
 
-const limitValues = [5, 10, 15, 20]
-
-interface PaginationProps {
+export interface PaginationProps {
     increasePage: () => void;
     decreasePage: () => void;
     getFirstPage: () => void;
@@ -15,10 +14,23 @@ interface PaginationProps {
     total: number;
 }
 
-const Pagination: FC<PaginationProps> = ({ increasePage, decreasePage, getFirstPage, getLastPage, changeLimit, page, limit, total, loading }) => {
+const Pagination: FC<PaginationProps> = (
+    {
+        increasePage,
+        decreasePage,
+        getFirstPage,
+        getLastPage,
+        changeLimit,
+        page,
+        limit,
+        total,
+        loading
+    }) => {
 
     const lastPage = (Math.ceil(total / limit))
-
+    const selectDisabled = loading || total === 0
+    const prevButtonsDisabled = loading || total === 0 || page === 0
+    const nextButtonsDisabled = loading || total === 0 || page === lastPage - 1
 
     return (
         <div className={classes.paginationContainer}>
@@ -44,39 +56,39 @@ const Pagination: FC<PaginationProps> = ({ increasePage, decreasePage, getFirstP
             <div className={classes.paginationElement}>
                 <div className={classes.paginationSubElement}>
                     <select
-                        disabled={loading ? true : false}
+                        disabled={selectDisabled}
                         className={classes.paginationSelect}
                         value={limit}
                         onChange={(e) => changeLimit(parseInt(e.target.value))}>
                         {limitValues.map((item) => (
                             <option
                                 className={classes.paginationOption}
-                                key={item} >
+                                key={item}>
                                 {item}
                             </option>
                         ))}
-                    </select >
+                    </select>
                 </div>
-            </div >
+            </div>
             <div className={classes.paginationElement}>
                 <div className={classes.paginationButtonGroup}>
                     <button
                         className={classes.paginationButton}
                         onClick={() => getFirstPage()}
-                        disabled={loading ? true : page === 0 ? true : false}>&lt;&lt;</button>
+                        disabled={prevButtonsDisabled}>&lt;&lt;</button>
                     <button
                         className={classes.paginationButton}
                         onClick={() => decreasePage()}
-                        disabled={loading ? true : page === 0 ? true : false}>&lt;</button>
+                        disabled={prevButtonsDisabled}>&lt;</button>
                 </div>
             </div>
             <div className={classes.paginationElement}>
                 <div className={classes.paginationSubElement}>
                     <div className={classes.paginationLabel}>
-                        {total===0
-                        ?<span>Страница: 0 из 0</span>
-                        : <span>Страница: {page + 1} из {lastPage}</span>   
-                        }                        
+                        {total === 0
+                            ? <span>Страница: 0 из 0</span>
+                            : <span>Страница: {page + 1} из {lastPage}</span>
+                        }
                     </div>
                 </div>
             </div>
@@ -85,14 +97,14 @@ const Pagination: FC<PaginationProps> = ({ increasePage, decreasePage, getFirstP
                     <button
                         className={classes.paginationButton}
                         onClick={() => increasePage()}
-                        disabled={loading ? true : page === lastPage - 1 ? true : false}>&gt;</button>
+                        disabled={loading || total === 0 ? true : page === lastPage - 1 ? true : false}>&gt;</button>
                     <button
                         className={classes.paginationButton}
                         onClick={() => getLastPage()}
-                        disabled={loading ? true : page === lastPage - 1 ? true : false}>&gt;&gt;</button>
+                        disabled={loading || total === 0 ? true : page === lastPage - 1 ? true : false}>&gt;&gt;</button>
                 </div>
             </div>
-        </div >
+        </div>
     )
 }
 

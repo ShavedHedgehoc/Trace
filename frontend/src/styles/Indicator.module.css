@@ -1,0 +1,22 @@
+.dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.success{
+    background-color: green;
+}
+
+.alert{
+    background-color: #fa9702;
+}
+
+.error{
+    background-color: red;
+}
+
+.disable {
+    background-color: #bbb;
+}

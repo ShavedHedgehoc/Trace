@@ -2,31 +2,51 @@ import React, {useEffect} from 'react';
 import classes from '../../styles/Page.module.css';
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useActions} from "../../hooks/useActions";
-import {useNavigate} from "react-router-dom";
-import {RouteNames} from "../../router";
-import Pagination from "../utils/Pagination";
+import Pagination, {PaginationProps} from "../utils/Pagination";
 import TrademarkTable from "../tables/TrademarkTable";
+import LoadingHandler from "../utils/LoadingHandler";
+import Modal from "../utils/Modal";
+import NoDataHandler from "../utils/NoDataHandler";
+import TrademarkForm, {TrademarkFormProps} from "../forms/TrademarkForm";
+import {useDebounce} from "../../hooks/useDebounce";
 
 const TrademarksList = () => {
-    const {data, loading, error, page, limit} = useTypedSelector(state => state.trademarks)
+    const {data, loading, error, page, limit, init, filter} = useTypedSelector(state => state.trademarks)
     const {
         fetchTrademarks,
         increaseTrademarkPage,
         decreaseTrademarkPage,
         getFirstTrademarkPage,
         getLastTrademarkPage,
-        changeTrademarkLimit
+        changeTrademarkLimit,
+        changeTrademarkFilter,
+        clearTrademarkFilter
     } = useActions()
 
-    useEffect(() => {
-        fetchTrademarks(page, limit);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, limit])
+    const debouncedFilter = useDebounce(filter, 800)
 
-    let navigate = useNavigate();
-    const redirectToTrademark = (id: string) => {
-        navigate(`${RouteNames.TRADEMARKS}/${id}`)
+    const trademarkFormProps: TrademarkFormProps = {
+        changeFilter: ({key, value}) => changeTrademarkFilter({key, value}),
+        resetFilter: () => clearTrademarkFilter(),
+        filter: filter
     }
+
+    const paginationProps: PaginationProps = {
+        increasePage: () => increaseTrademarkPage(),
+        decreasePage: () => decreaseTrademarkPage(),
+        getFirstPage: () => getFirstTrademarkPage(),
+        getLastPage: () => getLastTrademarkPage(),
+        changeLimit: (limit) => changeTrademarkLimit(limit),
+        loading: loading,
+        page: page,
+        limit: limit,
+        total: data.total
+    }
+
+    useEffect(() => {
+        fetchTrademarks(page, limit, filter);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page, limit, debouncedFilter])
 
     if (error) {
         return (
@@ -36,37 +56,32 @@ const TrademarksList = () => {
         )
     }
 
-    if (loading) {
+    if (loading && init) {
         return (
             <div className={classes.centeredMessage}>
-                Loading...
+                <LoadingHandler/>
             </div>
         )
     }
+
     return (
         <div className={classes.pageContainer}>
-            <div className={classes.pageHeader}>Сырье</div>
+            <Modal visible={loading}><LoadingHandler/></Modal>
+            <div className={classes.pageHeader}>Список торговых названий</div>
+            <div className={classes.pageSubHeader}>
+                Написать карточку...
+            </div>
+            <div className={classes.pageFormContainer}>
+                <TrademarkForm {...trademarkFormProps}/>
+            </div>
             <div className={classes.pageTableContainer}>
                 {data.rows.length === 0
-                    ? <p>No data...</p>
-                    : <TrademarkTable
-                        items={data.rows}
-                        redirect={(trademark_id) => redirectToTrademark(trademark_id)}
-                    />
+                    ? <NoDataHandler/>
+                    : <TrademarkTable items={data.rows}/>
                 }
             </div>
             <div>
-                <Pagination
-                    increasePage={() => increaseTrademarkPage()}
-                    decreasePage={() => decreaseTrademarkPage()}
-                    getFirstPage={() => getFirstTrademarkPage()}
-                    getLastPage={() => getLastTrademarkPage()}
-                    changeLimit={(limit) => changeTrademarkLimit(limit)}
-                    page={page}
-                    limit={limit}
-                    total={data.total}
-                    loading={loading}
-                />
+                <Pagination {...paginationProps} />
             </div>
         </div>
     );

@@ -1,18 +1,20 @@
 import React, {useEffect} from 'react';
 import classes from '../../styles/Page.module.css';
-import {useNavigate, useParams} from "react-router-dom";
-import {Params, RouteNames} from "../../router";
+import {useLocation, useParams} from "react-router-dom";
+import {Params} from "../../router";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useActions} from "../../hooks/useActions";
-import LotItemHeader from "../page_headers/LotItemHeader";
-import Pagination from "../utils/Pagination";
+import Pagination, {PaginationProps} from "../utils/Pagination";
 import LotItemTable from "../tables/LotItemTable";
+import LoadingHandler from "../utils/LoadingHandler";
+import Modal from "../utils/Modal";
 
 const LotDetail = () => {
 
+    const location = useLocation()
     const params = useParams<Params.LOT_PARAMS>()
     const lot_id: string | undefined = params.lot_id
-    const {data, loading, error, limit, page} = useTypedSelector(state => state.lotItem)
+    const {data, loading, error, limit, page, init} = useTypedSelector(state => state.lotItem)
 
     const {
         fetchLotItem,
@@ -21,17 +23,29 @@ const LotDetail = () => {
         getFirstLotItemPage,
         getLastLotItemPage,
         changeLotItemLimit,
+        resetLotItemState,
     } = useActions()
+
+    const paginationProps: PaginationProps = {
+        increasePage: () => increaseLotItemPage(),
+        decreasePage: () => decreaseLotItemPage(),
+        getFirstPage: () => getFirstLotItemPage(),
+        getLastPage: () => getLastLotItemPage(),
+        changeLimit: (limit) => changeLotItemLimit(limit),
+        loading: loading,
+        page: page,
+        limit: limit,
+        total: data.total
+    }
+
+    useEffect(() => {
+        resetLotItemState();
+    }, [location])
 
     useEffect(() => {
         fetchLotItem(page, limit, lot_id);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, limit])
-
-    let navigate = useNavigate();
-    const redirectToBoil = (boil_name: string) => {
-        navigate(`${RouteNames.BOILS}/${boil_name}`)
-    }
 
     if (error) {
         return (
@@ -41,34 +55,29 @@ const LotDetail = () => {
         )
     }
 
-    if (loading) {
+    if (loading && init) {
         return (
             <div className={classes.centeredMessage}>
-                Loading...
+                <LoadingHandler/>
             </div>
         )
     }
+
     return (
         <div className={classes.pageContainer}>
+            <Modal visible={loading}><LoadingHandler/></Modal>
             <div className={classes.pageHeader}>
-                <LotItemHeader header={data.header}/>
+                Информация по квазипартии: {data.header.lot_name}
+            </div>
+            <div className={classes.pageSubHeader}>
+                <div>{data.header.product_name}</div>
+                <div>Торговое название: {data.header.trademark_name}</div>
+                <div>Партия производителя: {data.header.manufacturer_lot_name}</div>
             </div>
             <div className={classes.pageTableContainer}>
-                <LotItemTable items={data.rows} redirect={(boil_name) => redirectToBoil(boil_name)}/>
+                <LotItemTable items={data.rows}/>
             </div>
-            <div>
-                <Pagination increasePage={() => increaseLotItemPage()}
-                            decreasePage={() => decreaseLotItemPage()}
-                            getFirstPage={() => getFirstLotItemPage()}
-                            getLastPage={() => getLastLotItemPage()}
-                            changeLimit={(limit) => changeLotItemLimit(limit)}
-                            loading={loading}
-                            page={page}
-                            limit={limit}
-                            total={data.total}/>
-            </div>
-
-
+            <Pagination {...paginationProps}/>
         </div>
     );
 };

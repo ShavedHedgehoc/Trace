@@ -1,29 +1,24 @@
 import React from "react";
 
-import {IBoilData} from "../../types/boil";
+import {IBoilData, IBoilRow} from "../../types/boil";
 import classes from "../../styles/Table.module.css"
-import {useNavigate} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import {RouteNames} from "../../router";
 
 interface TableProps {
-    items: IBoilData[];
+    items: IBoilRow[];
 }
 
 export default function BoilTable(props: TableProps) {
 
-    let navigate = useNavigate();
-    const redirectToBoil = (name: string) => {
-        navigate(`${RouteNames.BOILS}/${name}`)
-    };
-
     const columns = [
-        {id: '1', label: 'Варка', align: 'center', width: '140px', value: 'name'},
-        {id: '2', label: 'Артикул', align: 'center', width: '200px',},
-        {id: '3', label: 'Дата', align: 'center', width: '100px',},
-        {id: '4', label: 'Месяц', align: 'center', width: '120px',},
-        {id: '5', label: 'Год', align: 'center', width: '120px',},
-        {id: '6', label: 'Площадка', align: 'center', width: '120px',},
-        {id: '7', label: 'Переход', align: 'center', width: '140px',},
+        {id: '1', label: 'Варка'},
+        {id: '2', label: 'Артикул'},
+        {id: '3', label: 'Дата'},
+        {id: '4', label: 'Месяц'},
+        {id: '5', label: 'Год'},
+        {id: '6', label: 'Площадка'},
+        {id: '7', label: 'Переход'},
     ];
 
     return (
@@ -47,9 +42,7 @@ export default function BoilTable(props: TableProps) {
                     <td className={classes.tableTd}>{item.year}</td>
                     <td className={classes.tableTd}>{item.plant}</td>
                     <td className={classes.tableTd}>
-                        <button onClick={() => redirectToBoil(item.name)} className={classes.tableButton}>
-                            Данные
-                        </button>
+                        <Link className={classes.tableLink} to={`${RouteNames.BOILS}/${item.batch_id}`} state={{a:true}}>Данные</Link>
                     </td>
                 </tr>
             ))}

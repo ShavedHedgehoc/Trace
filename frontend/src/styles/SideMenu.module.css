@@ -6,6 +6,9 @@
     left: 0;
     transform: translateX(-130%);
     transition: all 0.4s;
+
+
+
 }
 
 .menu__active{
@@ -27,24 +30,27 @@
 
 .menu__content{
     width: 30%;
+    max-width: 350px;
     height: 100vh;
-    background-color: gray;       
+    background-color: #292929;
     transition: all 0.4s;
+    font-family: 'Oswald', sans-serif;
 }
 
 .menu__ul{
     height: 100%;
     list-style: none;
-    text-align: center;
+    text-align: left;
     display: flex;
     flex-direction: column;
     padding-top: 20px;
+    padding-left: 30px;
 }
 
 
 
 .menu__ul a {
-    color:white;
+    color:#dd5;
     text-decoration: none;
     padding:10px;
     font-size: 24px;

@@ -2,7 +2,7 @@ import React, {FC} from 'react'
 import {BoilFilterParams, IBoilFilter, IBoilFormField, IMonthData, IPlantData, IYearData} from '../../types/boil';
 import classes from "../../styles/Form.module.css";
 
-interface BoilFormProps {
+ export interface BoilFormProps {
     changeFilter: ({key, value}: IBoilFormField) => void;
     clearFilter: () => void;
     filter: IBoilFilter;
@@ -28,7 +28,7 @@ const BoilForm: FC<BoilFormProps> = (
                 <div className={classes.formLabel}>Варка</div>
                 <div className={classes.formField}>
                     <input type="text" className={classes.formInput}
-                           // disabled={loading}
+                           autoComplete={'off'}
                            id={BoilFilterParams.BATCH}
                            value={filter.batch}
                            onChange={(e) => (changeFilter({key: e.target.id, value: e.target.value}))}
@@ -39,7 +39,7 @@ const BoilForm: FC<BoilFormProps> = (
                 <div className={classes.formLabel}>Артикул</div>
                 <div className={classes.formField}>
                     <input type="text" className={classes.formInput}
-                           // disabled={loading}
+                           autoComplete={'off'}
                            id={BoilFilterParams.MARKING}
                            value={filter.marking}
                            onChange={(e) => (changeFilter({key: e.target.id, value: e.target.value}))}
@@ -104,8 +104,7 @@ const BoilForm: FC<BoilFormProps> = (
                 </div>
             </div>
             <div className={classes.formElement}>
-                <button className={classes.formButton} onClick={() => clearFilter()} >Очистить
-                </button>
+                <a className={classes.formButton} onClick={() => clearFilter()} >Очистить</a>
             </div>
         </div>
     )

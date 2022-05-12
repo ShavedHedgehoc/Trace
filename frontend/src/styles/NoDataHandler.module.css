@@ -1,0 +1,8 @@
+.noDataHandlerContainer {
+    background: var(--container-background-color);
+    color: var(--main-active-color);
+    font-size: xx-large;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,11 +1,12 @@
 import React from "react";
 import classes from "../../styles/Table.module.css"
 import {IConvergenceRow} from "../../types/convergence";
+import {RouteNames} from "../../router";
+import {Link} from "react-router-dom";
 
 interface TableProps {
     items: IConvergenceRow[];
-    redirect_to_boil: (boil_name: string) => void;
-    redirect_to_card: (boil_name: string) => void;
+    exactly: string;
 }
 
 export default function ConvergenceTable(props: TableProps) {
@@ -37,12 +38,12 @@ export default function ConvergenceTable(props: TableProps) {
                     <td className={classes.tableTd}>{item.marking}</td>
                     <td className={classes.tableTd}>{item.plant}</td>
                     <td className={classes.tableTd}>
-                        <button onClick={() => props.redirect_to_boil(item.batch_name)} className={classes.tableButton}>
-                            Варка
-                        </button>
-                        <button onClick={() => props.redirect_to_card(item.batch_name)} className={classes.tableButton}>
+                        <Link className={classes.tableLink} to={`${RouteNames.BOILS}/${item.batch_id}`}>Варка</Link>
+                        <Link className={classes.tableLink}
+                              to={`${RouteNames.BOILS_CONVERGENCE_REPORT}/${item.batch_name}/${props.exactly}`}
+                        >
                             Карточка
-                        </button>
+                        </Link>
                     </td>
                 </tr>
             ))}

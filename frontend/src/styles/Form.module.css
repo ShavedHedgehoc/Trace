@@ -1,76 +1,119 @@
-.formContainer{
+.formContainer {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     padding: 0 20px 0 20px;
-    background:white;
-    margin: 2px;
+    color: var(--main-font-color);
+    background: var(--container-background-color);
+    margin: 3px;
     width: 100%;
-    /* color:gray; */
 }
-.formElement{
+
+.formElement {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap:5px;
+    gap: 5px;
     padding: 10px 0;
-    /* background: yellow; */
-    /* margin: 5px; */
+    /*width: 100%;*/
+    /*background-color: white;*/
+
 }
-.formLabel{
+.formElementStretch {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px 0;
+    /*width: 100%;*/
+    /*background-color: wheat;*/
+
+}
+
+.formInlineElement {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px 0;
+}
+
+.formLabel {
     width: 100%;
     padding: 5px 0 5px 0;
-    text-align: left;   
-    /* background: green; */
+    text-align: center;
 }
-.formField{
-    width: 100%;    
+
+.formField {
+    width: 100%;
 }
+
 .formButton {
-    appearance: none;
-    border: 1px solid var(--container-border-color);
+    /*appearance: none;*/
+    color: var(--main-active-color);
+    /*background:var(--container-background-color);*/
+    /*border: 1px solid var(--container-border-color);*/
     border-radius: 10px;
-    background: white;
-    color: black;
+    /*background: white;*/
+    /*color: black;*/
     padding: 8px 16px;
-    font-size: 16px;
+    font-size: large;
     /* width: 50px; */
     text-align: center;
     margin-left: 3px;
     margin-right: 3px;
 }
 
-.formButton:disabled {
-    color: grey;
-}
+/*.formButton:disabled {*/
+/*    color: grey;*/
+/*}*/
 
-.formButton:disabled:hover {
-    background: white;
-}
+/*.formButton:disabled:hover {*/
+/*    background: white;*/
+/*}*/
 
 .formButton:hover {
-    background: lightgray;
+    cursor: pointer;
 }
 
 .formSelect {
-    font-size: 16px;
+    color: var(--main-active-color);
+    background-color: var(--container-background-color);
+    font-size: large;
     padding: 5px;
     vertical-align: middle;
     min-width: 120px;
     max-width: 150px;
+    border: none;
+    box-shadow: none;
+    border-bottom: 1px solid var(--main-active-color);
 }
-.formInput {
-    font-size: 16px;
+
+.formInput, .formDate {
+    color: var(--main-active-color);
+    background-color: var(--container-background-color);
+    font-size: large;
     padding: 5px;
     vertical-align: middle;
     min-width: 120px;
     max-width: 150px;
+    border: none;
+    border-bottom: 1px solid var(--main-active-color);
 }
-.formDate{
-    font-size: 16px;
-    font-family: Arial, Helvetica, sans-serif;
-    padding: 2px;
-    min-width: 120px;
-    max-width: 150px;
+
+.formSelect, .formInput, .formDate:focus {
+    outline: none;
+}
+
+.formDate {
+    font-family: 'Montserrat', sans-serif;
+}
+
+::-webkit-calendar-picker-indicator {
+    /*filter:invert(91%) sepia(80%) saturate(506%) hue-rotate(359deg) brightness(91%) contrast(89%);*/
+    background-color: #dd5;
 }

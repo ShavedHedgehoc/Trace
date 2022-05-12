@@ -2,7 +2,7 @@ from datetime import date, datetime
 from app import db
 # from sqlalchemy.sql import func, case
 from sqlalchemy.sql.sqltypes import INTEGER, Integer
-from sqlalchemy.sql import expression, text, func, case, join, select
+from sqlalchemy.sql import expression, text, func, case, join, select, and_
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from sqlalchemy.exc import DataError
 from sqlalchemy.dialects.mssql import DATE
@@ -159,7 +159,6 @@ class Batch(db.Model):
     def plant_letter(cls):
         return case(
             [
-                # (cls.Plant != None, cls.Plant),
                 (cls.Plant == 'П', cls.Plant),
                 (cls.Plant == 'К', cls.Plant),
             ],
@@ -276,7 +275,6 @@ class Lot(db.Model):
         name = self.LotName
         if len(name) == 20:
             if name != 'Партия не определена':
-                print('here')
                 return (name[11:12]+'/'+name[13:14]+'/'+name[15:18])
         return None
 
@@ -286,13 +284,14 @@ class Lot(db.Model):
         name_length = func.length(cls.LotName)
 
         return case(
-            [
-                ((name_length == 20) and (cls.LotName != 'Партия не определена'),
-                 func.cast(
+            [(and_(
+                name_length == 20,
+                cls.LotName != 'Партия не определена'),
+                func.cast(
                     (func.substring(cls.LotName, 15, 4) +
                      '-'+func.substring(cls.LotName, 13, 2) +
                      '-'+func.substring(cls.LotName, 11, 2)), DATE)
-                 ), ],
+              ), ],
             else_=None
         )
 

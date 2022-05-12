@@ -1,21 +1,22 @@
 export interface BoilState {
-    data: IBoil;
+    data: IBoilData;
     loading: boolean;
     error: null | string;
     page: number;
     limit: number;
     filter: IBoilFilter;
+    init: boolean;
 }
 
-export interface IBoil {
-    rows: IBoilData[];
+export interface IBoilData {
+    rows: IBoilRow[];
     month_selector_options: IMonthData[];
     year_selector_options: IYearData[];
     plant_selector_options: IPlantData[];
     total: number;
 }
 
-export interface IBoilData {
+export interface IBoilRow {
     batch_id: string,
     date: string,
     marking: string,
@@ -50,8 +51,8 @@ export interface IBoilFilter {
 }
 
 export interface IBoilFormField {
-    key: string,
-    value: string
+    key: string;
+    value: string;
 }
 
 export enum BoilActionTypes {
@@ -66,7 +67,6 @@ export enum BoilActionTypes {
     CHANGE_BOILS_LIMIT = "CHANGE_BOILS_LIMIT",
     CHANGE_BOILS_FILTER = "CHANGE_BOILS_FILTER",
     CLEAR_BOILS_FILTER = "CLEAR_BOILS_FILTER",
-    SET_BOILS_INIT_STATE = "SET_BOILS_INIT_STATE"
 }
 
 export enum BoilFilterParams {
@@ -84,7 +84,7 @@ interface FetchBoilsAction {
 
 interface FetchBoilsSuccessAction {
     type: BoilActionTypes.FETCH_BOILS_SUCCESS;
-    payload: IBoil;
+    payload: IBoilData;
 }
 
 interface FetchBoilsErrorAction {

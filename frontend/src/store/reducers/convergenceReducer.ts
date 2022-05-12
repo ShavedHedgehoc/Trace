@@ -30,7 +30,8 @@ const initialState: ConvergenceState = {
         end_date: setDates()[1],
         exactly: 'false',
         plant: '-'
-    }
+    },
+    init: true
 }
 
 export const convergenceReducer = (state = initialState, action: ConvergenceAction): ConvergenceState => {
@@ -43,7 +44,8 @@ export const convergenceReducer = (state = initialState, action: ConvergenceActi
                 data: state.data,
                 page: state.page,
                 limit: state.limit,
-                filter: state.filter
+                filter: state.filter,
+                init: state.init,
             }
         }
         case ConvergenceActionTypes.FETCH_CONVERGENCE_SUCCESS: {
@@ -53,7 +55,8 @@ export const convergenceReducer = (state = initialState, action: ConvergenceActi
                 data: action.payload,
                 page: state.page,
                 limit: state.limit,
-                filter: state.filter
+                filter: state.filter,
+                init: false,
             }
         }
         case ConvergenceActionTypes.FETCH_CONVERGENCE_ERROR: {
@@ -63,7 +66,8 @@ export const convergenceReducer = (state = initialState, action: ConvergenceActi
                 data: initialState.data,
                 page: state.page,
                 limit: state.limit,
-                filter: state.filter
+                filter: state.filter,
+                init: true,
             }
         }
         case ConvergenceActionTypes.INCREASE_CONVERGENCE_PAGE:
@@ -112,6 +116,8 @@ export const convergenceReducer = (state = initialState, action: ConvergenceActi
                     plant: '-'
                 }
             }
+        case ConvergenceActionTypes.RESET_CONVERGENCE_STATE:
+            return initialState
         default:
             return state
     }

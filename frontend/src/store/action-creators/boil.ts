@@ -22,13 +22,13 @@ export const fetchBoils = (
                     "/api/v1/boils",
                     {
                         params: axiosParams(page, limit, filter)
-
                     }
                 ))
             dispatch({
                 type: BoilActionTypes.FETCH_BOILS_SUCCESS,
                 payload: response.data
             })
+            // console.log(response.data)
         } catch (error) {
             dispatch({
                 type: BoilActionTypes.FETCH_BOILS_ERROR,

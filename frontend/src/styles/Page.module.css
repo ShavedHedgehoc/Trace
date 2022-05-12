@@ -1,9 +1,14 @@
 .pageContainer {
+    width: 90%;
+    max-width: 1800px;
     display: flex;
     flex-direction: column;
+    margin: auto;
     justify-content: space-around;
     gap: 20px;
     padding: 30px 0 30px 0;
+    overflow-y: hidden;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .centeredMessage {
@@ -16,16 +21,40 @@
 .pageHeader {
     margin-left: 5px;
     margin-right: 5px;
-    font-size: large;
-    font-weight: 400;
+    font-size: xxx-large;
+    font-weight: 300;
+    font-family: 'Oswald', sans-serif;
+    color: #dd5;
+}
+
+.pageSubHeader{
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: x-large;
+    font-weight: 300;
+    font-family: 'Oswald', sans-serif;
+    /*color: #dd5;*/
+}
+
+
+.pageSpaceHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: xxx-large;
+    font-weight: 300;
+    font-family: 'Oswald', sans-serif;
+    color: #dd5;
 }
 
 .pageFormContainer {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: white;
-    border: 1px solid gray;
+    background-color: var(--container-background-color);
+    font-family: 'Montserrat', sans-serif;
     border-radius: 5px;
     margin-left: 5px;
     margin-right: 5px;
@@ -35,9 +64,37 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: white;
-    border: 1px solid gray;
+    background-color: var(--container-background-color);
+    font-family: 'Montserrat', sans-serif;
     border-radius: 5px;
     margin-left: 5px;
     margin-right: 5px;
 }
+
+.nestedNavigation{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 15px 0;
+    margin: 20px 0;
+}
+
+.navButton{
+    color: var(--main-active-color);
+    background: var(--main-background-color);
+    font-size: x-large;
+    padding: 10px 0;
+    width: 200px;
+    border: 1px solid var(--main-background-color);
+    border-radius: 5px;
+}
+
+.navButtonActive {
+    color: var(--main-active-color);
+    background: var(--main-background-color);
+    font-size: x-large;
+    padding: 10px 0;
+    width: 200px;
+    border: 1px solid var(--main-active-color);
+    border-radius: 5px;}

@@ -4,6 +4,7 @@ export interface LotItemState {
     error: null | string;
     page: number;
     limit: number;
+    init: boolean;
 }
 
 export interface ILotItemData {
@@ -23,9 +24,11 @@ export interface ILotItemHeader {
 }
 
 export interface ILotItemRow {
-    name: string;
+    boil_id: string;
+    boil_name: string;
     date: string;
     product_name: string;
+    plant: string;
 }
 
 export enum LotItemActionTypes {
@@ -36,7 +39,8 @@ export enum LotItemActionTypes {
     DECREASE_LOT_ITEM_PAGE = "DECREASE_LOT_ITEM_PAGE",
     GET_FIRST_LOT_ITEM_PAGE = "GET_FIRST_LOT_ITEM_PAGE",
     GET_LAST_LOT_ITEM_PAGE = "GET_LAST_LOT_ITEM_PAGE",
-    CHANGE_LOT_ITEM_LIMIT = "CHANGE_LOT_ITEM_LIMIT"
+    CHANGE_LOT_ITEM_LIMIT = "CHANGE_LOT_ITEM_LIMIT",
+    RESET_LOT_ITEM_STATE = "RESET_LOT_ITEM_STATE",
 }
 
 interface FetchLotItemAction {
@@ -74,6 +78,9 @@ interface LotItemChangeLimit {
     payload: number;
 }
 
+interface LotItemResetState {
+    type: LotItemActionTypes.RESET_LOT_ITEM_STATE;
+}
 
 export type LotItemAction =
     FetchLotItemAction
@@ -84,3 +91,4 @@ export type LotItemAction =
     | LotItemGetFirstPage
     | LotItemGetLastPage
     | LotItemChangeLimit
+    | LotItemResetState

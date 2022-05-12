@@ -1,31 +1,44 @@
-*{
-    --main-background-color:#f8f8f8;
-    --header-background-color: #263238;
+* {
+    /*--main-background-color: #f8f8f8;*/
+    --main-background-color: #121212;
+    --container-background-color: #1d1d1d;
+    /*--header-background-color: #263238;*/
+    --header-background-color: #1f1f1f;
+    --main-font-color: #ececec;
+    --main-active-color: #dd5;
     --container-border-color: gray;
 }
-body, 
+
+body,
 html {
+
+    font-family: 'Open Sans', sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    
 }
 
-.App {    
+.App {
     display: flex;
     flex-direction: column;
+    /*width: 100%;*/
     height: 100vh;
-    font-family: sans-serif;    
-    overflow-y: hidden;   
+    font-family: sans-serif;
+    overflow-y: hidden;
     background-color: var(--main-background-color);
 }
 
-.content {    
-    flex:1;
-    align-self: center;
-    width: 95%;
-    max-width: 1800px;
-    overflow-y: auto; 
+.content {
+    flex: 1;
+    color: var(--main-font-color);
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    width: 100%;
+    /*max-width: 1800px;*/
+    overflow-y: auto;
     height: calc(100vh - 91px);
 
 }

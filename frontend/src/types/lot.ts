@@ -4,6 +4,7 @@ export interface LotState {
     error: null | string;
     page: number;
     limit: number;
+    init: boolean;
 }
 
 export interface ILotData {

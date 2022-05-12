@@ -2,12 +2,16 @@ import React, {useEffect} from 'react';
 import classes from '../../styles/Page.module.css';
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useActions} from "../../hooks/useActions";
-import Pagination from "../utils/Pagination";
+import Pagination, {PaginationProps} from "../utils/Pagination";
 import LotTable from "../tables/LotTable";
+import LoadingHandler from "../utils/LoadingHandler";
+import Modal from "../utils/Modal";
+import NoDataHandler from "../utils/NoDataHandler";
 
 const LotsList: React.FC = (): JSX.Element => {
+    // not use
 
-    const {data, loading, error, page, limit} = useTypedSelector(state => state.lots);
+    const {data, loading, error, page, limit, init} = useTypedSelector(state => state.lots);
     const {
         fetchLots,
         increaseLotsPage,
@@ -16,6 +20,18 @@ const LotsList: React.FC = (): JSX.Element => {
         getLastLotsPage,
         changeLotsLimit
     } = useActions()
+
+    const paginationProps: PaginationProps = {
+        increasePage: () => increaseLotsPage(),
+        decreasePage: () => decreaseLotsPage(),
+        getFirstPage: () => getFirstLotsPage(),
+        getLastPage: () => getLastLotsPage(),
+        changeLimit: (limit) => changeLotsLimit(limit),
+        loading: loading,
+        page: page,
+        limit: limit,
+        total: data.total
+    }
 
     useEffect(() => {
         fetchLots(page, limit);
@@ -30,33 +46,30 @@ const LotsList: React.FC = (): JSX.Element => {
         )
     }
 
-    if (loading) {
+    if (loading && init) {
         return (
             <div className={classes.centeredMessage}>
-                Loading...
+                <LoadingHandler/>
             </div>
         )
     }
 
     return (
         <div className={classes.pageContainer}>
-            <div className={classes.pageHeader}>Квазипартии</div>
+            <Modal visible={loading}><LoadingHandler/></Modal>
+            <div className={classes.pageHeader}>Список квазипартий</div>
+            <div className={classes.pageSubHeader}>
+                Вставить в таблицу иконки со ссылками на всё и вся...
+            </div>
+            <div className={classes.pageSubHeader}>
+                Прикрутить фильтроформу....
+            </div>
             <div className={classes.pageTableContainer}>
-                {data.rows.length === 0 ? <p>No data...</p> : <LotTable items={data.rows}/>}
+                {data.rows.length === 0
+                    ? <NoDataHandler/>
+                    : <LotTable items={data.rows}/>}
             </div>
-            <div>
-                <Pagination
-                    increasePage={() => increaseLotsPage()}
-                    decreasePage={() => decreaseLotsPage()}
-                    getFirstPage={() => getFirstLotsPage()}
-                    getLastPage={() => getLastLotsPage()}
-                    changeLimit={(limit) => changeLotsLimit(limit)}
-                    page={page}
-                    limit={limit}
-                    total={data.total}
-                    loading={loading}
-                />
-            </div>
+            <Pagination {...paginationProps} />
         </div>
     );
 };

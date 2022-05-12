@@ -8,7 +8,7 @@
 }
 .headerButton{
     background-color:var(--header-background-color);
-    color:white;
+    color:#7b7b7b;
     font-size:48px;
     padding-left: 16px;
     border: 0;
