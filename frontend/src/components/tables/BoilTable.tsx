@@ -1,6 +1,6 @@
 import React from "react";
 
-import {IBoilData, IBoilRow} from "../../types/boil";
+import {IBoilRow} from "../../types/boil";
 import classes from "../../styles/Table.module.css"
 import {Link} from 'react-router-dom'
 import {RouteNames} from "../../router";

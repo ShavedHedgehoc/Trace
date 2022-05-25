@@ -67,10 +67,7 @@ const TrademarksList = () => {
     return (
         <div className={classes.pageContainer}>
             <Modal visible={loading}><LoadingHandler/></Modal>
-            <div className={classes.pageHeader}>Список торговых названий</div>
-            <div className={classes.pageSubHeader}>
-                Написать карточку...
-            </div>
+            <div className={classes.pageHeader}>Список торговых названий</div>            
             <div className={classes.pageFormContainer}>
                 <TrademarkForm {...trademarkFormProps}/>
             </div>

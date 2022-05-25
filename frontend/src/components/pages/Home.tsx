@@ -1,4 +1,5 @@
 import React from "react";
+import {BsTelegram, BsWhatsapp} from "react-icons/bs";
 import classes from "../../styles/Page.module.css"
 
 const Home: React.FC = (): JSX.Element => {
@@ -8,7 +9,11 @@ const Home: React.FC = (): JSX.Element => {
                 Добро пожаловать!
             </div>
             <div className={classes.pageSubHeader}>
-                Здесь надо написать что-нибудь про обратную связь и дать ссылки на Telegram и WhatsApp...
+                В случае каких-либо затруднений или при необходимости добавить какой-нибудь функционал
+            </div>
+            <div className={classes.pageSubHeader}>
+                <div><BsTelegram/> </div>
+                <div><BsWhatsapp/> </div>
             </div>
         </div>
     )
