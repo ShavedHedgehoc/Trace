@@ -2,6 +2,7 @@ import {ConvergenceItemAction, ConvergenceItemActionTypes, ConvergenceItemState}
 
 const initialState: ConvergenceItemState = {
     data: {
+        batch_id:'',
         rows: []
     },
     loading: false,

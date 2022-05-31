@@ -6,6 +6,7 @@ export interface ConvergenceItemState {
 
 export interface IConvergenceItemData {
     // header: IConvergenceItemHeader;
+    batch_id: string;
     rows: IConvergenceItemRow[];
 }
 

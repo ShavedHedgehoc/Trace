@@ -217,6 +217,6 @@ def boil_card(batch_name):
             'fact': row.fact or 0
         })
 
-    response = {'rows': rows}
+    response = {'rows': rows, 'batch_id':batchid}
 
     return jsonify(response)

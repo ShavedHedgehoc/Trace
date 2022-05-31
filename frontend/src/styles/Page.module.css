@@ -27,7 +27,7 @@
     color: #dd5;
 }
 
-.pageSubHeader{
+.pageSubHeader {
     margin-left: 5px;
     margin-right: 5px;
     font-size: x-large;
@@ -71,7 +71,7 @@
     margin-right: 5px;
 }
 
-.nestedNavigation{
+.nestedNavigation {
     display: flex;
     width: 100%;
     flex-direction: row;
@@ -80,7 +80,7 @@
     margin: 20px 0;
 }
 
-.navButton{
+.navButton {
     color: var(--main-active-color);
     background: var(--main-background-color);
     font-size: x-large;
@@ -97,4 +97,11 @@
     padding: 10px 0;
     width: 200px;
     border: 1px solid var(--main-active-color);
-    border-radius: 5px;}
+    border-radius: 5px;
+}
+
+.tableLink {
+    color: var(--main-active-color);
+    text-decoration: none;
+    padding: 5px 20px;
+}
