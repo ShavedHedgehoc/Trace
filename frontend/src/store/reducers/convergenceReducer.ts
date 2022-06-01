@@ -6,7 +6,19 @@ import {
 } from "../../types/convergence";
 
 function setDates() {
-    let today = new Date();
+    
+    let today = new Date();    
+
+    if (today.getDate() === 1) {
+        const prevMonthLastDay = new Date(today.getTime() - (1 * 86400000))
+        const [prevDay, month, year] = [prevMonthLastDay.getDate(), prevMonthLastDay.getMonth() + 1, prevMonthLastDay.getFullYear()].map(String)
+        const twoSignPrevDay = prevDay.padStart(2, '0');
+        const twoSignMonth = month.padStart(2, '0');
+        const startDate = year + '-' + twoSignMonth + '-01';
+        const endDate = year + '-' + twoSignMonth + '-' + twoSignPrevDay;
+        return [startDate, endDate]
+    }
+
     const [prevDay, month, year] = [today.getDate() - 1, today.getMonth() + 1, today.getFullYear()].map(String)
     const twoSignPrevDay = prevDay.padStart(2, '0');
     const twoSignMonth = month.padStart(2, '0');
@@ -72,35 +84,35 @@ export const convergenceReducer = (state = initialState, action: ConvergenceActi
         }
         case ConvergenceActionTypes.INCREASE_CONVERGENCE_PAGE:
             if (state.page === lastPage - 1) {
-                return {...state, page: state.page}
+                return { ...state, page: state.page }
             } else {
-                return {...state, page: state.page + 1}
+                return { ...state, page: state.page + 1 }
             }
         case ConvergenceActionTypes.DECREASE_CONVERGENCE_PAGE:
             if (state.page === 0) {
-                return {...state, page: state.page}
+                return { ...state, page: state.page }
             } else {
-                return {...state, page: state.page - 1}
+                return { ...state, page: state.page - 1 }
             }
         case ConvergenceActionTypes.GET_FIRST_CONVERGENCE_PAGE:
-            return {...state, page: 0}
+            return { ...state, page: 0 }
         case ConvergenceActionTypes.GET_LAST_CONVERGENCE_PAGE:
-            return {...state, page: lastPage - 1}
+            return { ...state, page: lastPage - 1 }
         case ConvergenceActionTypes.CHANGE_CONVERGENCE_LIMIT:
-            return {...state, limit: action.payload, page: 0}
+            return { ...state, limit: action.payload, page: 0 }
         case ConvergenceActionTypes.CHANGE_CONVERGENCE_FILTER:
             switch (action.payload.key) {
                 case ConvergenceFilterParams.START_DATE: {
-                    return {...state, filter: {...state.filter, start_date: action.payload.value}, page: 0}
+                    return { ...state, filter: { ...state.filter, start_date: action.payload.value }, page: 0 }
                 }
                 case ConvergenceFilterParams.END_DATE: {
-                    return {...state, filter: {...state.filter, end_date: action.payload.value}, page: 0}
+                    return { ...state, filter: { ...state.filter, end_date: action.payload.value }, page: 0 }
                 }
-                case ConvergenceFilterParams.EXACTLY:{
-                    return {...state, filter: {...state.filter, exactly: action.payload.value}, page: 0}
+                case ConvergenceFilterParams.EXACTLY: {
+                    return { ...state, filter: { ...state.filter, exactly: action.payload.value }, page: 0 }
                 }
-                case ConvergenceFilterParams.PLANT:{
-                    return {...state, filter: {...state.filter, plant: action.payload.value}, page: 0}
+                case ConvergenceFilterParams.PLANT: {
+                    return { ...state, filter: { ...state.filter, plant: action.payload.value }, page: 0 }
                 }
                 default:
                     return state
