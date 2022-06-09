@@ -19,6 +19,7 @@ import ProductTMsList from "../components/pages/ProductTMsList";
 import ProductTMDetail from "../components/pages/ProductTMDetail";
 import BoilsConvergenceReport from "../components/pages/BoilsConvergenceReport";
 import BoilsConvergenceReportCard from "../components/pages/BoilsConvergenceReportCard";
+import TestDoc from '../components/pages/TestDoc';
 
 export interface IRoute {
     path: string;
@@ -27,12 +28,13 @@ export interface IRoute {
 
 export enum Params {
     BOIL_PARAMS = 'boil_id',
+    BOIL_PDF_PARAMS = 'boil_id',
     PRODUCT_PARAMS = 'product_id',
     MANUFACTURER_PARAMS = 'manufacturer_id',
     MANUFACTURER_LOT_PARAMS = 'manufacturer_lot_id',
     LOT_PARAMS = 'lot_id',
     TRADEMARK_PARAMS = 'trademark_id',
-    SELLER_PARAMS = 'seller_id',
+    SELLER_PARAMS = 'seller_id',BOIL_PDF = 'boils_pdf',
     PRODUCT_TM_PARAMS = 'product_tm_id',
     BOILS_CONVERGENCE_PARAMS_BOIL = 'boil_name',
     BOILS_CONVERGENCE_PARAMS_EXACTLY = 'exactly',
@@ -42,6 +44,8 @@ export enum RouteNames {
     HOME = '/',
     BOILS = '/boils',
     BOIL_DETAIL = '/boils/:boil_id',
+    BOIL_PDF = '/boils_pdf',
+    BOIL_PDF_ITEM = '/boils_pdf/:boil_id',
     PRODUCTS = '/products',
     PRODUCT_DETAIL = '/products/:product_id',
     MANUFACTURERS = '/manufacturers',
@@ -58,6 +62,7 @@ export enum RouteNames {
     PRODUCT_TM_DETAIL = '/product_tms/:product_tm_id',
     BOILS_CONVERGENCE_REPORT = '/reports/convergence',
     BOILS_CONVERGENCE_REPORT_CARD = '/reports/convergence/:boil_name/:exactly',
+    
 }
 
 export const publicRoutes: IRoute[] = [
@@ -80,4 +85,5 @@ export const publicRoutes: IRoute[] = [
     {path: RouteNames.PRODUCT_TM_DETAIL, element: ProductTMDetail},
     {path: RouteNames.BOILS_CONVERGENCE_REPORT, element: BoilsConvergenceReport},
     {path: RouteNames.BOILS_CONVERGENCE_REPORT_CARD, element: BoilsConvergenceReportCard},
+    {path: RouteNames.BOIL_PDF_ITEM, element: TestDoc},
 ]
