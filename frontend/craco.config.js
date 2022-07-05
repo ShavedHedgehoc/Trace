@@ -20,5 +20,12 @@ module.exports = {
                 })
             ]
         }
-    }
+    },
+    devServer: {
+        proxy: {
+            // '/':"http://localhost:5000",
+            '/api/v1/': 'http://localhost:5000',
+            '/api/v2/': 'http://localhost:5001'
+        }
+    },
 };

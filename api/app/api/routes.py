@@ -5,6 +5,11 @@ from app import db
 from app.models import Document
 
 
+@bp.route("/api/v1/", methods=['GET'])
+def test_api():
+    return jsonify("Old api test rote")
+
+
 @bp.route("/api/v1/doc_count", methods=['GET'])
 def doc_count():
     doc_qry = db.session.query(Document.DoctypePK)

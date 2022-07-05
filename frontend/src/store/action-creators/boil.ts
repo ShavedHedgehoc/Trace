@@ -1,34 +1,19 @@
-import axios from "axios";
 import { Dispatch } from "react";
-import { BoilAction, BoilActionTypes, IBoilFilter, IBoilFormField } from "../../types/boil"
+import { BoilAction, BoilActionTypes, IBoilFormField } from "../../types/boil"
+import BoilService from '../../http/services/BoilServise';
 
-const axiosParams = (page: number, limit: number, filter: IBoilFilter) => {
-    const params = new URLSearchParams();
-    params.append('_page', String(page))
-    params.append('_limit', String(limit))
-    Object.entries(filter).forEach(([key, value]) => {
-        params.append("_" + key, value)
-    })
-    return params
-}
+const filterInitValue = { batch: "", marking: "", date: "", month: "-", year: "-", plant: "-" };
 
 export const fetchBoils = (
-    page = 0, limit = 10, filter = { batch: "", marking: "", date: "", month: "-", year: "-", plant: "-" }) => {
+    page = 0, limit = 10, filter = filterInitValue) => {
     return async (dispatch: Dispatch<BoilAction>) => {
         try {
             dispatch({ type: BoilActionTypes.FETCH_BOILS })
-            const response = await (
-                axios.get(
-                    "/api/v1/boils",
-                    {
-                        params: axiosParams(page, limit, filter)
-                    }
-                ))
+            const response = await BoilService.get_boils(page, limit, filter)
             dispatch({
                 type: BoilActionTypes.FETCH_BOILS_SUCCESS,
                 payload: response.data
             })
-            // console.log(response.data)
         } catch (error) {
             dispatch({
                 type: BoilActionTypes.FETCH_BOILS_ERROR,

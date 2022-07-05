@@ -9,3 +9,5 @@ node_modules
 frontendts/scripts
 frontendts/config
 .idea
+env
+venv

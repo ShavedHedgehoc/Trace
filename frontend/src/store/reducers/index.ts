@@ -12,8 +12,12 @@ import {lotItemReducer} from "./lotItemReducer";
 import {convergenceReducer} from "./convergenceReducer";
 import {convergenceItemReducer} from "./convergenceItemReducer";
 import {trademarkItemReducer} from "./trademarkItemReducer";
+import { authReducer } from './authReducer';
+import { msgReducer } from './messageReducer';
 
 export const rootReducer = combineReducers({
+    auth: authReducer,
+    msg: msgReducer,
     boils: boilsReducer,
     boilItem: boilItemReducer,
     products: productReducer,
