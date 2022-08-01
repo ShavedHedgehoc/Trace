@@ -1,6 +1,7 @@
 import { Dispatch } from "react";
 import { BoilAction, BoilActionTypes, IBoilFormField } from "../../types/boil"
 import BoilService from '../../http/services/BoilServise';
+import handleError from "../../http/handleError";
 
 const filterInitValue = { batch: "", marking: "", date: "", month: "-", year: "-", plant: "-" };
 
@@ -15,9 +16,10 @@ export const fetchBoils = (
                 payload: response.data
             })
         } catch (error) {
+            const errValue = handleError(error)
             dispatch({
                 type: BoilActionTypes.FETCH_BOILS_ERROR,
-                payload: 'error'
+                payload: errValue
             })
         }
     }

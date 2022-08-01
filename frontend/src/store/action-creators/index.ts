@@ -12,6 +12,7 @@ import * as TrademarkItemActionCreators from "./trademarkItem";
 import * as LotItemActionCreators from "./lotItem";
 import * as ConvergenceActionCreators from "./convergence";
 import * as ConvergenceItemActionCreators from "./convergenceItem";
+import * as MsgActionCreators from "./message";
 
 
 const ActionCreators = {
@@ -29,6 +30,7 @@ const ActionCreators = {
     ...LotItemActionCreators,
     ...ConvergenceActionCreators,
     ...ConvergenceItemActionCreators,
+    ...MsgActionCreators,
 }
 
 export default ActionCreators

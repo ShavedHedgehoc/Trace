@@ -3,6 +3,7 @@ from enum import Enum
 
 class ApiRoutes(str, Enum):
 
+    HOME = "/"
     DOC_COUNTER = "/doc_count"
     REGISTER = "/auth/register"
     LOGIN = "/auth/login"
@@ -15,6 +16,7 @@ class ApiRoutes(str, Enum):
     LOTS = "/lots"
     LOT_ITEM = "/lots/<id>"
     PRODUCTS = "/products"
-    PRODUCT_ITEM = "/products/id"
+    PRODUCT_ITEM = "/products/<id>"
+    PRODUCT_TRADEMARKS = "/products_trademarks/id"
     TRADEMARKS = "/trademarks"
-    TRAADEMARK_ITEM = "/trademarks/id"
+    TRADEMARK_ITEM = "/trademarks/<id>"

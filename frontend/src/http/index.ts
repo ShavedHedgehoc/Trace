@@ -98,14 +98,14 @@ $api.interceptors.response.use(
                 originalRequest._retry = true;
                 try {
                     console.log("refresh from interceptor");
-
                     dispatch({ type: AuthActionTypes.REFRESH })
                     const response = await $clear_api.post(ApiRoutes.REFRESH)
                     dispatch({
                         type: AuthActionTypes.REFRESH_SUCCESS,
                         payload: response.data
                     })
-                    return $api.request(originalRequest)
+                    localStorage.setItem('token', response.data.token)                    
+                    return $api.request(originalRequest)                    
                 } catch (error) {
                     dispatch({ type: AuthActionTypes.REFRESH_ERROR })
                     return Promise.reject(error);
@@ -115,6 +115,5 @@ $api.interceptors.response.use(
         return Promise.reject(error);
     }
 )
-
 
 export { $api, $clear_api, $old_api }

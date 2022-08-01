@@ -11,10 +11,14 @@ class TokenData:
 
 
 class SubSchema(Schema):
+    class Meta:
+        unknown = INCLUDE
+    
     id = fields.Integer()
     name = fields.String()
     email = fields.String()
     session = fields.String()
+    # roles = fields.List(fields.Str())
 
 
 class TokenSchema(Schema):

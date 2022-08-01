@@ -4,5 +4,6 @@ export enum ApiRoutes {
     LOGOUT = "/auth/logout",
     REFRESH = "/auth/refresh",
     DOC_COUNTER = "/doc_count",
-    BOILS = "/boils"
+    BOILS = "/boils",
+    CONVERGENCE = "/boils_report"
 }

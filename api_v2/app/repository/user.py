@@ -1,14 +1,17 @@
+from typing import List
 import bcrypt
 
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError, OperationalError
-from app.assets.api_dataclasses import LoginResponce, Payload, Tokens
+from app.assets.user_roles import UserRoles
+from app.assets.api_dataclasses import Payload
 from app.assets.api_errors import DatabaseConnectionError, MissingCredentialsError, PassNotEqualError, UserExistsError, UserNotExistsError
 from app.schemas.user import UserLoginData, UserLoginSchema, UserRegisterSchema
 from app.schemas.token import TokenSchema
 
 from app.repository.session import SessionRepository
 from app.repository.token import TokenRepository
+from app.repository.role import RoleRepository
 
 
 from app import db
@@ -17,6 +20,7 @@ from app.models.user import User
 
 token_repository = TokenRepository()
 session_repository = SessionRepository()
+role_repository = RoleRepository()
 
 
 class UserRepository():
@@ -62,23 +66,26 @@ class UserRepository():
         if not(equal):
             raise PassNotEqualError
 
-    def get_payload(self, user: User, session: str) -> Payload:
+    def get_payload(self, user: User, session: str, roles: List[str]) -> Payload:
         """ Return Payload object """
         payload = Payload(user.UserPK, user.UserName,
-                          user.UserEmail, session)
+                          user.UserEmail, session, roles)
         return payload
 
     def get_by_email(self, email: str) -> User:
         """ Return User object with User.UserEmail == email
             or raise UserNotExistsError if not found
         """
-        user = db.session.query(User).filter(
-            User.UserEmail == email).one_or_none()
-        if not(user):
-            raise UserNotExistsError
-        return user
+        try:
+            user = db.session.query(User).filter(
+                User.UserEmail == email).one_or_none()
+            if not(user):
+                raise UserNotExistsError
+            return user
+        except OperationalError:
+            raise DatabaseConnectionError
 
-    def add(self, user: User) -> User:
+    def add_user(self, user: User) -> User:
         """ Add user to database,
             raise UserExistsError if user already exists
         """
@@ -90,53 +97,77 @@ class UserRepository():
             return user
         except IntegrityError:
             raise UserExistsError
-
-    def register(self, data: dict):
-        try:
-            candidate = self.load_register_data(data)
-            user = self.add(candidate)
-            session = session_repository.create_session(user.UserPK)
-            payload = self.get_payload(user, session.SessionPK)
-            tokens = token_repository.get_tokens(payload)
-            token_repository.create_or_update(
-                user.UserPK, tokens.refresh_token)
-            user_dump = self.login_schema.dump(user)
-            print(user_dump)
-            result = LoginResponce(user=user_dump, tokens=tokens)
-            return result
         except OperationalError:
             raise DatabaseConnectionError
+
+    def register(self, data: dict):
+        candidate = self.load_register_data(data)
+        user = self.add_user(candidate)
+        session = session_repository.create_session(user.UserPK)
+        role = role_repository.add_role(UserRoles.USER, user.UserPK)
+        role_list = []
+        role_list.append(role.RoleName)
+        payload = self.get_payload(user, session.SessionPK, role_list)
+        tokens = token_repository.get_tokens(payload)
+        token_repository.create_or_update(user.UserPK, tokens.refresh_token)
+        result = {
+            "user": {
+                "id": user.UserPK,
+                "name": user.UserName,
+                "email": user.UserEmail,
+                "roles": role_list
+            },
+            "token": tokens.access_token
+        }
+        return result, tokens.refresh_token
 
         # result = self.register_schema.dump(user)
         # return result
 
-    def login(self, data: dict) -> LoginResponce:
+    def login(self, data: dict):
         """ User login"""
-        try:
-            user_data = self.load_login_data(data)
-            user = self.get_by_email(user_data.email)
-            self.check_password(user_data.password, user.UserPassword)
-            session = session_repository.create_session(user.UserPK)
-            payload = self.get_payload(user, session.SessionPK)
-            tokens = token_repository.get_tokens(payload)
-            token_repository.create_or_update(
-                user.UserPK, tokens.refresh_token)
-            user_dump = self.login_schema.dump(user)
-            print(user_dump)
-            result = LoginResponce(user=user_dump, tokens=tokens)
-            return result
-        except OperationalError:
-            raise DatabaseConnectionError
+        user_data = self.load_login_data(data)
+        user = self.get_by_email(user_data.email)
+        self.check_password(user_data.password, user.UserPassword)
+        session = session_repository.create_session(user.UserPK)
+        roles = role_repository.get_user_roles(user.UserPK)
+        payload = self.get_payload(user, session.SessionPK, roles)
+        tokens = token_repository.get_tokens(payload)
+        token_repository.create_or_update(
+            user.UserPK, tokens.refresh_token)
+        role_list = role_repository.get_user_roles(user.UserPK)
+        result = {
+            "user": {
+                "id": user.UserPK,
+                "name": user.UserName,
+                "email": user.UserEmail,
+                "roles": role_list
+            },
+            "token": tokens.access_token
+        }
+        return result, tokens.refresh_token
 
-    def refresh(self, token: str, user_data: Payload) -> Tokens:
+    def refresh(self, token: str, user_data: Payload):
         token_repository.check(token)
         session_repository.refresh_session(user_data.session)
         tokens = token_repository.refresh_tokens(user_data)
-        return tokens
+        role_list = role_repository.get_user_roles(user_data.id)
+        result = {
+            "user": {
+                "id": user_data.id,
+                "name": user_data.name,
+                "email": user_data.email,
+                "roles": role_list
+            },
+            "token": tokens.access_token
+        }
+        return result, tokens.refresh_token
 
     def logout(self, refresh_token: str, token_dict: dict):
         """ User logout"""
-        # add database connection ecxeption
         data = self.token_schema.load(token_dict)
         token_repository.remove(refresh_token)
         session_repository.close_session(data.session)
+
+    def get_users(self):
+        pass

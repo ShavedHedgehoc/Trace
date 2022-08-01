@@ -1,4 +1,3 @@
-
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import decode_token, get_jwt_identity
@@ -30,11 +29,11 @@ session_repository = SessionRepository()
 class Register(Resource):
     def post(self):
         try:
-            json_data = request.get_json(force=True)
-            # data = user_repository.register(json_data)
-            register = user_repository.register(json_data)
-            data = {"token": register.tokens.access_token, "user": register.user}
-            return api_response(data, None, 201)
+            json_data = request.get_json(force=True)            
+            data, token = user_repository.register(json_data)            
+            resp = api_response(data, None, 201)
+            set_refresh_cookies(resp, token)
+            return resp
         except MissingCredentialsError:
             return api_response(None, ApiMessages.MISSING_CREDENTIALS, 500)
         except UserExistsError:
@@ -47,10 +46,9 @@ class Login(Resource):
     def post(self):
         try:
             json_data = request.get_json(force=True)
-            login = user_repository.login(json_data)
-            data = {"token": login.tokens.access_token, "user": login.user}
+            data, token = user_repository.login(json_data)            
             resp = api_response(data, None, 200)
-            set_refresh_cookies(resp, login.tokens.refresh_token)
+            set_refresh_cookies(resp, token)
             return resp
         except MissingCredentialsError:
             return api_response(None, ApiMessages.MISSING_CREDENTIALS, 500)
@@ -59,7 +57,7 @@ class Login(Resource):
         except PassNotEqualError:
             return api_response(None, ApiMessages.PASS_NOT_EQUAL, 401)
         except DatabaseConnectionError:
-            return api_response(None, ApiMessages.DB_ERROR, 500)
+            return api_response(None, ApiMessages.DB_ERROR, 500)        
 
 
 class Refresh(Resource):
@@ -69,12 +67,9 @@ class Refresh(Resource):
             token = request.cookies.get("refresh_token_cookie")
             identity = get_jwt_identity()
             user_data = Payload(**identity)
-            tokens = user_repository.refresh(token, user_data)
-            user = {"id": str(user_data.id), "name": user_data.name,
-                    "email": user_data.email}
-            data = {"token": tokens.access_token, "user": user}
+            data, token = user_repository.refresh(token, user_data)            
             resp = api_response(data, None, 200)
-            set_refresh_cookies(resp, tokens.refresh_token)
+            set_refresh_cookies(resp, token)
             return resp
         except TokenNotExistsError:
             resp = api_response(None, ApiMessages.TOKEN_NOT_EXISTS, 401)

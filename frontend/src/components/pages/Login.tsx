@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import classes from "../../styles/Login.module.css"
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import Modal from "../utils/Modal";
 import LoadingHandler from "../utils/LoadingHandler";
+import { useEffect } from 'react';
 
 const Login: React.FC = (): JSX.Element => {
     const [name, setName] = useState('')
@@ -11,8 +12,16 @@ const Login: React.FC = (): JSX.Element => {
     const [password, setPassword] = useState('')
     const [regPage, setRegPage] = useState(false)
 
-    const { register, login } = useActions()
+    const { register, login, clearMessage } = useActions()
     const { loading } = useTypedSelector(state => state.auth)
+    const { message } = useTypedSelector(state => state.msg)
+
+
+
+    useEffect(() => {
+        clearMessage()
+    }, [regPage])
+
     const changePage = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault()
         setRegPage(!regPage)
@@ -70,6 +79,9 @@ const Login: React.FC = (): JSX.Element => {
                         :
                         <a href="#" onClick={(e) => changePage(e)} className={classes.loginLink}>Нет аккаунта? Зарегистрироваться</a>
                     }
+                </div>
+                <div className={classes.loginItem}>
+                    <span className={classes.loginMessage}>{message}</span>
                 </div>
             </div>
         </div >

@@ -69,3 +69,7 @@
 .loginLink:visited {
     color: var(--main-active-color);
 }
+
+.loginMessage {
+    color: var(--main-active-color)
+}

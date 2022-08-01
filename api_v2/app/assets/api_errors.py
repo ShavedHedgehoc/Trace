@@ -20,3 +20,20 @@ class UserExistsError(Exception):
 
 class TokenNotExistsError(Exception):
     pass
+
+
+class RoleNotExistsError(Exception):
+    pass
+
+
+class BadJSONError(Exception):
+    pass
+
+class LotNotExistsError(Exception):
+    pass
+
+class TrademarkNotExistsError(Exception):
+    pass
+
+class ProductNotExistsError(Exception):
+    pass

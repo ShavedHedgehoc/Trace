@@ -67,7 +67,7 @@ class TokenRepository():
 
     def generate_refresh_token(self, payload: Payload) -> str:
         """ Return generated access token"""
-        expires_delta = timedelta(minutes=2)
+        expires_delta = timedelta(minutes=20)
         refresh_token = create_refresh_token(
             identity=payload,
             expires_delta=expires_delta)
@@ -81,7 +81,5 @@ class TokenRepository():
 
     def refresh_tokens(self, user_data: Payload) -> Tokens:
         tokens = self.get_tokens(user_data)
-        self.create_or_update(user_data.id, tokens.refresh_token)
-        # new_token = self.create(user_data.id, tokens.refresh_token)
-        # self.save(new_token)
+        self.create_or_update(user_data.id, tokens.refresh_token)        
         return tokens
