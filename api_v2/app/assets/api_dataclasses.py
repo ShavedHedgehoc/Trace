@@ -131,8 +131,9 @@ class ProductItemRequestOptions:
     
     
 @dataclass
-class ProductTrademarksRequestOptions:
+class ProductTrademarksItemRequestOptions:
     page: int
     limit: int
     # filter: 
+    
     

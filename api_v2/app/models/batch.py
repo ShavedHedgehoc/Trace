@@ -49,7 +49,7 @@ class Batch(db.Model):
         }
         return month_dict[self.name[-2]]
 
-    @ batch_month.expression
+    @batch_month.expression
     def batch_month(cls):
         month_letter = func.substring(
             cls.BatchName, func.length(cls.BatchName)-1, 1)

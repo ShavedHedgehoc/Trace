@@ -1,67 +1,43 @@
-import axios from "axios";
-import {Dispatch} from "react";
-import {
-    IProductItemFilter,
-    IProductItemFormField,
-    ProductItemAction,
-    ProductItemActionTypes
-} from "../../types/productItem"
+import { Dispatch } from "react";
+import handleError from "../../http/handleError";
+import ProductService from '../../http/services/ProductService';
+import { IProductItemFormField, ProductItemAction, ProductItemActionTypes } from "../../types/productItem"
 
-const axiosParams = (page: number, limit: number, filter: IProductItemFilter) => {
-    const params = new URLSearchParams();
-    params.append('_page', String(page))
-    params.append('_limit', String(limit))
-    Object.entries(filter).forEach(([key, value]) => {
-        params.append("_" + key, value)
-    })
-    return params
-}
+const filterInitValue = { lot_name: '', seller_name: '', manufacturer_name: '', manufacturer_lot_name: '', trademark_name: '' };
 
-export const fetchProductItem = (
-    page = 0, limit = 10, product_id: string | undefined, filter = {
-        lot_name: '',
-        seller_name: '',
-        manufacturer_name: '',
-        manufacturer_lot_name: '',
-        trademark_name: ''
-    }) => {
+export const fetchProductItem = (page = 0, limit = 10, product_id: string | undefined, filter = filterInitValue) => {
     return async (dispatch: Dispatch<ProductItemAction>) => {
         try {
-            dispatch({type: ProductItemActionTypes.FETCH_PRODUCT_ITEM})
-            const response = await (
-                axios.get(
-                    `/api/v1/products/${product_id}`,
-                    {
-                        params: axiosParams(page, limit, filter)
-                    }
-                ))
+            dispatch({ type: ProductItemActionTypes.FETCH_PRODUCT_ITEM })
+            const response = await ProductService.get_product_item(product_id, page, limit, filter)
             dispatch({
                 type: ProductItemActionTypes.FETCH_PRODUCT_ITEM_SUCCESS,
                 payload: response.data
             })
         } catch (error) {
+            const errValue = handleError(error)
             dispatch({
                 type: ProductItemActionTypes.FETCH_PRODUCT_ITEM_ERROR,
-                payload: 'error'
+                payload: errValue
             })
         }
     }
 }
 
 export function increaseProductItemPage(): ProductItemAction {
-    return {type: ProductItemActionTypes.INCREASE_PRODUCT_ITEM_PAGE}
+    return { type: ProductItemActionTypes.INCREASE_PRODUCT_ITEM_PAGE }
 }
 
 export function decreaseProductItemPage(): ProductItemAction {
-    return {type: ProductItemActionTypes.DECREASE_PRODUCT_ITEM_PAGE}
+    return { type: ProductItemActionTypes.DECREASE_PRODUCT_ITEM_PAGE }
 }
 
 export function getFirstProductItemPage(): ProductItemAction {
-    return {type: ProductItemActionTypes.GET_FIRST_PRODUCT_ITEM_PAGE}
+    return { type: ProductItemActionTypes.GET_FIRST_PRODUCT_ITEM_PAGE }
 }
 
 export function getLastProductItemPage(): ProductItemAction {
-    return {type: ProductItemActionTypes.GET_LAST_PRODUCT_ITEM_PAGE}
+    return { type: ProductItemActionTypes.GET_LAST_PRODUCT_ITEM_PAGE }
 }
 
 export function setProductItemsPage(page = 0): ProductItemAction {
@@ -78,17 +54,17 @@ export function changeProductItemLimit(limit = 10): ProductItemAction {
     }
 }
 
-export function changeProductItemFilter({key, value}: IProductItemFormField): ProductItemAction {
+export function changeProductItemFilter({ key, value }: IProductItemFormField): ProductItemAction {
     return {
         type: ProductItemActionTypes.CHANGE_PRODUCT_ITEM_FILTER,
-        payload: {key, value}
+        payload: { key, value }
     }
 }
 
 export function clearProductItemFilter(): ProductItemAction {
-    return {type: ProductItemActionTypes.CLEAR_PRODUCT_ITEM_FILTER}
+    return { type: ProductItemActionTypes.CLEAR_PRODUCT_ITEM_FILTER }
 }
 
 export function resetProductItemState(): ProductItemAction {
-    return {type: ProductItemActionTypes.RESET_PRODUCT_ITEM_STATE}
+    return { type: ProductItemActionTypes.RESET_PRODUCT_ITEM_STATE }
 }

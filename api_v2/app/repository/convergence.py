@@ -1,9 +1,8 @@
 from flask import jsonify
+from flask_sqlalchemy import BaseQuery
 from marshmallow import ValidationError
-
-from sqlalchemy import case, func, or_
+from sqlalchemy import func
 from sqlalchemy.exc import OperationalError
-
 
 from app import db
 from app.models.batch import Batch
@@ -12,41 +11,24 @@ from app.models.bt_product import BtProduct
 from app.models.plant import Plant
 from app.models.product import Product
 from app.models.weighting import Weighting
-from app.assets.api_dataclasses import ConvergenceItemRequestOptions, ConvergenceRequestOptions
+from app.assets.api_dataclasses import ConvergenceRequestOptions
 from app.schemas.boil import PlantSchema
-from app.schemas.convergence import ConvergenceItemRequestSchema, ConvergenceRequestSchema
+from app.schemas.convergence import ConvergenceRequestSchema, ConvergenceRowSchema
 from app.assets.api_dataclasses import ConvergenceRequestOptions
 from app.assets.api_errors import DatabaseConnectionError, BadJSONError
 
 
 class ConvergenceRepository:
-    plant_dict_for_report = {
-        "П": "Пискаревка",
-        "К": "Колпино",
-    }
+
     plant_schema = PlantSchema()
     request_schema = ConvergenceRequestSchema()
-    request_item_schema = ConvergenceItemRequestSchema()
+    rows_schema = ConvergenceRowSchema()
 
-    def __load_request_data(self, data: dict) -> ConvergenceRequestOptions:
-        try:
-            req_options = self.request_schema.load(data)
-            return req_options
-        except ValidationError:
-            raise BadJSONError
-        except TypeError:
-            raise BadJSONError
-        
-    def __load_item_request_data(self, data: dict) -> ConvergenceItemRequestOptions:
-        try:
-            req_options = self.request_item_schema.load(data)
-            return req_options
-        except ValidationError:
-            raise BadJSONError
-        except TypeError:
-            raise BadJSONError
+    def __request_data(self, data: dict) -> ConvergenceRequestOptions:
+        req_options = self.request_schema.load(data)
+        return req_options
 
-    def __get_plant_options(self):
+    def __plant_options(self):
         plants = db.session.query(
             Plant.PlantAlias.label("key"),
             Plant.PlantName.label("value")
@@ -54,62 +36,120 @@ class ConvergenceRepository:
         plant_options = self.plant_schema.dump(plants, many=True)
         return plant_options
 
-    def __get_query(self, options: ConvergenceRequestOptions):
+    def __query(self, options: ConvergenceRequestOptions) -> BaseQuery:
 
         filters = []
-
-        if options.filter.plant != '-':
-            filters.append(Batch.Plant == options.filter.plant)
-        filters.append(Batch.BatchDate >= options.filter.start_date)
-        filters.append(Batch.BatchDate <= options.filter.end_date)
-
-        wght_total_subquery = db.session.query(
-            Weighting.BatchPK.label('batch_id'),
-            Weighting.ProductId.label('product_id'),
-            func.sum(Weighting.Quantity).label('total')
-        ).group_by(
-            Weighting.BatchPK,
-            Weighting.ProductId
-        ).subquery()
-
-        if options.filter.exactly:
-            filters.append(wght_total_subquery.c.total != Boil.Quantity)
-        else:
-            filters.append(wght_total_subquery.c.total.is_(None))
+        filter = options.filter
+        filters.append(Weighting.Quantity.is_(None))
+        filters.append(Batch.BatchDate.between(
+            filter.start_date, filter.end_date))
+        if filter.plant != '-':
+            filters.append(Batch.Plant == filter.plant)
 
         report_subquery = db.session.query(
             Boil.BatchPK.label('batch_id'),
-            Batch.Plant.label('plant'),
             Batch.BatchName.label('batch_name'),
             Batch.BatchDate.label('batch_date'),
             Batch.batch_year.label('batch_year'),
             Batch.batch_month.label('batch_month'),
             Batch.batch_number.label('batch_number'),
-            Batch.plant_letter.label('plant_letter'),
             Product.ProductMarking.label('marking'),
-        ).outerjoin(
-            wght_total_subquery,
-            ((wght_total_subquery.c.batch_id == Boil.BatchPK) & (
-                wght_total_subquery.c.product_id == Boil.ProductId))
+            Plant.PlantName.label('plant')
         ).join(
             Batch, Batch.BatchPK == Boil.BatchPK
+        ).join(
+            Plant, Plant.PlantAlias == Batch.Plant
         ).join(
             BtProduct, BtProduct.BatchPK == Boil.BatchPK
         ).join(
             Product, Product.ProductId == BtProduct.ProductId
+        ).join(
+            Weighting,
+            ((Weighting.BatchPK == Boil.BatchPK) & (
+                Weighting.ProductId == Boil.ProductId)),
+            isouter=True
         ).filter(
             *filters
+        ).group_by(
+            Boil.BatchPK,
+            Batch.BatchName,
+            Batch.BatchDate,
+            Batch.batch_year,
+            Batch.batch_month,
+            Batch.batch_number,
+            Product.ProductMarking,
+            Plant.PlantName
         ).subquery()
 
-        report_qry = db.session.query(
+        query = db.session.query(
             report_subquery.c.batch_id.label('batch_id'),
             report_subquery.c.batch_name.label('batch_name'),
             report_subquery.c.batch_date.label('batch_date'),
-            report_subquery.c.batch_year.label('batch_year'),
+            report_subquery.c.batch_year,
             report_subquery.c.batch_month,
             report_subquery.c.batch_number,
             report_subquery.c.marking.label('marking'),
-            report_subquery.c.plant_letter.label('plant_letter'),
+            report_subquery.c.plant.label('plant')
+        ).order_by(
+            report_subquery.c.batch_year,
+            report_subquery.c.batch_month,
+            report_subquery.c.batch_number
+        )
+        return query
+
+    def __query_ex(self, options: ConvergenceRequestOptions) -> BaseQuery:
+        filters = []
+        filter = options.filter
+
+        filters.append(Batch.BatchDate.between(
+            filter.start_date, filter.end_date))
+        if filter.plant != '-':
+            filters.append(Batch.Plant == filter.plant)
+
+        report_subquery = db.session.query(
+            Boil.BatchPK.label('batch_id'),
+            Batch.BatchName.label('batch_name'),
+            Batch.BatchDate.label('batch_date'),
+            Product.ProductMarking.label('marking'),
+            Batch.batch_year.label('batch_year'),
+            Batch.batch_month.label('batch_month'),
+            Batch.batch_number.label('batch_number'),
+            Plant.PlantName.label('plant'),
+            Boil.Quantity.label('plan'),
+            func.sum(Weighting.Quantity).label('fact')
+        ).join(
+            Batch, Batch.BatchPK == Boil.BatchPK
+        ).join(
+            Plant, Plant.PlantAlias == Batch.Plant
+        ).join(
+            BtProduct, BtProduct.BatchPK == Boil.BatchPK
+        ).join(
+            Product, Product.ProductId == BtProduct.ProductId
+        ).join(
+            Weighting,
+            ((Weighting.BatchPK == Boil.BatchPK) & (
+                Weighting.ProductId == Boil.ProductId)),
+            isouter=True
+        ).filter(
+            *filters
+        ).group_by(
+            Boil.BatchPK,
+            Batch.BatchName,
+            Batch.BatchDate,
+            Product.ProductMarking,
+            Plant.PlantName,
+            Boil.Quantity
+        ).subquery()
+
+        query = db.session.query(
+            report_subquery.c.batch_id.label('batch_id'),
+            report_subquery.c.batch_name.label('batch_name'),
+            report_subquery.c.batch_date.label('batch_date'),
+            report_subquery.c.batch_year,
+            report_subquery.c.batch_month,
+            report_subquery.c.batch_number,
+            report_subquery.c.marking.label('marking'),
+            report_subquery.c.plant.label('plant'),
         ).distinct(
             report_subquery.c.batch_id
         ).order_by(
@@ -117,135 +157,30 @@ class ConvergenceRepository:
             report_subquery.c.batch_month,
             report_subquery.c.batch_number
         )
-        return report_qry
+        return query
 
-    def __get_convergences_rows(self, query, options: ConvergenceRequestOptions):
-        offset = options.page * options.limit
-        report_data = query.offset(offset).limit(options.limit)
-        
-        # add marshmallow here
-        
-        rows = []
-
-        for row in report_data:
-            rows.append({
-                'batch_id': row.batch_id,
-                'batch_name': row.batch_name,
-                'marking': row.marking,
-                'batch_date':
-                    row.batch_date.strftime(
-                        "%d-%m-%Y") if row.batch_date else None,
-                'plant': self.plant_dict_for_report[row.plant_letter]
-            })
+    def __rows(self, query: BaseQuery, options: ConvergenceRequestOptions):
+        offset = options.page*options.limit
+        data = query.offset(offset).limit(options.limit)
+        rows = self.rows_schema.dump(data, many=True)
         return rows
 
     def get_convergenses(self, data: dict):
         try:
-            req_options = self.__load_request_data(data)
-            query = self.__get_query(req_options)
-            rows = self.__get_convergences_rows(query, req_options)
+            req_options = self.__request_data(data)
+            if req_options.filter.exactly:
+                query = self.__query_ex(req_options)
+            else:
+                query = self.__query(req_options)
+            rows = self.__rows(query, req_options)
             total = query.count()
-            plant_selector_options = self.__get_plant_options()
-            result = {'rows': rows,
-                      'total': total,
-                      'plant_selector_options': plant_selector_options
-                      }
+            plant_options = self.__plant_options()
+            result = {'rows': rows, 'total': total,
+                      'plant_selector_options': plant_options}
             return jsonify(result)
         except OperationalError:
             raise DatabaseConnectionError
-
-    def get_convergense_item(self, name: str, data: dict):
-        req_options = self.__load_item_request_data(data)
-        exactly  = req_options.exactly
-        
-
-        batch = db.session.query(Batch).filter(
-            Batch.BatchName == name).one_or_none()
-
-        if batch is None:
+        except ValidationError:
             raise BadJSONError
-        else:
-            batchid = batch.BatchPK
-
-        boil_subqry = db.session.query(
-            Boil.BatchPK.label('batch_id'),
-            Boil.ProductId.label('product_id'),
-            Product.ProductName.label('product_name'),
-            func.sum(Boil.Quantity).label('plan'),
-        ).join(
-            Product, Boil.ProductId == Product.ProductId
-        ).filter(
-            Boil.BatchPK == batchid
-        ).group_by(
-            Boil.BatchPK,
-            Boil.ProductId,
-            Product.ProductName
-        ).subquery()
-
-        wght_subqry = db.session.query(
-            Weighting.BatchPK,
-            Weighting.ProductId.label('product_id'),
-            Product.ProductName.label('product_name'),
-            func.sum(Weighting.Quantity).label('fact')
-        ).join(
-            Product, Weighting.ProductId == Product.ProductId
-        ).filter(
-            Weighting.BatchPK == batchid
-        ).group_by(
-            Weighting.BatchPK,
-            Weighting.ProductId,
-            Product.ProductName
-        ).subquery()
-
-        filters = []
-
-        if exactly:
-            filters.append(
-                or_(wght_subqry.c.fact != boil_subqry.c.plan,
-                    wght_subqry.c.fact.is_(None))
-            )
-
-        else:
-            filters.append(wght_subqry.c.fact.is_(None))
-
-        boil_qry = db.session.query(
-            boil_subqry.c.product_id.label('b_product_id'),
-            boil_subqry.c.product_name.label('b_product_name'),
-            boil_subqry.c.plan.label('plan'),
-            wght_subqry.c.product_id.label('w_product_id'),
-            wght_subqry.c.product_name.label('w_product_name'),
-            wght_subqry.c.fact.label('fact')
-        ).join(
-            wght_subqry,
-            boil_subqry.c.product_id == wght_subqry.c.product_id,
-            full=True
-        ).filter(
-            *filters
-        ).order_by(case(
-            [(boil_subqry.c.product_name != '', boil_subqry.c.product_name), ],
-            else_=wght_subqry.c.product_name
-        ).asc())
-
-        boil_rows = boil_qry.all()
-
-        # if boil_rows is None:
-        #     abort(404)
-
-        rows = []
-
-        for row in boil_rows:
-            product_id = row.b_product_id if row.b_product_id \
-                else row.w_product_id
-            product_name = row.b_product_name if row.b_product_name \
-                else row.w_product_name
-
-            rows.append({
-                'product_id': product_id,
-                'product_name': product_name,
-                'plan': row.plan,
-                'fact': row.fact or 0
-            })
-
-        response = {'rows': rows, 'batch_id': batchid}
-
-        return jsonify(response)
+        except TypeError:
+            raise BadJSONError

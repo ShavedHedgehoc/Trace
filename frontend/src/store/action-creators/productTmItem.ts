@@ -1,57 +1,41 @@
-import axios from "axios";
-import {Dispatch} from "react";
-import {ProductTmItemAction, ProductTmItemActionTypes} from "../../types/productTmItem";
+import { Dispatch } from "react";
+import ProductService from "../../http/services/ProductService";
+import { ProductTmItemAction, ProductTmItemActionTypes } from "../../types/productTmItem";
+import handleError from '../../http/handleError';
 
-const axiosParams = (page: number, limit: number) => {
-    const params = new URLSearchParams();
-    params.append('_page', String(page))
-    params.append('_limit', String(limit))
-    // Object.entries(filter).forEach(([key, value]) => {
-    //     params.append("_" + key, value)
-    // })
-    return params
-}
-
-export const fetchProductTmItem = (
-    page = 0, limit = 10, product_id: string|undefined) => {
+export const fetchProductTmItem = (page = 0, limit = 10, product_id: string | undefined) => {
     return async (dispatch: Dispatch<ProductTmItemAction>) => {
         try {
-            dispatch({type: ProductTmItemActionTypes.FETCH_PRODUCT_TM_ITEM})
-            const response = await (
-                axios.get(
-                    `/api/v1/products_trademarks/${product_id}`,
-                    {
-                        params: axiosParams(page, limit)
-
-                    }
-                ))
+            dispatch({ type: ProductTmItemActionTypes.FETCH_PRODUCT_TM_ITEM })
+            const response = await ProductService.get_product_tm_item(product_id, page, limit)
             dispatch({
                 type: ProductTmItemActionTypes.FETCH_PRODUCT_TM_ITEM_SUCCESS,
                 payload: response.data
             })
         } catch (error) {
+            const errValue = handleError(error)
             dispatch({
                 type: ProductTmItemActionTypes.FETCH_PRODUCT_TM_ITEM_ERROR,
-                payload: 'error'
+                payload: errValue
             })
         }
     }
 }
 
 export function increaseProductTmItemPage(): ProductTmItemAction {
-    return {type: ProductTmItemActionTypes.INCREASE_PRODUCT_TM_ITEM_PAGE}
+    return { type: ProductTmItemActionTypes.INCREASE_PRODUCT_TM_ITEM_PAGE }
 }
 
 export function decreaseProductTmItemPage(): ProductTmItemAction {
-    return {type: ProductTmItemActionTypes.DECREASE_PRODUCT_TM_ITEM_PAGE}
+    return { type: ProductTmItemActionTypes.DECREASE_PRODUCT_TM_ITEM_PAGE }
 }
 
 export function getFirstProductTmItemPage(): ProductTmItemAction {
-    return {type: ProductTmItemActionTypes.GET_FIRST_PRODUCT_TM_ITEM_PAGE}
+    return { type: ProductTmItemActionTypes.GET_FIRST_PRODUCT_TM_ITEM_PAGE }
 }
 
 export function getLastProductTmItemPage(): ProductTmItemAction {
-    return {type: ProductTmItemActionTypes.GET_LAST_PRODUCT_TM_ITEM_PAGE}
+    return { type: ProductTmItemActionTypes.GET_LAST_PRODUCT_TM_ITEM_PAGE }
 }
 
 export function changeProductTmItemLimit(limit = 10): ProductTmItemAction {
@@ -62,5 +46,5 @@ export function changeProductTmItemLimit(limit = 10): ProductTmItemAction {
 }
 
 export function resetProductTmItemState(): ProductTmItemAction {
-    return {type:ProductTmItemActionTypes.RESET_PRODUCT_TM_ITEM_STATE}
+    return { type: ProductTmItemActionTypes.RESET_PRODUCT_TM_ITEM_STATE }
 }

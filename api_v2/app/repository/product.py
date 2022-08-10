@@ -51,7 +51,7 @@ class ProductRepository:
             self.filters.append(Product.ProductName.like(
                 f"%{filter.product_name}%"))
 
-    def __get_rows(self, query, options):
+    def __rows(self, query, options):
         offset = options.page*options.limit
         data = query.offset(offset).limit(options.limit)
         rows = self.rows_schema.dump(data, many=True)
@@ -62,7 +62,7 @@ class ProductRepository:
             req_options = self.__load_request_options(data)
             self.__process_filters(req_options)
             query = self.__query()
-            rows = self.__get_rows(query, req_options)
+            rows = self.__rows(query, req_options)
             total = query.count()
             response = {'rows': rows, 'total': total}
             return jsonify(response)

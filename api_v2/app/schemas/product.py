@@ -2,7 +2,7 @@ from datetime import datetime
 from marshmallow import Schema, fields, missing, post_dump, post_load
 
 
-from app.assets.api_dataclasses import ProductFilter, ProductItemFilter, ProductItemRequestOptions, ProductRequestOptions, TrademarkFilter, TrademarkItemRequestOptions, TrademarkRequestOptions
+from app.assets.api_dataclasses import ProductFilter, ProductItemFilter, ProductItemRequestOptions, ProductRequestOptions, ProductTrademarksItemRequestOptions, TrademarkFilter, TrademarkItemRequestOptions, TrademarkRequestOptions
 
 
 class ProductFilterSchema(Schema):
@@ -77,5 +77,41 @@ class ProductItemRowSchema(Schema):
 
 
 class ProductItemHeaderSchema(Schema):
+    product_id = fields.Str()
+    product_name = fields.Str(missing="Нет данных")
+
+
+class ProductTrademarkItemRequestSchema(Schema):
+    page = fields.Int(missing=0)
+    limit = fields.Int(missing=10)
+
+    @post_load
+    def make_options(self, data, **kwargs) -> ProductItemRequestOptions:
+        return ProductTrademarksItemRequestOptions(**data)
+
+
+class ProductTrademarkItemRowSchema(Schema):
+    boil_id = fields.Int()
+    boil_name = fields.Str()
+    boil_date = fields.DateTime()
+    plant = fields.Str()
+    lot_id = fields.Int()
+    lot_name = fields.Str()
+    product_name = fields.Str()
+    trademark_id = fields.Int()
+    trademark_name = fields.Str()
+    
+    @post_dump(pass_many=True)
+    def handle_values(self, data, **kwargs):
+        for item in data:
+            if item["boil_date"]:
+                date_string = datetime.strptime(
+                    item["boil_date"], "%Y-%m-%dT%H:%M:%S")
+                item["boil_date"] = datetime.strftime(date_string, "%d-%m-%Y")
+            else:
+                item["boil_date"] = "Нет данных"
+        return data    
+    
+class ProductTrademarkItemHeaderSchema(Schema):
     product_id = fields.Str()
     product_name = fields.Str(missing="Нет данных")

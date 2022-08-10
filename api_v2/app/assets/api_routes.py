@@ -17,6 +17,6 @@ class ApiRoutes(str, Enum):
     LOT_ITEM = "/lots/<id>"
     PRODUCTS = "/products"
     PRODUCT_ITEM = "/products/<id>"
-    PRODUCT_TRADEMARKS = "/products_trademarks/id"
+    PRODUCT_TRADEMARKS = "/products_trademarks/<id>"
     TRADEMARKS = "/trademarks"
     TRADEMARK_ITEM = "/trademarks/<id>"
