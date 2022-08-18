@@ -1,6 +1,7 @@
 import os
 from flask_restful import Api
 
+
 from app.assets.api_routes import ApiRoutes
 # from app.resource.home import Home
 from app.resource.auth import Logout, Refresh, Register, Login
@@ -10,6 +11,7 @@ from app.resource.convergence import Convergence, ConvergenceItem
 from app.resource.lot import LotItem, Lots
 from app.resource.product import ProductItem, ProductTrademarks, Products
 from app.resource.trademark import TrademarkItem, Trademarks
+from app.resource.cells_contain import CellsContain
 
 api = Api(prefix=os.getenv("SECOND_API_PREFIX"))
 
@@ -30,3 +32,4 @@ api.add_resource(ProductItem, ApiRoutes.PRODUCT_ITEM)
 api.add_resource(ProductTrademarks, ApiRoutes.PRODUCT_TRADEMARKS)
 api.add_resource(Trademarks, ApiRoutes.TRADEMARKS)
 api.add_resource(TrademarkItem, ApiRoutes.TRADEMARK_ITEM)
+api.add_resource(CellsContain, ApiRoutes.CELLS_CONTAIN)

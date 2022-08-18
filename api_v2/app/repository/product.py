@@ -67,7 +67,4 @@ class ProductRepository:
             response = {'rows': rows, 'total': total}
             return jsonify(response)
         except OperationalError:
-            raise DatabaseConnectionError
-
-    def get_product_trademarks(self, id: str, data: dict):
-        pass
+            raise DatabaseConnectionError    

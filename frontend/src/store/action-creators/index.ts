@@ -13,6 +13,7 @@ import * as LotItemActionCreators from "./lotItem";
 import * as ConvergenceActionCreators from "./convergence";
 import * as ConvergenceItemActionCreators from "./convergenceItem";
 import * as MsgActionCreators from "./message";
+import * as CellsContainActionCreators from "./cellsContain"
 
 
 const ActionCreators = {
@@ -31,6 +32,8 @@ const ActionCreators = {
     ...ConvergenceActionCreators,
     ...ConvergenceItemActionCreators,
     ...MsgActionCreators,
+    ...CellsContainActionCreators,
+
 }
 
 export default ActionCreators

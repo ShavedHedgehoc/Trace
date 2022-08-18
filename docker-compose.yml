@@ -1,17 +1,17 @@
 version: '3.3'
 
 services:
-  api_old:
-    build: 
-      context: ./api   
-      dockerfile: ../docker/api/Dockerfile.dev
-    command: python traceability.py run -h 0.0.0.0:5000
-    volumes:
-      - ./api/:/usr/src/app/
-    ports:
-      - 5000:5000
-    env_file:
-      - ./.env.dev
+  # api_old:
+  #   build: 
+  #     context: ./api   
+  #     dockerfile: ../docker/api/Dockerfile.dev
+  #   command: python traceability.py run -h 0.0.0.0:5000
+  #   volumes:
+  #     - ./api/:/usr/src/app/
+  #   ports:
+  #     - 5000:5000
+  #   env_file:
+  #     - ./.env.dev
   api_new:
     build:
       context: ./api_v2

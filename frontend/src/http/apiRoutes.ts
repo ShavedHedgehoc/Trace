@@ -9,5 +9,6 @@ export enum ApiRoutes {
     LOTS = "/lots",
     PRODUCTS = "/products",
     PRODUCT_TRADEMARKS = "/products_trademarks",
-    TRADEMARKS = "/trademarks"
+    TRADEMARKS = "/trademarks",
+    CELLS_CONTAIN = "/cells_contain",
 }

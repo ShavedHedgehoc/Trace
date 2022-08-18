@@ -20,7 +20,7 @@ class ProductRequestSchema(Schema):
     filter = fields.Nested(ProductFilterSchema)
 
     @post_load
-    def make_options(self, data, **kwargs) -> TrademarkRequestOptions:
+    def make_options(self, data, **kwargs) -> ProductRequestOptions:
         return ProductRequestOptions(**data)
 
 

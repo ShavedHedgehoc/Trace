@@ -137,3 +137,8 @@ class ProductTrademarksItemRequestOptions:
     # filter: 
     
     
+@dataclass
+class CellsContainRequestOptions:
+    page: int
+    limit: int
+    

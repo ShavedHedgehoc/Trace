@@ -22,6 +22,7 @@ const SideMenu: React.FC = ({}) => {
                         {/*<Link to={RouteNames.SELLERS} onClick={() => switchMenu()}>Поставщики</Link>*/}
                         {/*<Link to={RouteNames.MANUFACTURERS} onClick={() => switchMenu()}>Производители</Link>*/}
                         <Link to={RouteNames.BOILS_CONVERGENCE_REPORT} onClick={() => switchMenu()}>Отчет по варкам</Link>
+                        <Link to={RouteNames.CELLS_CONTAIN} onClick={() => switchMenu()}>Сырье в ячейках</Link>
                     </div>
                 </div>
             </div>

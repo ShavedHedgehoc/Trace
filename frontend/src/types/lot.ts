@@ -13,19 +13,19 @@ export interface ILotData {
 }
 
 export interface ILotRow {
-    lot_id: string,
-    'lot_name': string,
-    'lot_date': string,
-    'product_id': string,
-    'product_name': string,
-    'trademark_id': string,
-    'trademark_name': string,
-    'seller_id': string,
-    'seller_name': string,
-    'manufacturer_id': string,
-    'manufacturer_name': string,
-    'manufacturer_lot_id': string,
-    'manufacturer_lot_name': string
+    lot_id: string;
+    lot_name: string;
+    lot_date: string;
+    product_id: string;
+    product_name: string;
+    trademark_id: string;
+    trademark_name: string;
+    seller_id: string;
+    seller_name: string;
+    manufacturer_id: string;
+    manufacturer_name: string;
+    manufacturer_lot_id: string;
+    manufacturer_lot_name: string;
 }
 
 export enum LotActionTypes {
