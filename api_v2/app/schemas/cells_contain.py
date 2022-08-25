@@ -1,13 +1,23 @@
 from datetime import datetime
 from marshmallow import Schema, fields, post_dump, post_load
 
-from app.assets.api_dataclasses import CellsContainRequestOptions
+from app.assets.api_dataclasses import CellsContainFilter, CellsContainRequestOptions
+
+class CellsContainFilterSchema(Schema):
+    cell = fields.Str()
+    product_id = fields.Str()
+    product_name = fields.Str()
+
+    @post_load
+    def post_load_hook(self, data, **kwargs):
+        return CellsContainFilter(**data)
+
 
 
 class CellsContainRequestSchema(Schema):
     page = fields.Int(missing=0)
     limit = fields.Int(missing=10)
-    # filter = fields.Nested(ProductFilterSchema)
+    filter = fields.Nested(CellsContainFilterSchema)
 
     @post_load
     def make_options(self, data, **kwargs) -> CellsContainRequestOptions:

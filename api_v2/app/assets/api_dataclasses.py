@@ -136,9 +136,17 @@ class ProductTrademarksItemRequestOptions:
     limit: int
     # filter: 
     
+
+@dataclass
+class CellsContainFilter:
+    cell: str
+    product_id: str
+    product_name: str
     
+
 @dataclass
 class CellsContainRequestOptions:
     page: int
     limit: int
+    filter: CellsContainFilter
     

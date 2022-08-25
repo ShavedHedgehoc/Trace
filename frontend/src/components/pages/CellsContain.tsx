@@ -8,12 +8,15 @@ import Modal from "../utils/Modal";
 import NoDataHandler from "../utils/NoDataHandler";
 import { useLocation } from 'react-router-dom';
 import CellsContainTable from '../tables/CellsContainTable';
+import CellsContainForm, { CellsContainFormProps } from '../forms/CellContainForm';
+import { changeCellsContainFilter, resetCellsContainFilter } from '../../store/action-creators/cellsContain';
+import { useDebounce } from '../../hooks/useDebounce';
 
 
 const CellsContain: React.FC = (): JSX.Element => {
     const location = useLocation()
 
-    const { data, loading, error, page, limit, init } = useTypedSelector(state => state.cellsContain)
+    const { data, loading, error, page, limit, filter, init } = useTypedSelector(state => state.cellsContain)
     const { user } = useTypedSelector(state => state.auth)
 
     const {
@@ -23,10 +26,12 @@ const CellsContain: React.FC = (): JSX.Element => {
         getFirstCellsContainPage,
         getLastCellsContainPage,
         changeCellsContainLimit,
+        changeCellsContainFilter,
+        resetCellsContainFilter,
         resetCellsContainState
     } = useActions()
 
-
+    const debouncedFilter = useDebounce(filter, 800)
 
     const paginationProps: PaginationProps = {
         increasePage: () => increaseCellsContainPage(),
@@ -40,26 +45,27 @@ const CellsContain: React.FC = (): JSX.Element => {
         total: data.total
     }
 
-    // const productFormProps: ProductFormProps = {
-    //     changeFilter: ({key, value}) => changeProductFilter({key, value}),
-    //     clearFilter: () => clearProductFilter(),
-    //     filter: filter
-    // }
+    const cellsContainFormProps: CellsContainFormProps = {
+        filter: filter,
+        changeFilter: ({ key, value }) => changeCellsContainFilter({ key, value }),
+        resetFilter: () => resetCellsContainFilter()
+    }
 
-    // useEffect(() => {
-    //     resetCellsContainState();
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [location])
 
     useEffect(() => {
-        fetchCellsContains(page, limit);
+        resetCellsContainState();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, limit])
+    }, [location])
 
-    // useEffect(() => {
-    //     fetchCellsContains(page, limit);
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [])
+    useEffect(() => {
+        fetchCellsContains(page, limit, filter);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page, limit, debouncedFilter])
+
+    useEffect(() => {
+        fetchCellsContains(page, limit, filter);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     if (error) {
         return (
@@ -81,11 +87,11 @@ const CellsContain: React.FC = (): JSX.Element => {
         <div className={classes.pageContainer}>
             <Modal visible={loading}><LoadingHandler /></Modal>
             <div className={classes.pageHeader}>Содержимое ячеек</div>
-            {/* <div className={classes.pageFormContainer}>
-                <ProductForm {...productFormProps} />
-            </div> */}
+            <div className={classes.pageFormContainer}>
+                <CellsContainForm {...cellsContainFormProps} />
+            </div>
             <div className={classes.pageTableContainer}>
-                {data.rows.length === 0 ? <NoDataHandler limit={limit} /> : user?.roles && <CellsContainTable items={data.rows} roles={user.roles}/>}
+                {data.rows.length === 0 ? <NoDataHandler limit={limit} /> : user?.roles && <CellsContainTable items={data.rows} roles={user.roles} />}
             </div>
             <Pagination {...paginationProps} />
         </div>

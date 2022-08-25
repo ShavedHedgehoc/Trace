@@ -4,7 +4,8 @@ export interface CellsContainState {
     error: null | string;
     page: number;
     limit: number;
-    // filter: ICellContainFilter;
+    filter: ICellsContainFilter;
+    order: ICellsContainOrders;
     init: boolean;
 }
 
@@ -13,7 +14,11 @@ export interface ICellsContainData {
     total: number;
 }
 
-
+export interface ICellsContainFilter {
+    cell: string;
+    product_id: string;
+    product_name: string;
+}
 
 export interface ICellsContainRow {
     id: string;
@@ -26,17 +31,22 @@ export interface ICellsContainRow {
     product_name: string;
 }
 
-// export interface ICellContainFilter {
-//     start_date: string;
-//     end_date: string;
-//     exactly: string; // fix it to boolean!!!
-//     plant: string;
-// }
+export enum ICellsContainOrders {
+    BY_CELLS = "by_cells",
+    BY_PRODUCTS = "by_products",
+    BY_EXPIRE = "by_expire"
+}
 
-// export interface ICellContainFormField {
-//     key: string;
-//     value: string;
-// }
+export interface ICellsContainFormField {
+    key: string;
+    value: string;
+}
+
+export enum CellsContainFilterParams {
+    CELL = "cell",
+    PRODUCT_ID = "product_id",
+    PRODUCT_NAME = "product_name",
+}
 
 export enum CellsContainActionTypes {
     FETCH_CELLS_CONTAIN = "FETCH_CELLS_CONTAIN",
@@ -47,8 +57,8 @@ export enum CellsContainActionTypes {
     GET_FIRST_CELLS_CONTAIN_PAGE = "GET_FIRST_CELLS_CONTAIN_PAGE",
     GET_LAST_CELLS_CONTAIN_PAGE = "GET_LAST_CELLS_CONTAIN_PAGE",
     CHANGE_CELLS_CONTAIN_LIMIT = "CHANGE_CELLS_CONTAIN_LIMIT",
-    // CHANGE_CELLS_CONTAIN_FILTER = "CHANGE_CELLS_CONTAIN_FILTER",
-    // RESET_CELLS_CONTAIN_FILTER = "RESET_CELLS_CONTAIN_FILTER",
+    CHANGE_CELLS_CONTAIN_FILTER = "CHANGE_CELLS_CONTAIN_FILTER",
+    RESET_CELLS_CONTAIN_FILTER = "RESET_CELLS_CONTAIN_FILTER",
     RESET_CELLS_CONTAIN_STATE = "RESET_CELLS_CONTAIN_STATE",
 }
 
@@ -94,14 +104,14 @@ interface CellsContainChangeLimit {
     payload: number;
 }
 
-// interface CellsContainChangeFilter {
-//     type: CellsContainActionTypes.CHANGE_CellContain_FILTER;
-//     payload: ICellContainFormField;
-// }
+interface CellsContainChangeFilter {
+    type: CellsContainActionTypes.CHANGE_CELLS_CONTAIN_FILTER;
+    payload: ICellsContainFormField;
+}
 
-// interface CellsContainResetFilter {
-//     type: CellsContainActionTypes.RESET_CellContain_FILTER;
-// }
+interface CellsContainResetFilter {
+    type: CellsContainActionTypes.RESET_CELLS_CONTAIN_FILTER;
+}
 
 interface CellsContainResetState {
     type: CellsContainActionTypes.RESET_CELLS_CONTAIN_STATE;
@@ -116,6 +126,6 @@ export type CellsContainAction =
     | CellsContainSetFirstPage
     | CellsContainSetLastPage
     | CellsContainChangeLimit
-    // | CellContainChangeFilter
-    // | CellContainResetFilter
+    | CellsContainChangeFilter
+    | CellsContainResetFilter
     | CellsContainResetState

@@ -22,7 +22,7 @@ class CellsContain(Resource):
             return api_response(data, None, 200)
         except DatabaseConnectionError:
             return api_response(None, ApiMessages.DB_ERROR, 500)
-        except BadRequest:
-            return api_response(None, ApiMessages.EMPTY_JSON_BODY, 500)
-        except BadJSONError:
-            return api_response(None, ApiMessages.BAD_JSON_BODY, 500)
+        # except BadRequest:
+        #     return api_response(None, ApiMessages.EMPTY_JSON_BODY, 500)
+        # except BadJSONError:
+        #     return api_response(None, ApiMessages.BAD_JSON_BODY, 500)

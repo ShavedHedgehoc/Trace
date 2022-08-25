@@ -50,15 +50,23 @@ class CellsContainRepository:
         )
         return query
 
-    def __process_filters(self, options) -> None:
-        # self.filters = []
-        self.orders = []
-        # self.orders.append(Cell.CellName)
-        # self.orders.append(Product.ProductId)
-        self.orders.append(Product.ProductName)
+    def __process_filters(self, options: CellsContainRequestOptions) -> None:
+        self.filters = []
+        filter = options.filter
+        if filter.cell:
+            self.filters.append(Cell.CellName.like(f"%{filter.cell}%"))
+        if filter.product_id:
+            self.filters.append(
+                Product.ProductId.like(f"%{filter.product_id}%"))
+        if filter.product_name:
+            self.filters.append(Product.ProductName.like(
+                f"%{filter.product_name}%"))        
         pass
+
     def __process_orders(self, options) -> None:
-        pass
+        self.orders = []
+        self.orders.append(Cell.CellName)
+        self.orders.append(Product.ProductName)
 
     def __rows(self, query, options):
         offset = options.page*options.limit

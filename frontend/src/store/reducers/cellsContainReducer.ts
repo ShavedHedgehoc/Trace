@@ -1,4 +1,4 @@
-import { CellsContainAction, CellsContainState, CellsContainActionTypes } from '../../types/cellsContain';
+import { CellsContainAction, CellsContainState, CellsContainActionTypes, ICellsContainOrders, CellsContainFilterParams } from '../../types/cellsContain';
 
 const initialState: CellsContainState = {
     data: {
@@ -9,10 +9,12 @@ const initialState: CellsContainState = {
     limit: 10,
     loading: false,
     error: null,
-    // filter: {
-    //     product_id: '',
-    //     product_name: '',
-    // },
+    filter: {
+        cell: '',
+        product_id: '',
+        product_name: '',
+    },
+    order: ICellsContainOrders.BY_CELLS,
     init: true,
 }
 
@@ -26,7 +28,8 @@ export const cellsContainReducer = (state = initialState, action: CellsContainAc
                 data: state.data,
                 page: state.page,
                 limit: state.limit,
-                // filter: state.filter,
+                filter: state.filter,
+                order: state.order,
                 init: state.init,
             }
         case CellsContainActionTypes.FETCH_CELLS_CONTAIN_SUCCESS:
@@ -36,7 +39,8 @@ export const cellsContainReducer = (state = initialState, action: CellsContainAc
                 data: action.payload,
                 page: state.page,
                 limit: state.limit,
-                // filter: state.filter,
+                filter: state.filter,
+                order: state.order,
                 init: false,
             }
         case CellsContainActionTypes.FETCH_CELLS_CONTAIN_ERROR:
@@ -46,7 +50,8 @@ export const cellsContainReducer = (state = initialState, action: CellsContainAc
                 data: initialState.data,
                 page: state.page,
                 limit: state.limit,
-                // filter: state.filter,
+                filter: state.filter,
+                order: state.order,
                 init: true,
             }
         case CellsContainActionTypes.INCREASE_CELLS_CONTAIN_PAGE:
@@ -67,17 +72,27 @@ export const cellsContainReducer = (state = initialState, action: CellsContainAc
             return { ...state, page: lastPage - 1 }
         case CellsContainActionTypes.CHANGE_CELLS_CONTAIN_LIMIT:
             return { ...state, limit: action.payload, page: 0 }
-        // case ProductActionTypes.CHANGE_PRODUCTS_FILTER:
-        //     switch (action.payload.key) {
-        //         case ProductFilterParams.PRODUCT_ID:
-        //             return { ...state, filter: { ...state.filter, product_id: action.payload.value }, page: 0 }
-        //         case ProductFilterParams.PRODUCT_NAME:
-        //             return { ...state, filter: { ...state.filter, product_name: action.payload.value }, page: 0 }
-        //         default:
-        //             return state
-        //     }
-        // case ProductActionTypes.CLEAR_PRODUCTS_FILTER:
-        //     return { ...state, filter: { ...state.filter, product_id: '', product_name: '' } }
+        case CellsContainActionTypes.CHANGE_CELLS_CONTAIN_FILTER:
+            switch (action.payload.key) {
+                case CellsContainFilterParams.CELL:
+                    return { ...state, filter: { ...state.filter, cell: action.payload.value } }
+                case CellsContainFilterParams.PRODUCT_ID:
+                    return { ...state, filter: { ...state.filter, product_id: action.payload.value } }
+                case CellsContainFilterParams.PRODUCT_NAME:
+                    return { ...state, filter: { ...state.filter, product_name: action.payload.value } }
+                default:
+                    return state
+            }
+        case CellsContainActionTypes.RESET_CELLS_CONTAIN_FILTER:
+            return {
+                ...state,
+                filter: {
+                    ...state.filter,
+                    cell: '',
+                    product_id: '',
+                    product_name: ''
+                }
+            }
         case CellsContainActionTypes.RESET_CELLS_CONTAIN_STATE:
             return initialState
         default:
