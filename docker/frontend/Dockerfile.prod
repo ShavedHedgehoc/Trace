@@ -15,7 +15,11 @@ COPY ./frontend/craco.config.js ./
 COPY ./frontend/src ./src
 COPY ./frontend/public ./public
 
-RUN npm install npm@8.7.0
+RUN npm install npm@8.7.0 --force
+# RUN npm install -g npm@8.15.0
+# RUN npm install @craco/craco --save --legacy-peers-deps
+# RUN npm install npm@8.18.0
+# RUN npm install --legacy-peer-deps
 RUN rm -rf /usr/local/lib/node_modules/npm
 RUN mv node_modules/npm /usr/local/lib/node_modules/npm
 

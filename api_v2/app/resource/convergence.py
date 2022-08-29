@@ -6,6 +6,8 @@ from app.assets.api_errors import DatabaseConnectionError, BadJSONError
 from app.assets.api_response import api_response
 from app.repository.convergence import ConvergenceRepository
 from app.repository.convergence_item import ConvergenceItemRepository
+from app.assets.api_decorators import role_required
+from app.assets.user_roles import UserRoles
 
 from werkzeug.exceptions import BadRequest
 
@@ -14,6 +16,8 @@ convergence_item_repository = ConvergenceItemRepository()
 
 
 class Convergence(Resource):
+    
+    @role_required([UserRoles.TECHNOLOGIST, UserRoles.SPECIALIST, UserRoles.ADMIN])
     def post(self):
         try:
             json_data = request.get_json(force=True)
@@ -28,6 +32,7 @@ class Convergence(Resource):
 
 
 class ConvergenceItem(Resource):    
+    @role_required([UserRoles.TECHNOLOGIST, UserRoles.SPECIALIST, UserRoles.ADMIN])
     def post(self, name):
         try:
             json_data = request.get_json(force=True)                            

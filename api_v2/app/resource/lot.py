@@ -17,7 +17,7 @@ lot_item_repository = LotItemRepository()
 
 class Lots(Resource):
 
-    # @role_required([UserRoles.USER])
+    @role_required([UserRoles.USER])
     def post(self):
         try:
             json_data = request.get_json(force=True)

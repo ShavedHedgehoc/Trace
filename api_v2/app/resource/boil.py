@@ -16,7 +16,7 @@ boil_item_repository = BoilItemRepository()
 
 
 class Boils(Resource):
-    # @role_required([UserRoles.USER])
+    @role_required([UserRoles.USER])
     def post(self):
         try:
             json_data = request.get_json(force=True)
@@ -31,6 +31,7 @@ class Boils(Resource):
 
 
 class BoilItem(Resource):
+    @role_required([UserRoles.USER])
     def get(self, id):
         try:
             data = boil_item_repository.get_boil(id)

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import classes from "../../styles/Page.module.css";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { useActions } from "../../hooks/useActions";
@@ -9,14 +9,19 @@ import NoDataHandler from "../utils/NoDataHandler";
 import { useLocation } from 'react-router-dom';
 import CellsContainTable from '../tables/CellsContainTable';
 import CellsContainForm, { CellsContainFormProps } from '../forms/CellContainForm';
-import { changeCellsContainFilter, resetCellsContainFilter } from '../../store/action-creators/cellsContain';
 import { useDebounce } from '../../hooks/useDebounce';
+import DeleteCellsContain from '../utils/DeleteCellsContain';
+
 
 
 const CellsContain: React.FC = (): JSX.Element => {
+
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+    const [deleteRowId, setDeleteRowId] = useState('')
+
     const location = useLocation()
 
-    const { data, loading, error, page, limit, filter, init } = useTypedSelector(state => state.cellsContain)
+    const { data, loading, error, page, limit, filter, order, init } = useTypedSelector(state => state.cellsContain)
     const { user } = useTypedSelector(state => state.auth)
 
     const {
@@ -28,7 +33,9 @@ const CellsContain: React.FC = (): JSX.Element => {
         changeCellsContainLimit,
         changeCellsContainFilter,
         resetCellsContainFilter,
-        resetCellsContainState
+        changeCellsContainOrder,
+        resetCellsContainState,
+        deleteCellsContainById
     } = useActions()
 
     const debouncedFilter = useDebounce(filter, 800)
@@ -47,7 +54,9 @@ const CellsContain: React.FC = (): JSX.Element => {
 
     const cellsContainFormProps: CellsContainFormProps = {
         filter: filter,
+        order: order,
         changeFilter: ({ key, value }) => changeCellsContainFilter({ key, value }),
+        changeOrder: (value) => changeCellsContainOrder(value),
         resetFilter: () => resetCellsContainFilter()
     }
 
@@ -58,12 +67,12 @@ const CellsContain: React.FC = (): JSX.Element => {
     }, [location])
 
     useEffect(() => {
-        fetchCellsContains(page, limit, filter);
+        fetchCellsContains(page, limit, filter, order);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, limit, debouncedFilter])
+    }, [page, limit, order, debouncedFilter])
 
     useEffect(() => {
-        fetchCellsContains(page, limit, filter);
+        fetchCellsContains(page, limit, filter, order);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -83,15 +92,33 @@ const CellsContain: React.FC = (): JSX.Element => {
         )
     }
 
+
+    const showDeleteModal = (id: string) => {
+        setDeleteRowId(id)
+        setDeleteModalVisible(true)
+    }
+
+    const handleDeleteModalClickYes = () => {
+        deleteCellsContainById(deleteRowId,page, limit, filter, order);
+        setDeleteRowId('')
+        setDeleteModalVisible(false)        
+    }
+
+    const handleDeleteModalClickNo = () => {        
+        setDeleteRowId('')
+        setDeleteModalVisible(false)
+    }
+
     return (
         <div className={classes.pageContainer}>
             <Modal visible={loading}><LoadingHandler /></Modal>
+            <Modal visible={deleteModalVisible}><DeleteCellsContain id={deleteRowId} handleClickYes={handleDeleteModalClickYes} handleClickNo={handleDeleteModalClickNo} /></Modal>
             <div className={classes.pageHeader}>Содержимое ячеек</div>
             <div className={classes.pageFormContainer}>
                 <CellsContainForm {...cellsContainFormProps} />
             </div>
             <div className={classes.pageTableContainer}>
-                {data.rows.length === 0 ? <NoDataHandler limit={limit} /> : user?.roles && <CellsContainTable items={data.rows} roles={user.roles} />}
+                {data.rows.length === 0 ? <NoDataHandler limit={limit} /> : user?.roles && <CellsContainTable items={data.rows} roles={user.roles} delItem={showDeleteModal} />}
             </div>
             <Pagination {...paginationProps} />
         </div>

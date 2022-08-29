@@ -229,6 +229,10 @@
     border-radius: 5px;
 }
 
+.formElementRowInput:focus{
+    outline: none;
+}
+
 .formRadio {
     font-family: 'Montserrat', sans-serif;    
     /* color: var(--main-active-color);         */
@@ -247,4 +251,5 @@
     text-align: center;
     margin-left: 3px;
     margin-right: 3px;    
+    cursor: pointer;
 }

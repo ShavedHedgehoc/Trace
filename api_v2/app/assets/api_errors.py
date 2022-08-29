@@ -37,3 +37,6 @@ class TrademarkNotExistsError(Exception):
 
 class ProductNotExistsError(Exception):
     pass
+
+class CellsContainError(Exception):
+    pass

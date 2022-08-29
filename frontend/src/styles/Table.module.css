@@ -61,4 +61,5 @@
     color:var(--main-active-color);
     text-decoration: none;
     padding: 5px 20px;
+    cursor: pointer;
 }

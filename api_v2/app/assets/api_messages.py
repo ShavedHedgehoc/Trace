@@ -15,3 +15,5 @@ class ApiMessages(str, Enum):
     LOT_NOT_EXISTS = "Квазипартия не найдена"
     TRADEMARK_NOT_EXISTS = "Торговое название не найдено"
     PRODUCT_NOT_EXISTS = "Сырье не найдено"
+    CELLS_CONTAIN_ID_ERROR = "Записи с таким идентификатором не существует"
+    RECORD_DELETE_SUCCESS = "Запись успешно удалена"

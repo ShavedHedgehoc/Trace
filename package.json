@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "jspdf": "^2.5.1",
-    "jspdf-autotable": "^3.5.25",
-    "utf-8": "^2.0.0"
-  }
-}

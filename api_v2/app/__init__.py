@@ -11,13 +11,10 @@ def create_app():
     
     app = Flask(__name__)
     app.config["JWT_SECRET_KEY"] = "fdflkdsfjlsf"
-    
-    
 
     if os.getenv("FLASK_ENV") == "development":
         print("Config in dev mode")
-        app.config.from_object("config.DevelopmentConfig")
-        print(app.config)
+        app.config.from_object("config.DevelopmentConfig")        
     if os.getenv("FLASK_ENV") == "production":
         print("Config in prod mode")
         app.config.from_object("config.ProductionConfig")

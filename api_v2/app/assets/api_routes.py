@@ -21,3 +21,4 @@ class ApiRoutes(str, Enum):
     TRADEMARKS = "/trademarks"
     TRADEMARK_ITEM = "/trademarks/<id>"
     CELLS_CONTAIN = "/cells_contain"
+    CELLS_CONTAIN_ITEM = "/cells_contain/<id>"

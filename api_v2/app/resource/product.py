@@ -19,7 +19,7 @@ product_trademark_repository = ProductTrademarksRepository()
 
 class Products(Resource):
 
-    # @role_required([UserRoles.USER])
+    @role_required([UserRoles.USER])
     def post(self):
         try:
             json_data = request.get_json(force=True)
@@ -34,6 +34,7 @@ class Products(Resource):
 
 
 class ProductItem(Resource):
+    @role_required([UserRoles.USER])
     def post(self, id):
         try:
             json_data = request.get_json(force=True)

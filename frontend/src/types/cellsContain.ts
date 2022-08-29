@@ -59,15 +59,12 @@ export enum CellsContainActionTypes {
     CHANGE_CELLS_CONTAIN_LIMIT = "CHANGE_CELLS_CONTAIN_LIMIT",
     CHANGE_CELLS_CONTAIN_FILTER = "CHANGE_CELLS_CONTAIN_FILTER",
     RESET_CELLS_CONTAIN_FILTER = "RESET_CELLS_CONTAIN_FILTER",
+    CHANGE_CELLS_CONTAIN_ORDER = "CHANGE_CELLS_CONTAIN_ORDER",
     RESET_CELLS_CONTAIN_STATE = "RESET_CELLS_CONTAIN_STATE",
+    DELETE_CELLS_CONTAIN_ITEM = "DELETE_CELLS_CONTAIN_ITEM",
+    DELETE_CELLS_CONTAIN_ITEM_SUCCESS = "DELETE_CELLS_CONTAIN_ITEM_SUCCESS",
+    DELETE_CELLS_CONTAIN_ITEM_ERROR = "DELETE_CELLS_CONTAIN_ITEM_ERROR"
 }
-
-// export enum CellContainFilterParams {
-//     START_DATE = "start_date",
-//     END_DATE = "end_date",
-//     EXACTLY = "exactly",
-//     PLANT = "plant"
-// }
 
 interface FetchCellsContainAction {
     type: CellsContainActionTypes.FETCH_CELLS_CONTAIN;
@@ -83,49 +80,71 @@ interface FetchCellsContainErrorAction {
     payload: string;
 }
 
-interface CellsContainIncreasePage {
+interface CellsContainIncreasePageAction {
     type: CellsContainActionTypes.INCREASE_CELLS_CONTAIN_PAGE;
 }
 
-interface CellsContainDecreasePage {
+interface CellsContainDecreasePageAction {
     type: CellsContainActionTypes.DECREASE_CELLS_CONTAIN_PAGE;
 }
 
-interface CellsContainSetFirstPage {
+interface CellsContainSetFirstPageAction {
     type: CellsContainActionTypes.GET_FIRST_CELLS_CONTAIN_PAGE;
 }
 
-interface CellsContainSetLastPage {
+interface CellsContainSetLastPageAction {
     type: CellsContainActionTypes.GET_LAST_CELLS_CONTAIN_PAGE;
 }
 
-interface CellsContainChangeLimit {
+interface CellsContainChangeLimitAction {
     type: CellsContainActionTypes.CHANGE_CELLS_CONTAIN_LIMIT;
     payload: number;
 }
 
-interface CellsContainChangeFilter {
+interface CellsContainChangeFilterAction {
     type: CellsContainActionTypes.CHANGE_CELLS_CONTAIN_FILTER;
     payload: ICellsContainFormField;
 }
 
-interface CellsContainResetFilter {
+interface CellsContainChangeOrderAction {
+    type: CellsContainActionTypes.CHANGE_CELLS_CONTAIN_ORDER;
+    payload: ICellsContainOrders;
+}
+
+interface CellsContainResetFilterAction {
     type: CellsContainActionTypes.RESET_CELLS_CONTAIN_FILTER;
 }
 
-interface CellsContainResetState {
+interface CellsContainResetStateAction {
     type: CellsContainActionTypes.RESET_CELLS_CONTAIN_STATE;
+}
+
+interface CellsContainDeleteByIdAction {
+    type: CellsContainActionTypes.DELETE_CELLS_CONTAIN_ITEM;    
+}
+
+interface CellsContainDeleteByIdSuccessAction {
+    type: CellsContainActionTypes.DELETE_CELLS_CONTAIN_ITEM_SUCCESS;    
+}
+
+interface CellsContainDeleteByIdErrorAction {
+    type: CellsContainActionTypes.DELETE_CELLS_CONTAIN_ITEM_ERROR;    
+    payload: string;
 }
 
 export type CellsContainAction =
     FetchCellsContainAction
     | FetchCellsContainSuccessAction
     | FetchCellsContainErrorAction
-    | CellsContainIncreasePage
-    | CellsContainDecreasePage
-    | CellsContainSetFirstPage
-    | CellsContainSetLastPage
-    | CellsContainChangeLimit
-    | CellsContainChangeFilter
-    | CellsContainResetFilter
-    | CellsContainResetState
+    | CellsContainIncreasePageAction
+    | CellsContainDecreasePageAction
+    | CellsContainSetFirstPageAction
+    | CellsContainSetLastPageAction
+    | CellsContainChangeLimitAction
+    | CellsContainChangeFilterAction
+    | CellsContainResetFilterAction
+    | CellsContainChangeOrderAction
+    | CellsContainResetStateAction
+    | CellsContainDeleteByIdAction
+    | CellsContainDeleteByIdSuccessAction
+    | CellsContainDeleteByIdErrorAction

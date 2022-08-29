@@ -5,7 +5,7 @@ from sqlalchemy.exc import OperationalError
 
 
 from app import db
-from app.assets.api_errors import DatabaseConnectionError, BadJSONError
+from app.assets.api_errors import CellsContainError, DatabaseConnectionError, BadJSONError
 from app.assets.api_dataclasses import CellsContainRequestOptions
 from app.schemas.cells_contain import CellsContainRequestSchema, CellsContainRowSchema
 from app.models.cell import Cell
@@ -60,13 +60,18 @@ class CellsContainRepository:
                 Product.ProductId.like(f"%{filter.product_id}%"))
         if filter.product_name:
             self.filters.append(Product.ProductName.like(
-                f"%{filter.product_name}%"))        
-        pass
+                f"%{filter.product_name}%"))                    
+    
 
-    def __process_orders(self, options) -> None:
+    def __process_orders(self, options: CellsContainRequestOptions) -> None:
         self.orders = []
-        self.orders.append(Cell.CellName)
-        self.orders.append(Product.ProductName)
+        order = options.order
+        if order == "by_cells":
+            self.orders.append(Cell.CellName)
+        if order == "by_products":
+            self.orders.append(Product.ProductName)
+        if order == "by_expire":
+            self.orders.append(CellsContain.Expire)
 
     def __rows(self, query, options):
         offset = options.page*options.limit
@@ -91,3 +96,14 @@ class CellsContainRepository:
             raise BadJSONError
         except TypeError:
             raise BadJSONError
+        
+    def delete_by_id(self, id:int):
+        try:
+            record = db.session.query(CellsContain).filter(CellsContain.CellContainPK == id).one_or_none()
+            if record is None:
+                raise CellsContainError
+            db.session.delete(record)
+            db.session.commit()
+        except OperationalError:
+            raise DatabaseConnectionError
+        

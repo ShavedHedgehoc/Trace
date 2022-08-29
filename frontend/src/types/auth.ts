@@ -22,7 +22,7 @@ export enum AuthActionTypes {
 }
 
 interface AuthRegisterAction {
-    type: AuthActionTypes.REGISTER;    
+    type: AuthActionTypes.REGISTER;
 }
 
 interface AuthRegisterSuccessAction {
@@ -33,6 +33,13 @@ interface AuthRegisterSuccessAction {
 interface AuthRegisterErrorAction {
     type: AuthActionTypes.REGISTER_ERROR
     payload: string
+}
+
+export enum UserRoles {
+    USER = "User",
+    ADMIN = "Admin",
+    TECHNOLOGIST = "Technologist",
+    SPECIALIST = "Specialist"
 }
 
 export type AuthAction =

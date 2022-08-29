@@ -20,7 +20,7 @@ trademark_item_repository = TrademarkItemRepository()
 
 class Trademarks(Resource):
 
-    # @role_required([UserRoles.USER])
+    @role_required([UserRoles.USER])
     def post(self):
         try:
             json_data = request.get_json(force=True)
@@ -35,6 +35,8 @@ class Trademarks(Resource):
 
 
 class TrademarkItem(Resource):
+    
+    @role_required([UserRoles.USER])
     def post(self, id):
         try:
             json_data = request.get_json(force=True)

@@ -149,4 +149,5 @@ class CellsContainRequestOptions:
     page: int
     limit: int
     filter: CellsContainFilter
+    order: str
     

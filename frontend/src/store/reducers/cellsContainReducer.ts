@@ -83,6 +83,8 @@ export const cellsContainReducer = (state = initialState, action: CellsContainAc
                 default:
                     return state
             }
+        case CellsContainActionTypes.CHANGE_CELLS_CONTAIN_ORDER:
+            return { ...state, order: action.payload }
         case CellsContainActionTypes.RESET_CELLS_CONTAIN_FILTER:
             return {
                 ...state,
@@ -95,6 +97,12 @@ export const cellsContainReducer = (state = initialState, action: CellsContainAc
             }
         case CellsContainActionTypes.RESET_CELLS_CONTAIN_STATE:
             return initialState
+        case CellsContainActionTypes.DELETE_CELLS_CONTAIN_ITEM:
+            return { ...state, loading: true, error: null }
+        case CellsContainActionTypes.DELETE_CELLS_CONTAIN_ITEM_SUCCESS:
+            return { ...state, loading: false, error: null }
+        case CellsContainActionTypes.DELETE_CELLS_CONTAIN_ITEM_ERROR:
+            return { ...state, loading: false, error: action.payload }
         default:
             return state
     }

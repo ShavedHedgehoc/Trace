@@ -1,14 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import classes from "../../styles/Table.module.css"
 
-// import {Link} from "react-router-dom";
-// import { RouteNames } from "../../router";
 import { ICellsContainRow } from '../../types/cellsContain';
 
 interface TableProps {
     items: ICellsContainRow[];
     roles: string[];
+    delItem: (id: string) => void;
 }
 
 export default function CellsContainTable(props: TableProps) {
@@ -46,7 +44,7 @@ export default function CellsContainTable(props: TableProps) {
                         <td className={classes.tableTd}>{item.exp}</td>
                         {props.roles.includes("Specialist") &&
                             <td className={classes.tableTd}>
-                                <Link className={classes.tableLink} to={``}>Удалить {item.id}</Link>
+                                <a className={classes.tableLink} onClick={() => props.delItem(item.id)}>Удалить запись</a>
                             </td>
                         }
                     </tr>
