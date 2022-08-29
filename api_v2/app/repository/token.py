@@ -59,7 +59,7 @@ class TokenRepository():
 
     def generate_access_token(self, payload: Payload) -> str:
         """ Return generated access token"""
-        expires_delta = timedelta(minutes=1)
+        expires_delta = timedelta(minutes=60)
         access_token = create_access_token(
             identity=payload,
             expires_delta=expires_delta)
@@ -67,7 +67,7 @@ class TokenRepository():
 
     def generate_refresh_token(self, payload: Payload) -> str:
         """ Return generated access token"""
-        expires_delta = timedelta(minutes=20)
+        expires_delta = timedelta(days=20)
         refresh_token = create_refresh_token(
             identity=payload,
             expires_delta=expires_delta)
