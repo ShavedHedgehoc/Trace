@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@craco/craco": "^6.4.3",
+    "@craco/craco": "^7.0.0-alpha.7",
     "@react-pdf/renderer": "^2.2.0",
     "@types/http-proxy-middleware": "^1.0.0",
     "@types/jest": "^27.4.1",

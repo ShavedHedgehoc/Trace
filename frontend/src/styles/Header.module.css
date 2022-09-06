@@ -8,29 +8,44 @@
 }
 .headerLeftContainer{
     display: flex;
-    background-color: beige;
-    /* flex: 0 0 auto;     */
+    gap: 10px;    
     justify-content: flex-start;
+    padding-left: 10px;
+    align-items: center;
 }
 .headerRightContainer{
-    display: flex;    
-    /* flex-grow: 0; */
-    
-    padding-right: 30px;
-       
+    display: flex;        
+    padding-right: 30px;       
     justify-content: flex-end;
     align-items: center;
 }
 .headerMenuButton{
     background-color:var(--header-background-color);
+    cursor: pointer;
     color:#7b7b7b;
     font-size:48px;
-    padding-left: 16px;
+    padding-left: 6px;
+    padding-right: 16px;
     border: 0;
 }
 
 .headerButton{
     color: var(--main-active-color);
+    cursor: pointer;
+    background-color:var(--header-background-color);
+    font-size: 16px;
+    padding-right: 16px;
+    padding-left: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border: 1px var(--main-active-color) solid;
+    border-radius: 5px;
+}
+
+.headerLinkButton{
+    color: var(--main-active-color);
+    cursor: pointer;
+    text-decoration: none;
     background-color:var(--header-background-color);
     font-size: 16px;
     padding-right: 16px;

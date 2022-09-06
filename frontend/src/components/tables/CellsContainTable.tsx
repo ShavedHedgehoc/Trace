@@ -6,7 +6,7 @@ import { ICellsContainRow } from '../../types/cellsContain';
 interface TableProps {
     items: ICellsContainRow[];
     roles: string[];
-    delItem: (id: string) => void;
+    delItem: (id: string, item:ICellsContainRow) => void;
 }
 
 export default function CellsContainTable(props: TableProps) {
@@ -44,7 +44,7 @@ export default function CellsContainTable(props: TableProps) {
                         <td className={classes.tableTd}>{item.exp}</td>
                         {props.roles.includes("Specialist") &&
                             <td className={classes.tableTd}>
-                                <a className={classes.tableLink} onClick={() => props.delItem(item.id)}>Удалить запись</a>
+                                <a className={classes.tableLink} onClick={() => props.delItem(item.id, item)}>Удалить запись</a>
                             </td>
                         }
                     </tr>

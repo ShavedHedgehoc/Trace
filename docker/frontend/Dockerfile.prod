@@ -1,4 +1,4 @@
-FROM node:16-alpine as build-step
+FROM node:16.17.0-alpine3.15 as build-step
 
 WORKDIR /app
 
@@ -15,7 +15,9 @@ COPY ./frontend/craco.config.js ./
 COPY ./frontend/src ./src
 COPY ./frontend/public ./public
 
-RUN npm install npm@8.7.0 --force
+# RUN npm install npm@8.7.0 --force
+RUN npm install -g npm@8.18.0
+RUN npm install npm@8.18.0
 # RUN npm install -g npm@8.15.0
 # RUN npm install @craco/craco --save --legacy-peers-deps
 # RUN npm install npm@8.18.0

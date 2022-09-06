@@ -137,14 +137,15 @@ class BoilItemHeaderSchema(Schema):
                 data[field] = 'Нет данных'
         return data
 
+
 class BoilItemSummaryRowSchema(Schema):
-    b_product_id= fields.Str(missing="Нет данных")
-    w_product_id= fields.Str(missing="Нет данных")
-    b_product_name= fields.Str(missing="Нет данных")
-    w_product_name= fields.Str(missing="Нет данных")
+    b_product_id = fields.Str(missing="Нет данных")
+    w_product_id = fields.Str(missing="Нет данных")
+    b_product_name = fields.Str(missing="Нет данных")
+    w_product_name = fields.Str(missing="Нет данных")
     plan = fields.Decimal()
     fact = fields.Decimal()
-    
+
     @post_dump(pass_many=True)
     def handle_values(self, data, **kwargs):
         for item in data:
@@ -164,25 +165,30 @@ class BoilItemSummaryRowSchema(Schema):
 
 
 class BoilItemRowSchema(Schema):
-    product_id=fields.Str()
-    product_name=fields.Str()
-    quantity=fields.Decimal()    
-    lot_id=fields.Int()
-    lot=fields.Str()
-    user=fields.Str()
-    date=fields.DateTime()
-    
+    product_id = fields.Str()
+    product_name = fields.Str()
+    quantity = fields.Decimal()
+    lot_id = fields.Int()
+    lot = fields.Str()
+    user = fields.Str()
+    date = fields.DateTime()
+
+    def parse_date(self, date: datetime) -> str:
+        format_ms = "%Y-%m-%dT%H:%M:%S.%f"
+        format_none_ms = "%Y-%m-%dT%H:%M:%S"
+        try:
+            date_string = datetime.strptime(date, format_ms)
+        except ValueError:
+            date_string = datetime.strptime(date, format_none_ms)
+        return date_string
+
     @post_dump(pass_many=True)
     def handle_values(self, data, **kwargs):
         for item in data:
-            if item["date"]:                
-                date_string = datetime.strptime(
-                     item["date"], "%Y-%m-%dT%H:%M:%S.%f")
-                item["time"]=datetime.strftime(date_string, "%H:%M:%S")
-                item["date"] = datetime.strftime(date_string, "%d-%m-%Y")
-            else:
-                item["date"] = "Нет данных"
-                item["time"] = "Нет данных"
+            if not item["date"]:
+                item["date"] = item["time"] = "Нет данных"
+                continue
+            date_string = self.parse_date(item["date"])
+            item["time"] = datetime.strftime(date_string, "%H:%M:%S")
+            item["date"] = datetime.strftime(date_string, "%d-%m-%Y")
         return data
-    
-    

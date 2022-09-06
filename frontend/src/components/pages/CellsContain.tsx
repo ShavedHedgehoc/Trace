@@ -11,6 +11,7 @@ import CellsContainTable from '../tables/CellsContainTable';
 import CellsContainForm, { CellsContainFormProps } from '../forms/CellContainForm';
 import { useDebounce } from '../../hooks/useDebounce';
 import DeleteCellsContain from '../utils/DeleteCellsContain';
+import { ICellsContainRow } from '../../types/cellsContain';
 
 
 
@@ -18,6 +19,9 @@ const CellsContain: React.FC = (): JSX.Element => {
 
     const [deleteModalVisible, setDeleteModalVisible] = useState(false)
     const [deleteRowId, setDeleteRowId] = useState('')
+    const [itemToDelete, setItemToDelete] = useState<Partial<ICellsContainRow>>({
+        id: '', cell_id: '', cell_name: '', exp: '', lot_name: ''
+    })
 
     const location = useLocation()
 
@@ -93,18 +97,19 @@ const CellsContain: React.FC = (): JSX.Element => {
     }
 
 
-    const showDeleteModal = (id: string) => {
+    const showDeleteModal = (id: string, item: ICellsContainRow) => {
         setDeleteRowId(id)
+        setItemToDelete(item)
         setDeleteModalVisible(true)
     }
 
     const handleDeleteModalClickYes = () => {
-        deleteCellsContainById(deleteRowId,page, limit, filter, order);
+        deleteCellsContainById(deleteRowId, page, limit, filter, order);
         setDeleteRowId('')
-        setDeleteModalVisible(false)        
+        setDeleteModalVisible(false)
     }
 
-    const handleDeleteModalClickNo = () => {        
+    const handleDeleteModalClickNo = () => {
         setDeleteRowId('')
         setDeleteModalVisible(false)
     }
@@ -112,7 +117,10 @@ const CellsContain: React.FC = (): JSX.Element => {
     return (
         <div className={classes.pageContainer}>
             <Modal visible={loading}><LoadingHandler /></Modal>
-            <Modal visible={deleteModalVisible}><DeleteCellsContain id={deleteRowId} handleClickYes={handleDeleteModalClickYes} handleClickNo={handleDeleteModalClickNo} /></Modal>
+            <Modal visible={deleteModalVisible}><DeleteCellsContain
+                id={deleteRowId}
+                item={itemToDelete}
+                handleClickYes={handleDeleteModalClickYes} handleClickNo={handleDeleteModalClickNo} /></Modal>
             <div className={classes.pageHeader}>Содержимое ячеек</div>
             <div className={classes.pageFormContainer}>
                 <CellsContainForm {...cellsContainFormProps} />

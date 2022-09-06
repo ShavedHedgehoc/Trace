@@ -22,6 +22,7 @@ import BoilsConvergenceReportCard from "../components/pages/BoilsConvergenceRepo
 import TestDoc from '../components/pages/TestDoc';
 import CellsContain from '../components/pages/CellsContain';
 import Forbidden from '../components/pages/Forbidden';
+import AdminPage from "../components/pages/AdminPage";
 
 export interface IRoute {
     path: string;
@@ -66,6 +67,7 @@ export enum RouteNames {
     BOILS_CONVERGENCE_REPORT = '/reports/convergence',
     BOILS_CONVERGENCE_REPORT_CARD = '/reports/convergence/:boil_name/:exactly',
     CELLS_CONTAIN = '/cells_contain',
+    ADMIN = '/admin',
 
 }
 
@@ -95,4 +97,8 @@ export const publicRoutes: IRoute[] = [
 
 export const techRoutes: IRoute[] = [
     { path: RouteNames.CELLS_CONTAIN, element: CellsContain }
+]
+
+export const adminRoutes: IRoute[] = [
+    { path: RouteNames.ADMIN, element: AdminPage }
 ]
