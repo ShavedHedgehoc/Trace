@@ -4,8 +4,7 @@ export interface ConvergenceItemState {
     error: null | string;
 }
 
-export interface IConvergenceItemData {
-    // header: IConvergenceItemHeader;
+export interface IConvergenceItemData {    
     batch_id: string;
     rows: IConvergenceItemRow[];
 }

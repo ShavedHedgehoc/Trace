@@ -2,12 +2,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-end;
-    /*background-color: white;*/
-    /*background-color: #34495E;*/
-    background-color: #1d1d1d;
-    /*color:#dd5;*/
-    /*border: 1px solid gray;*/
+    justify-content: flex-end;    
+    background-color: #1d1d1d;    
     color:#ececec;
     border-radius: 5px;
     margin-left: 5px;
@@ -26,27 +22,19 @@
 .paginationSubElement {
     padding: 10px;
     vertical-align: middle;
-    font-size: 16px;
-    /* background: yellow; */
+    font-size: 16px;    
 }
 
-.paginationButtonGroup {
-    /*background-color: #34495E;*/
+.paginationButtonGroup {    
     background-color:#1d1d1d;
 }
 
 .paginationButton {
-    appearance: none;
-    /*background-color: #34495E;*/
+    appearance: none;    
     background-color: #1d1d1d;
-    border: none;
-    /*border-radius: 10px;*/
-    /*background: white;*/
-    /*color: black;*/
-    /*color: wheat;*/
+    border: none;    
     color: #dd5;
-    padding: 8px 16px;
-    /*font-size: 16px;*/
+    padding: 8px 16px;    
     width: 50px;
     text-align: center;
     margin-left: 3px;
@@ -61,26 +49,13 @@
     pointer-events: none;
 }
 
-/*.paginationButton:disabled:hover {*/
-/*    !*color: grey;*!*/
-/*    border: none;*/
-/*}*/
-
 .paginationButton:hover {
     cursor: pointer;
 }
-    /*background: lightgray;*/
-    /*color: white;*/
-    /*border: 1px solid wheat;*/
-
-
-/*}*/
-
-.paginationSelect {
-    /*-webkit-appearance: none;*/
+ 
+.paginationSelect { 
     font-size: large;
     background-color: #1d1d1d;
-
     box-shadow: none;
     color: #dd5;
     padding: 5px;
@@ -89,7 +64,6 @@
     font-family: 'Montserrat', sans-serif;
     border: none;
     outline: none;
-
 }
 
 .paginationSelect:focus{
@@ -112,5 +86,4 @@
 }
 .paginationOption:hover{
         background-color: #1d1d1d;
-
 }

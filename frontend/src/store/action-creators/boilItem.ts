@@ -11,8 +11,7 @@ export const fetchBoilItem = (boil_id: string | undefined) => {
             dispatch({
                 type: BoilItemActionTypes.FETCH_BOIL_ITEM_SUCCESS,
                 payload: response.data
-            })
-            console.log(response.data)
+            })            
         } catch (error) {
             const errValue = handleError(error)
             dispatch({

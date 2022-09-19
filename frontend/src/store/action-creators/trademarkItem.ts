@@ -45,17 +45,6 @@ export function changeTrademarkItemLimit(limit = 10): TrademarkItemAction {
     }
 }
 
-// export function changeTrademarkItemFilter({key, value}: ITrademarkItemFormField): TrademarkItemAction {
-//     return {
-//         type: TrademarkItemActionTypes.CHANGE_TRADEMARK_ITEM_FILTER,
-//         payload: {key, value}
-//     }
-// }
-//
-// export function clearTrademarkItemFilter(): TrademarkItemAction {
-//     return {type: TrademarkItemActionTypes.CLEAR_TRADEMARK_ITEM_FILTER}
-// }
-
 export function resetTrademarkItemState(): TrademarkItemAction {
     return { type: TrademarkItemActionTypes.RESET_TRADEMARK_ITEM_STATE }
 }

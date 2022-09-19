@@ -109,8 +109,6 @@ interface AuthCheckErrorAction {
     type: AuthActionTypes.CHECK_ERROR
 }
 
-
-
 export type AuthActions =
     AuthRegisterAction
     | AuthRegisterSuccessAction
@@ -127,7 +125,6 @@ export type AuthActions =
     | AuthCheckAction
     | AuthCheckSuccessAction
     | AuthCheckErrorAction
-
 
 export const authReducer = (state = defaultState, action: AuthActions): authState => {
     switch (action.type) {

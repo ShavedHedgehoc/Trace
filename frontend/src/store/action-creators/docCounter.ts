@@ -1,6 +1,7 @@
 import { Dispatch } from "react";
 import { DocCounterAction, DocCounterActionTypes } from "../../types/doccount";
 import DocumentService from '../../http/services/DocumentService';
+import handleError from "../../http/handleError";
 
 export const fetchDocCounter = () => {
     return async (dispatch: Dispatch<DocCounterAction>) => {
@@ -12,9 +13,10 @@ export const fetchDocCounter = () => {
                 payload: response.data
             })
         } catch (error) {
+            const errValue = handleError(error)
             dispatch({
                 type: DocCounterActionTypes.FETCH_DOC_COUNTER_ERROR,
-                payload: 'error'
+                payload: errValue
             })
         }
     }

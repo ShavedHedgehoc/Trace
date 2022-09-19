@@ -1,7 +1,12 @@
 const webpack = require("webpack");
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
     webpack: {
+        mode: 'production',
+        optimization: {
+            minimizer:[new TerserPlugin({})],
+        },
         configure: {
             resolve: {
                 fallback: {

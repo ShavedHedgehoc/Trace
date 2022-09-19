@@ -33,7 +33,6 @@ const ActionCreators = {
     ...ConvergenceItemActionCreators,
     ...MsgActionCreators,
     ...CellsContainActionCreators,
-
 }
 
 export default ActionCreators

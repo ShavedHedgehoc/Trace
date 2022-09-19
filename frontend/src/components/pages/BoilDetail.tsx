@@ -10,11 +10,6 @@ import WeightingTable from "../tables/WeightingTable";
 import LoadTable from "../tables/LoadTable";
 import NoDataHandler from "../utils/NoDataHandler";
 import { BsClipboardData } from "react-icons/bs";
-// import { jsPDF } from "jspdf";
-// import autoTable from "jspdf-autotable";
-// import "../../static/Roboto-Regular-normal.js"
-
-
 
 
 const BoilDetail: React.FC = (): JSX.Element => {
