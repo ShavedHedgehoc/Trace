@@ -14,8 +14,10 @@ services:
   #     - ./.env.dev
   api_new:
     build:
-      context: ./api_v2
-      dockerfile: ../docker/api_v2/Dockerfile.dev
+      # context: ./api_v2
+      # dockerfile: ../docker/api_v2/Dockerfile.dev
+      context: .
+      dockerfile: docker/api_v2/Dockerfile.prod
     command: python traceability.py run -h 0.0.0.0:5001
     # volumes:
     #   - ./api/:usr/src/app/
