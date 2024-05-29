@@ -20,6 +20,9 @@ import ProductTMDetail from "../components/pages/ProductTMDetail";
 import BoilsConvergenceReport from "../components/pages/BoilsConvergenceReport";
 import BoilsConvergenceReportCard from "../components/pages/BoilsConvergenceReportCard";
 import TestDoc from '../components/pages/TestDoc';
+import CellsContain from '../components/pages/CellsContain';
+import Forbidden from '../components/pages/Forbidden';
+import AdminPage from "../components/pages/AdminPage";
 
 export interface IRoute {
     path: string;
@@ -34,13 +37,14 @@ export enum Params {
     MANUFACTURER_LOT_PARAMS = 'manufacturer_lot_id',
     LOT_PARAMS = 'lot_id',
     TRADEMARK_PARAMS = 'trademark_id',
-    SELLER_PARAMS = 'seller_id',BOIL_PDF = 'boils_pdf',
+    SELLER_PARAMS = 'seller_id', BOIL_PDF = 'boils_pdf',
     PRODUCT_TM_PARAMS = 'product_tm_id',
     BOILS_CONVERGENCE_PARAMS_BOIL = 'boil_name',
     BOILS_CONVERGENCE_PARAMS_EXACTLY = 'exactly',
 }
 
 export enum RouteNames {
+    NOT_FOUND = '*',
     HOME = '/',
     BOILS = '/boils',
     BOIL_DETAIL = '/boils/:boil_id',
@@ -62,28 +66,39 @@ export enum RouteNames {
     PRODUCT_TM_DETAIL = '/product_tms/:product_tm_id',
     BOILS_CONVERGENCE_REPORT = '/reports/convergence',
     BOILS_CONVERGENCE_REPORT_CARD = '/reports/convergence/:boil_name/:exactly',
-    
+    CELLS_CONTAIN = '/cells_contain',
+    ADMIN = '/admin',
+
 }
 
 export const publicRoutes: IRoute[] = [
-    {path: RouteNames.HOME, element: Home},
-    {path: RouteNames.BOILS, element: BoilsList},
-    {path: RouteNames.BOIL_DETAIL, element: BoilDetail},
-    {path: RouteNames.PRODUCTS, element: ProductsList},
-    {path: RouteNames.PRODUCT_DETAIL, element: ProductDetail},
-    {path: RouteNames.MANUFACTURERS, element: ManufacturersList},
-    {path: RouteNames.MANUFACTURER_DETAIL, element: ManufacturerDetail},
-    {path:RouteNames.MANUFACTURER_LOTS, element:ManufacturerLotsList},
-    {path:RouteNames.MANUFACTURER_LOT_DETAIL, element:ManufacturerLotDetail},
-    {path: RouteNames.LOTS, element: LotsList},
-    {path: RouteNames.LOT_DETAIL, element: LotDetail},
-    {path: RouteNames.TRADEMARKS, element: TrademarksList},
-    {path: RouteNames.TRADEMARK_DETAIL, element: TrademarkDetail},
-    {path: RouteNames.SELLERS, element: SellersList},
-    {path: RouteNames.SELLER_DETAIL, element: SellerDetail},
-    {path: RouteNames.PRODUCT_TMS, element: ProductTMsList},
-    {path: RouteNames.PRODUCT_TM_DETAIL, element: ProductTMDetail},
-    {path: RouteNames.BOILS_CONVERGENCE_REPORT, element: BoilsConvergenceReport},
-    {path: RouteNames.BOILS_CONVERGENCE_REPORT_CARD, element: BoilsConvergenceReportCard},
-    {path: RouteNames.BOIL_PDF_ITEM, element: TestDoc},
+    { path: RouteNames.NOT_FOUND, element: Forbidden },
+    { path: RouteNames.HOME, element: Home },
+    { path: RouteNames.BOILS, element: BoilsList },
+    { path: RouteNames.BOIL_DETAIL, element: BoilDetail },
+    { path: RouteNames.PRODUCTS, element: ProductsList },
+    { path: RouteNames.PRODUCT_DETAIL, element: ProductDetail },
+    { path: RouteNames.MANUFACTURERS, element: ManufacturersList },
+    { path: RouteNames.MANUFACTURER_DETAIL, element: ManufacturerDetail },
+    { path: RouteNames.MANUFACTURER_LOTS, element: ManufacturerLotsList },
+    { path: RouteNames.MANUFACTURER_LOT_DETAIL, element: ManufacturerLotDetail },
+    { path: RouteNames.LOTS, element: LotsList },
+    { path: RouteNames.LOT_DETAIL, element: LotDetail },
+    { path: RouteNames.TRADEMARKS, element: TrademarksList },
+    { path: RouteNames.TRADEMARK_DETAIL, element: TrademarkDetail },
+    { path: RouteNames.SELLERS, element: SellersList },
+    { path: RouteNames.SELLER_DETAIL, element: SellerDetail },
+    { path: RouteNames.PRODUCT_TMS, element: ProductTMsList },
+    { path: RouteNames.PRODUCT_TM_DETAIL, element: ProductTMDetail },
+    { path: RouteNames.BOILS_CONVERGENCE_REPORT, element: BoilsConvergenceReport },
+    { path: RouteNames.BOILS_CONVERGENCE_REPORT_CARD, element: BoilsConvergenceReportCard },
+    { path: RouteNames.BOIL_PDF_ITEM, element: TestDoc }
+]
+
+export const techRoutes: IRoute[] = [
+    { path: RouteNames.CELLS_CONTAIN, element: CellsContain }
+]
+
+export const adminRoutes: IRoute[] = [
+    { path: RouteNames.ADMIN, element: AdminPage }
 ]

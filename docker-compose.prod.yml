@@ -1,18 +1,20 @@
 version: '3.3'
 
-services:
-  api:
+services: 
+  api_v2:    
     build:      
       context: .
-      dockerfile: docker/api/Dockerfile
+      dockerfile: docker/api_v2/Dockerfile.prod
     env_file:      
       - .env.prod
-    command: gunicorn --bind 0.0.0.0:5000 traceability:app    
+    command: gunicorn --bind 0.0.0.0:5001 traceability:app    
+    restart: always
   frontend:
     build:      
       context: .
       dockerfile: docker/frontend/Dockerfile.prod
     depends_on:
-      - api
+      - api_v2
     ports:
       - "80:80"    
+    restart: always

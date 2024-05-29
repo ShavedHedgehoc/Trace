@@ -1,8 +1,6 @@
 * {
-    /*--main-background-color: #f8f8f8;*/
     --main-background-color: #121212;
-    --container-background-color: #1d1d1d;
-    /*--header-background-color: #263238;*/
+    --container-background-color: #1d1d1d;   
     --header-background-color: #1f1f1f;
     --main-font-color: #ececec;
     --main-active-color: #dd5;
@@ -23,8 +21,7 @@ html {
 
 .App {
     display: flex;
-    flex-direction: column;
-    /*width: 100%;*/
+    flex-direction: column;    
     height: 100vh;
     font-family: sans-serif;
     overflow-y: hidden;
@@ -33,12 +30,8 @@ html {
 
 .content {
     flex: 1;
-    color: var(--main-font-color);
-    /*align-items: center;*/
-    /*justify-content: center;*/
-    width: 100%;
-    /*max-width: 1800px;*/
+    color: var(--main-font-color);    
+    width: 100%;    
     overflow-y: auto;
     height: calc(100vh - 91px);
-
 }

@@ -6,9 +6,6 @@
     left: 0;
     transform: translateX(-130%);
     transition: all 0.4s;
-
-
-
 }
 
 .menu__active{
@@ -17,8 +14,7 @@
     height: 100vh;
     top: 60px;
     left: 0;
-    transform: translateX(0);
-    
+    transform: translateX(0);    
 }
 
 .blur {

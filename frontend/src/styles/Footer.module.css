@@ -5,11 +5,7 @@
     flex: 0 0 auto;
     justify-content: flex-end;
     font-family: 'Oswald', sans-serif;
-    font-weight: 300;
-    /*border-top: 1px solid lightgrey;*/
-    /*margin-left: 20px;*/
-    /*margin-right: 20px;*/
-
+    font-weight: 300;    
 }
 
 .footer__content {

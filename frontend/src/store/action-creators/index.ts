@@ -1,3 +1,4 @@
+import * as AuthActionCreators from "./auth";
 import * as BoilActionCreators from "./boil";
 import * as BoilItemActionCreators from "./boilItem";
 import * as DocCounterActionCreators from "./docCounter"
@@ -11,8 +12,12 @@ import * as TrademarkItemActionCreators from "./trademarkItem";
 import * as LotItemActionCreators from "./lotItem";
 import * as ConvergenceActionCreators from "./convergence";
 import * as ConvergenceItemActionCreators from "./convergenceItem";
+import * as MsgActionCreators from "./message";
+import * as CellsContainActionCreators from "./cellsContain"
 
-export default {
+
+const ActionCreators = {
+    ...AuthActionCreators,
     ...BoilActionCreators,
     ...BoilItemActionCreators,
     ...DocCounterActionCreators,
@@ -26,4 +31,8 @@ export default {
     ...LotItemActionCreators,
     ...ConvergenceActionCreators,
     ...ConvergenceItemActionCreators,
+    ...MsgActionCreators,
+    ...CellsContainActionCreators,
 }
+
+export default ActionCreators
