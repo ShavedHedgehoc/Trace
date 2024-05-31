@@ -1,5 +1,5 @@
 from flask import jsonify
-from sqlalchemy import case, func
+from sqlalchemy import case, func, sql
 from sqlalchemy.exc import OperationalError
 
 
@@ -166,24 +166,50 @@ class BoilItemRepository:
         rows = self.rows_schema.dump(data, many=True)
         return rows
 
-    def __technology_query(self, id: int):
+    def __technology_subquery_loads(self, id: int):
         query = (
             db.session.query(
-                Operation.OperationCode.label("op_code"),
-                Operation.OperationName.label("op_name"),
-                BoilRecord.Temperature.label("temp"),
+                Load.BatchPK.label("batch_id"),
+                Weighting.ProductId.label("code"),
+                Product.ProductName.label("name"),
+                Lot.LotName.label("lot"),
+                sql.null().label("temp"),
+                Author.AuthorName.label("user"),
+                Document.CreateDate.label("date"),
+                sql.literal("load").label("op_type"),
+            )
+            .join(Weighting, Weighting.ContainerPK == Load.ContainerPK)
+            .join(Product, Product.ProductId == Weighting.ProductId)
+            .join(Lot, Lot.LotPK == Weighting.LotPK)
+            .join(Document, Document.DocumentPK == Load.DocumentPK)
+            .join(Author, Author.AuthorPK == Document.AuthorPK)
+            .filter(Load.BatchPK == id)
+        )
+        return query
+
+    def __technology_subquery_boil(self, id: int):
+        query = (
+            db.session.query(
+                BoilRecord.BatchId.label("batch_id"),
+                Operation.OperationCode.label("code"),
+                Operation.OperationName.label("name"),
+                sql.null().label("lot"),
+                BoilRecord.Temperature.label("op_temp"),
                 Author.AuthorName.label("user"),
                 BoilRecord.CreateDate.label("date"),
+                sql.literal("boil").label("op_type"),
             )
             .join(Operation, Operation.OperationPK == BoilRecord.OperationId)
             .join(Author, Author.AuthorPK == BoilRecord.AuthorId)
             .filter(BoilRecord.BatchId == id)
-            .order_by(BoilRecord.CreateDate)
         )
         return query
 
     def __technology_rows(self, id: int):
-        data = self.__technology_query(id).all()
+        loads = self.__technology_subquery_loads(id)
+        boils = self.__technology_subquery_boil(id)
+        sbqry = loads.union(boils).subquery()
+        data = db.session.query(sbqry).order_by(sbqry.c.date).all()
         rows = self.tech_schema.dump(data, many=True)
         return rows
 

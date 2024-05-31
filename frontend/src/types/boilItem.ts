@@ -43,11 +43,15 @@ export interface ILoadRow {
 }
 
 export interface ITechnologyRow {
-  op_code: string;
-  op_name: string;
+  batch_id:string
+  code: string;
+  name: string;
+  temp:string;
+  lot:string;
   user: string;
   date: string;
   time: string;
+  op_type:string;
 }
 
 export interface IBoilItemHeader {

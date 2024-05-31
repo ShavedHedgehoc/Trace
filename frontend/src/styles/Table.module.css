@@ -32,6 +32,24 @@
     font-family: 'Montserrat', sans-serif;
 }
 
+.tableTdSelect {
+    padding: 10px 12px;
+    color:#dd5;
+    text-align: center;
+    font-weight:500;
+    font-size: 1em;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.tableTdAlignLeftSelect{
+    padding: 10px 12px;
+    color:#dd5;
+    text-align: left;
+    font-weight:500;
+    font-size: 1em;
+    font-family: 'Montserrat', sans-serif;
+}
+
 .tableButton {
     appearance: none;
     border: 1px solid gray;

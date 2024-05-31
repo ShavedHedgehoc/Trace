@@ -29,10 +29,7 @@ class ProductionConfig(Config):
 
     SQLALCHEMY_DATABASE_URI = "mssql+pyodbc://{}:{}@{}/{}\
         ?driver=ODBC+Driver+17+for+SQL+Server".format(
-        DATABASE_USER,
-        DATABASE_PASSWORD,
-        DATABASE_IP,
-        DATABASE_DB
+        DATABASE_USER, DATABASE_PASSWORD, DATABASE_IP, DATABASE_DB
     )
 
 
@@ -42,16 +39,15 @@ class DevelopmentConfig(Config):
     DATABASE_IP = os.getenv("DATABASE_IP")
     DATABASE_DB = os.getenv("SECOND_API_DATABASE_DB")
 
-    SQLALCHEMY_DATABASE_URI = "mssql+pyodbc://{}:{}@{}/{}?driver=ODBC+Driver+17+for+SQL+Server".format(
-        DATABASE_USER,
-        DATABASE_PASSWORD,
-        DATABASE_IP,
-        DATABASE_DB
+    SQLALCHEMY_DATABASE_URI = (
+        "mssql+pyodbc://{}:{}@{}/{}?driver=ODBC+Driver+17+for+SQL+Server".format(
+            DATABASE_USER, DATABASE_PASSWORD, DATABASE_IP, DATABASE_DB
+        )
     )
     DEBUG = True
 
 
-class TestingConfig(Config):
-    SQLALCHEMY_DATABASE_URI = "sqlite:///{}".format(os.path.join(basedir, 'database.db'))
-    TESTING = True
-    DEBUG = False
+# class TestingConfig(Config):
+#     SQLALCHEMY_DATABASE_URI = "sqlite:///{}".format(os.path.join(basedir, 'database.db'))
+#     TESTING = True
+#     DEBUG = False

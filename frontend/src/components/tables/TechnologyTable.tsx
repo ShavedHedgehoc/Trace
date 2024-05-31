@@ -8,11 +8,13 @@ interface TableProps {
 
 export default function TechnologyTable(props: TableProps) {
   const columns = [
-    { id: "1", label: "Код операции" },
-    { id: "2", label: "Операция" },
-    { id: "3", label: "Выполнил" },
-    { id: "4", label: "Дата" },
-    { id: "5", label: "Время" },
+    { id: "1", label: "Код" },
+    { id: "2", label: "Наименование" },
+    { id: "3", label: "Квазипартия" },
+    { id: "3", label: "Температура" },
+    { id: "4", label: "Выполнил" },
+    { id: "5", label: "Дата" },
+    { id: "6", label: "Время" },
   ];
 
   return (
@@ -29,8 +31,10 @@ export default function TechnologyTable(props: TableProps) {
       <tbody>
         {props.items.map((item) => (
           <tr className={classes.tableRow} key={item.time}>
-            <td className={classes.tableTd}>{item.op_code}</td>
-            <td className={classes.tableTd}>{item.op_name}</td>
+            <td className={item.op_type == "boil" ? classes.tableTdSelect: classes.tableTd}>{item.code}</td>
+            <td className={item.op_type == "boil" ? classes.tableTdAlignLeftSelect: classes.tableTdAlignLeft}>{item.name}</td>
+            <td className={classes.tableTd}>{item.lot? item.lot : "-"}</td>
+            <td className={item.op_type == "boil" ? classes.tableTdSelect: classes.tableTd}>{item.temp? item.temp : "-"}</td>
             <td className={classes.tableTd}>{item.user}</td>
             <td className={classes.tableTd}>{item.date}</td>
             <td className={classes.tableTd}>{item.time}</td>

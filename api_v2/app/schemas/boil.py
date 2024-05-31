@@ -1,7 +1,5 @@
 from datetime import datetime
-
-from marshmallow import Schema, fields, missing, post_dump, post_load
-
+from marshmallow import Schema, fields, post_dump, post_load
 from app.assets.api_dataclasses import BoilFilter, BoilRequestOptions
 
 month_dict = {
@@ -194,9 +192,12 @@ class BoilItemRowSchema(Schema):
 
 
 class BoilItemTechRowSchema(Schema):
-    op_code = fields.Str()
-    op_name = fields.Str()
-    op_temp = fields.Int()
+    op_type = fields.Str()
+    batch_id = fields.Str()
+    code = fields.Str()
+    name = fields.Str()
+    temp = fields.Str()
+    lot = fields.Str()
     user = fields.Str()
     date = fields.DateTime()
 
