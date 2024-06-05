@@ -35,6 +35,6 @@ class BoilItem(Resource):
     def get(self, id):
         try:
             data = boil_item_repository.get_boil(id)
-            return api_response(data, None,  200)
+            return api_response(data, None, 200)
         except DatabaseConnectionError:
             return api_response(None, ApiMessages.DB_ERROR, 500)

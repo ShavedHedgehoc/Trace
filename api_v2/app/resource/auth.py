@@ -62,16 +62,16 @@ class Login(Resource):
 
 class Refresh(Resource):
     @jwt_required(refresh=True, locations="cookies")
-    def post(self):
+    def post(self):        
         try:
-            token = request.cookies.get("refresh_token_cookie")
+            token = request.cookies.get("refresh_token_cookie")           
             identity = get_jwt_identity()
             user_data = Payload(**identity)
             data, token = user_repository.refresh(token, user_data)            
             resp = api_response(data, None, 200)
             set_refresh_cookies(resp, token)
             return resp
-        except TokenNotExistsError:
+        except TokenNotExistsError:            
             resp = api_response(None, ApiMessages.TOKEN_NOT_EXISTS, 401)
             unset_refresh_cookies(resp)
             return resp

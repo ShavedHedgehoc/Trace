@@ -12,9 +12,10 @@ class RoleRepository:
 
     def get_role_by_name(self, role_name: str) -> Role:
         try:
-            role = db.session.query(Role).filter(
-                Role.RoleName == role_name).one_or_none()
-            if not(role):
+            role = (
+                db.session.query(Role).filter(Role.RoleName == role_name).one_or_none()
+            )
+            if not (role):
                 raise RoleNotExistsError
             return role
         except OperationalError:
@@ -22,24 +23,27 @@ class RoleRepository:
 
     def get_user_roles(self, user_id: int) -> List[str]:
         try:
-            role_strings = db.session.query(
-                Role.RoleName
-            ).join(
-                UserRole, UserRole.RolePK == Role.RolePK
-            ).filter(
-                UserRole.UserPK == user_id).all()
+            role_strings = (
+                db.session.query(Role.RoleName)
+                .join(UserRole, UserRole.RolePK == Role.RolePK)
+                .filter(UserRole.UserPK == user_id)
+                .all()
+            )
             data = []
             for role in role_strings:
                 data.append(role.RoleName)
-            print (data)
+            # print (data)
             return data
         except OperationalError:
             raise DatabaseConnectionError
 
     def get_role_record(self, role_id: int, user_id: int) -> Optional[UserRole]:
         try:
-            role_record = db.session.query(UserRole).filter(
-                and_(UserRole.UserPK == user_id, UserRole.RolePK == role_id)).one_or_none()
+            role_record = (
+                db.session.query(UserRole)
+                .filter(and_(UserRole.UserPK == user_id, UserRole.RolePK == role_id))
+                .one_or_none()
+            )
             return role_record
         except OperationalError:
             raise DatabaseConnectionError
@@ -50,10 +54,7 @@ class RoleRepository:
             role_record = self.get_role_record(role.RolePK, user_id)
             if role_record:
                 return None
-            record_to_append = UserRole(
-                UserPK=user_id,
-                RolePK=role.RolePK
-            )
+            record_to_append = UserRole(UserPK=user_id, RolePK=role.RolePK)
             role_record = db.session.add(record_to_append)
             db.session.commit()
             return role
