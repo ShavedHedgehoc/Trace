@@ -1,5 +1,5 @@
 from flask import jsonify
-from sqlalchemy import case, func, sql
+from sqlalchemy import case, func, sql, text
 from sqlalchemy.exc import OperationalError
 
 
@@ -124,7 +124,8 @@ class BoilItemRepository:
                 Lot.LotPK.label("lot_id"),
                 Lot.LotName.label("lot"),
                 Author.AuthorName.label("user"),
-                Document.CreateDate.label("date"),
+                # Document.CreateDate.label("date"),
+                func.dateadd(text("hour"), 3, Document.CreateDate).label("date"),
             )
             .join(Product, Weighting.ProductId == Product.ProductId)
             .join(Lot, Weighting.LotPK == Lot.LotPK)
@@ -149,7 +150,8 @@ class BoilItemRepository:
                 Product.ProductName.label("product_name"),
                 Lot.LotName.label("lot_name"),
                 Author.AuthorName.label("user"),
-                Document.CreateDate.label("date"),
+                # Document.CreateDate.label("date"),
+                func.dateadd(text("hour"), 3, Document.CreateDate).label("date"),
             )
             .join(Weighting, Weighting.ContainerPK == Load.ContainerPK)
             .join(Product, Product.ProductId == Weighting.ProductId)
@@ -175,7 +177,8 @@ class BoilItemRepository:
                 Lot.LotName.label("lot"),
                 sql.null().label("temp"),
                 Author.AuthorName.label("user"),
-                Document.CreateDate.label("date"),
+                # Document.CreateDate.label("date"),
+                func.dateadd(text("hour"), 3, Document.CreateDate).label("date"),
                 sql.literal("load").label("op_type"),
             )
             .join(Weighting, Weighting.ContainerPK == Load.ContainerPK)
