@@ -89,6 +89,12 @@ class Batch(db.Model):
                         cls.BatchName,
                         func.length(cls.BatchName)-2, 1)
                      ),
+                     (func.substring(cls.BatchName,
+                                    func.length(cls.BatchName), 1) == 'S',
+                        func.substring(
+                        cls.BatchName,
+                        func.length(cls.BatchName)-2, 1)
+                     ),
                 ],
                 else_='XZ'
             )
@@ -118,6 +124,9 @@ class Batch(db.Model):
                     cls.BatchName, 0, name_lenght-2), Integer)
                  ),
                  (last_symbol == 'Z', func.cast(func.substring(
+                    cls.BatchName, 0, name_lenght-2), Integer)
+                 ),
+                 (last_symbol == 'S', func.cast(func.substring(
                     cls.BatchName, 0, name_lenght-2), Integer)
                  ),
             ],
@@ -158,6 +167,8 @@ class Batch(db.Model):
             return 2020+int(self.BatchName[-2])
         if year_digit == 'Z':
             return 2020+int(self.BatchName[-2])
+        if year_digit == 'S':
+            return 2020+int(self.BatchName[-2])
         return 2020+int(year_digit)
 
     @ batch_year.expression
@@ -182,6 +193,11 @@ class Batch(db.Model):
                 )
                 ),
                 (last_symbol == 'Z', func.cast(
+                    '202'+func.substring(cls.BatchName, name_lenght-1, 1),
+                    Integer
+                )
+                ),
+                (last_symbol == 'S', func.cast(
                     '202'+func.substring(cls.BatchName, name_lenght-1, 1),
                     Integer
                 )
