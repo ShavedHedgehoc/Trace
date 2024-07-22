@@ -16,20 +16,11 @@ class Batch(db.Model):
 
     @classmethod
     def get_name_date_plant_by_id(cls, id):
-        """Return dictionary {name, date, plant}
-        """
+        """Return dictionary {name, date, plant}"""
         batch = db.session.query(cls).filter(cls.BatchPK == id).one_or_none()
         if batch is None:
-            return {
-                'name': 'Not found',
-                'date': 'Not found',
-                'plant': 'Not found'
-            }
-        return {
-            'name': batch.BatchName,
-            'date': batch.BatchDate,
-            'plant': batch.Plant
-        }
+            return {"name": "Not found", "date": "Not found", "plant": "Not found"}
+        return {"name": batch.BatchName, "date": batch.BatchDate, "plant": batch.Plant}
 
     @hybrid_property
     def batch_month(self):
@@ -51,53 +42,62 @@ class Batch(db.Model):
 
     @batch_month.expression
     def batch_month(cls):
-        month_letter = func.substring(
-            cls.BatchName, func.length(cls.BatchName)-1, 1)
+        month_letter = func.substring(cls.BatchName, func.length(cls.BatchName) - 1, 1)
         return case(
             [
-                (month_letter == 'A', 'A'),
-                (month_letter == 'B', 'B'),
-                (month_letter == 'C', 'C'),
-                (month_letter == 'D', 'D'),
-                (month_letter == 'E', 'E'),
-                (month_letter == 'F', 'F'),
-                (month_letter == 'G', 'G'),
-                (month_letter == 'H', 'H'),
-                (month_letter == 'I', 'I'),
-                (month_letter == 'J', 'J'),
-                (month_letter == 'K', 'K'),
-                (month_letter == 'L', 'L'),
+                (month_letter == "A", "A"),
+                (month_letter == "B", "B"),
+                (month_letter == "C", "C"),
+                (month_letter == "D", "D"),
+                (month_letter == "E", "E"),
+                (month_letter == "F", "F"),
+                (month_letter == "G", "G"),
+                (month_letter == "H", "H"),
+                (month_letter == "I", "I"),
+                (month_letter == "J", "J"),
+                (month_letter == "K", "K"),
+                (month_letter == "L", "L"),
             ],
             else_=case(
                 [
-                    (func.substring(
-                        cls.BatchName,
-                        func.length(cls.BatchName), 1) == 'X',
-                     func.substring(
-                        cls.BatchName,
-                        func.length(cls.BatchName)-2, 1)
-                     ),
-                    (func.substring(cls.BatchName,
-                                    func.length(cls.BatchName), 1) == 'Y',
+                    (
+                        func.substring(cls.BatchName, func.length(cls.BatchName), 1)
+                        == "X",
                         func.substring(
-                        cls.BatchName,
-                        func.length(cls.BatchName)-2, 1)
-                     ),
-                     (func.substring(cls.BatchName,
-                                    func.length(cls.BatchName), 1) == 'Z',
+                            cls.BatchName, func.length(cls.BatchName) - 2, 1
+                        ),
+                    ),
+                    (
+                        func.substring(cls.BatchName, func.length(cls.BatchName), 1)
+                        == "Y",
                         func.substring(
-                        cls.BatchName,
-                        func.length(cls.BatchName)-2, 1)
-                     ),
-                     (func.substring(cls.BatchName,
-                                    func.length(cls.BatchName), 1) == 'S',
+                            cls.BatchName, func.length(cls.BatchName) - 2, 1
+                        ),
+                    ),
+                    (
+                        func.substring(cls.BatchName, func.length(cls.BatchName), 1)
+                        == "Z",
                         func.substring(
-                        cls.BatchName,
-                        func.length(cls.BatchName)-2, 1)
-                     ),
+                            cls.BatchName, func.length(cls.BatchName) - 2, 1
+                        ),
+                    ),
+                    (
+                        func.substring(cls.BatchName, func.length(cls.BatchName), 1)
+                        == "S",
+                        func.substring(
+                            cls.BatchName, func.length(cls.BatchName) - 2, 1
+                        ),
+                    ),
+                    (
+                        func.substring(cls.BatchName, func.length(cls.BatchName), 1)
+                        == "A",
+                        func.substring(
+                            cls.BatchName, func.length(cls.BatchName) - 2, 1
+                        ),
+                    ),
                 ],
-                else_='XZ'
-            )
+                else_="XZ",
+            ),
         )
 
     @hybrid_property
@@ -117,91 +117,127 @@ class Batch(db.Model):
 
         return case(
             [
-                (last_symbol == 'X', func.cast(func.substring(
-                    cls.BatchName, 0, name_lenght-2), Integer)
-                 ),
-                (last_symbol == 'Y', func.cast(func.substring(
-                    cls.BatchName, 0, name_lenght-2), Integer)
-                 ),
-                 (last_symbol == 'Z', func.cast(func.substring(
-                    cls.BatchName, 0, name_lenght-2), Integer)
-                 ),
-                 (last_symbol == 'S', func.cast(func.substring(
-                    cls.BatchName, 0, name_lenght-2), Integer)
-                 ),
+                (
+                    last_symbol == "X",
+                    func.cast(
+                        func.substring(cls.BatchName, 0, name_lenght - 2), Integer
+                    ),
+                ),
+                (
+                    last_symbol == "Y",
+                    func.cast(
+                        func.substring(cls.BatchName, 0, name_lenght - 2), Integer
+                    ),
+                ),
+                (
+                    last_symbol == "Z",
+                    func.cast(
+                        func.substring(cls.BatchName, 0, name_lenght - 2), Integer
+                    ),
+                ),
+                (
+                    last_symbol == "S",
+                    func.cast(
+                        func.substring(cls.BatchName, 0, name_lenght - 2), Integer
+                    ),
+                ),
+                (
+                    last_symbol == "A",
+                    func.cast(
+                        func.substring(cls.BatchName, 0, name_lenght - 2), Integer
+                    ),
+                ),
             ],
-            else_=func.cast(func.substring(
-                cls.BatchName, 0, name_lenght-1), Integer)
+            else_=func.cast(func.substring(cls.BatchName, 0, name_lenght - 1), Integer),
         )
 
-    @ hybrid_property
+    @hybrid_property
     def plant_letter(self):
-        if self.Plant == 'П':
-            return(self.Plant)
-        if self.Plant == 'К':
-            return(self.Plant)
-        return 'XZ'
+        if self.Plant == "П":
+            return self.Plant
+        if self.Plant == "К":
+            return self.Plant
+        return "XZ"
 
-    @ plant_letter.expression
+    @plant_letter.expression
     def plant_letter(cls):
         return case(
             [
-                (cls.Plant == 'П', cls.Plant),
-                (cls.Plant == 'К', cls.Plant),
+                (cls.Plant == "П", cls.Plant),
+                (cls.Plant == "К", cls.Plant),
             ],
-            else_='XZ'
+            else_="XZ",
         )
 
-    @ hybrid_property
+    @hybrid_property
     def batch_year(self):
         year_digit = self.BatchName[-1]
-        if (year_digit == '3' or
-            year_digit == '6' or
-            year_digit == '7' or
-            year_digit == '8' or
-                year_digit == '9'):
-            return 2010+int(year_digit)
-        if year_digit == 'X':
-            return 2020+int(self.BatchName[-2])
-        if year_digit == 'Y':
-            return 2020+int(self.BatchName[-2])
-        if year_digit == 'Z':
-            return 2020+int(self.BatchName[-2])
-        if year_digit == 'S':
-            return 2020+int(self.BatchName[-2])
-        return 2020+int(year_digit)
+        if (
+            year_digit == "3"
+            or year_digit == "6"
+            or year_digit == "7"
+            or year_digit == "8"
+            or year_digit == "9"
+        ):
+            return 2010 + int(year_digit)
+        if year_digit == "X":
+            return 2020 + int(self.BatchName[-2])
+        if year_digit == "Y":
+            return 2020 + int(self.BatchName[-2])
+        if year_digit == "Z":
+            return 2020 + int(self.BatchName[-2])
+        if year_digit == "S":
+            return 2020 + int(self.BatchName[-2])
+        if year_digit == "A":
+            return 2020 + int(self.BatchName[-2])
+        return 2020 + int(year_digit)
 
-    @ batch_year.expression
+    @batch_year.expression
     def batch_year(cls):
         name_lenght = func.length(cls.BatchName)
         last_symbol = func.substring(cls.BatchName, name_lenght, 1)
         return case(
             [
-                (last_symbol == '3', func.cast('201'+last_symbol, Integer)),
-                (last_symbol == '6', func.cast('201'+last_symbol, Integer)),
-                (last_symbol == '7', func.cast('201'+last_symbol, Integer)),
-                (last_symbol == '8', func.cast('201'+last_symbol, Integer)),
-                (last_symbol == '9', func.cast('201'+last_symbol, Integer)),
-                (last_symbol == 'X', func.cast(
-                    '202'+func.substring(cls.BatchName, name_lenght-1, 1),
-                    Integer
-                )
+                (last_symbol == "3", func.cast("201" + last_symbol, Integer)),
+                (last_symbol == "6", func.cast("201" + last_symbol, Integer)),
+                (last_symbol == "7", func.cast("201" + last_symbol, Integer)),
+                (last_symbol == "8", func.cast("201" + last_symbol, Integer)),
+                (last_symbol == "9", func.cast("201" + last_symbol, Integer)),
+                (
+                    last_symbol == "X",
+                    func.cast(
+                        "202" + func.substring(cls.BatchName, name_lenght - 1, 1),
+                        Integer,
+                    ),
                 ),
-                (last_symbol == 'Y', func.cast(
-                    '202'+func.substring(cls.BatchName, name_lenght-1, 1),
-                    Integer
-                )
+                (
+                    last_symbol == "Y",
+                    func.cast(
+                        "202" + func.substring(cls.BatchName, name_lenght - 1, 1),
+                        Integer,
+                    ),
                 ),
-                (last_symbol == 'Z', func.cast(
-                    '202'+func.substring(cls.BatchName, name_lenght-1, 1),
-                    Integer
-                )
+                (
+                    last_symbol == "Z",
+                    func.cast(
+                        "202" + func.substring(cls.BatchName, name_lenght - 1, 1),
+                        Integer,
+                    ),
                 ),
-                (last_symbol == 'S', func.cast(
-                    '202'+func.substring(cls.BatchName, name_lenght-1, 1),
-                    Integer
-                )
+                (
+                    last_symbol == "S",
+                    func.cast(
+                        "202" + func.substring(cls.BatchName, name_lenght - 1, 1),
+                        Integer,
+                    ),
+                ),
+                (
+                    last_symbol == "A",
+                    func.cast(
+                        "202" + func.substring(cls.BatchName, name_lenght - 1, 1),
+                        Integer,
+                    ),
                 ),
             ],
-            else_=func.cast('202'+last_symbol, Integer)
+            else_=func.cast("202" + last_symbol, Integer),
         )
