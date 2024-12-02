@@ -132,9 +132,13 @@ class Batch(db.Model):
     def batch_number(self):
 
         last_symbol = self.BatchName[-1]
+        last_two_symbols = self.BatchName[-2:]
 
         if last_symbol.isdigit():
             return int(self.BatchName[0:-2])
+        else:
+            if last_two_symbols == "RS":
+                return int(self.BatchName[0:-4])
         return int(self.BatchName[0:-3])
 
     @batch_number.expression
