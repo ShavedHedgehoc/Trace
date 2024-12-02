@@ -44,10 +44,6 @@ class Batch(db.Model):
     def batch_month(cls):
         month_letter = func.substring(cls.BatchName, func.length(cls.BatchName) - 1, 1)
 
-        name_lenght = func.length(cls.BatchName)
-        last_symbol = func.substring(cls.BatchName, name_lenght, 1)
-        last_two_symbols = func.substring(cls.BatchName, name_lenght - 1, 2)
-
         return case(
             [
                 (month_letter == "A", "A"),
@@ -66,59 +62,50 @@ class Batch(db.Model):
             else_=case(
                 [
                     (
-                        # func.substring(cls.BatchName, func.length(cls.BatchName), 1)
-                        # == "X",
-                        last_symbol == "X",
+                        func.substring(cls.BatchName, func.length(cls.BatchName), 1)
+                        == "X",
                         func.substring(
                             cls.BatchName, func.length(cls.BatchName) - 2, 1
                         ),
                     ),
                     (
-                        # func.substring(cls.BatchName, func.length(cls.BatchName), 1)
-                        # == "Y",
-                        last_symbol == "Y",
+                        func.substring(cls.BatchName, func.length(cls.BatchName), 1)
+                        == "Y",
                         func.substring(
                             cls.BatchName, func.length(cls.BatchName) - 2, 1
                         ),
                     ),
                     (
-                        # func.substring(cls.BatchName, func.length(cls.BatchName), 1)
-                        # == "Z",
-                        last_symbol == "Z",
-                        func.substring(
-                            cls.BatchName, func.length(cls.BatchName) - 2, 1
-                        ),
-                    ),
-                    # r condition
-                    (
-                        # func.substring(cls.BatchName, func.length(cls.BatchName), 1)
-                        # == "R",
-                        last_symbol == "R",
+                        func.substring(cls.BatchName, func.length(cls.BatchName), 1)
+                        == "Z",
                         func.substring(
                             cls.BatchName, func.length(cls.BatchName) - 2, 1
                         ),
                     ),
                     (
-                        # func.substring(cls.BatchName, func.length(cls.BatchName) - 1, 2)
-                        # == "RS",
-                        last_symbol == "S" & last_two_symbols == "RS",
+                        func.substring(cls.BatchName, func.length(cls.BatchName) - 1, 2)
+                        == "RS",
                         func.substring(
                             cls.BatchName, func.length(cls.BatchName) - 3, 1
                         ),
                     ),
-                    # ?????
                     (
-                        # func.substring(cls.BatchName, func.length(cls.BatchName), 1)
-                        # == "S",
-                        last_symbol == "S" & last_two_symbols != "RS",
+                        func.substring(cls.BatchName, func.length(cls.BatchName), 1)
+                        == "S",
                         func.substring(
                             cls.BatchName, func.length(cls.BatchName) - 2, 1
                         ),
                     ),
                     (
-                        # func.substring(cls.BatchName, func.length(cls.BatchName), 1)
-                        # == "A",
-                        last_symbol == "A",
+                        func.substring(cls.BatchName, func.length(cls.BatchName), 1)
+                        == "A",
+                        func.substring(
+                            cls.BatchName, func.length(cls.BatchName) - 2, 1
+                        ),
+                    ),
+                    (
+                        func.substring(cls.BatchName, func.length(cls.BatchName), 1)
+                        == "R",
                         func.substring(
                             cls.BatchName, func.length(cls.BatchName) - 2, 1
                         ),
@@ -132,12 +119,11 @@ class Batch(db.Model):
     def batch_number(self):
 
         last_symbol = self.BatchName[-1]
-        last_two_symbols = self.BatchName[-2:]
 
         if last_symbol.isdigit():
             return int(self.BatchName[0:-2])
         else:
-            if last_two_symbols == "RS":
+            if self.BatchName[-2:] == "RS":
                 return int(self.BatchName[0:-4])
         return int(self.BatchName[0:-3])
 
@@ -168,29 +154,26 @@ class Batch(db.Model):
                         func.substring(cls.BatchName, 0, name_lenght - 2), Integer
                     ),
                 ),
-                # r condition
                 (
-                    last_symbol == "R",
-                    func.cast(
-                        func.substring(cls.BatchName, 0, name_lenght - 2), Integer
-                    ),
-                ),
-                # s condition
-                (
-                    last_symbol == "S" & last_two_symbols != "RS",
-                    func.cast(
-                        func.substring(cls.BatchName, 0, name_lenght - 2), Integer
-                    ),
-                ),
-                #  rs condition
-                (
-                    last_symbol == "S" & last_two_symbols == "RS",
+                    last_two_symbols == "RS",
                     func.cast(
                         func.substring(cls.BatchName, 0, name_lenght - 3), Integer
                     ),
                 ),
                 (
+                    last_symbol == "S",
+                    func.cast(
+                        func.substring(cls.BatchName, 0, name_lenght - 2), Integer
+                    ),
+                ),
+                (
                     last_symbol == "A",
+                    func.cast(
+                        func.substring(cls.BatchName, 0, name_lenght - 2), Integer
+                    ),
+                ),
+                (
+                    last_symbol == "R",
                     func.cast(
                         func.substring(cls.BatchName, 0, name_lenght - 2), Integer
                     ),
@@ -220,6 +203,7 @@ class Batch(db.Model):
     @hybrid_property
     def batch_year(self):
         year_digit = self.BatchName[-1]
+        last_two_digits = self.BatchName[-2:]
         if (
             year_digit == "3"
             or year_digit == "6"
@@ -234,16 +218,12 @@ class Batch(db.Model):
             return 2020 + int(self.BatchName[-2])
         if year_digit == "Z":
             return 2020 + int(self.BatchName[-2])
-        # add condition rs
-        if year_digit == "S":
-            last_two_symbols = self.BatchName[-2:]
-            if last_two_symbols == "RS":
-                return 2020 + int(self.BatchName[-3])
-            else:
-                return 2020 + int(self.BatchName[-2])
+        if year_digit == "S" & last_two_digits != "RS":
+            return 2020 + int(self.BatchName[-2])
+        if year_digit == "S" & last_two_digits == "RS":
+            return 2020 + int(self.BatchName[-3])
         if year_digit == "A":
             return 2020 + int(self.BatchName[-2])
-        # add r symbol
         if year_digit == "R":
             return 2020 + int(self.BatchName[-2])
         return 2020 + int(year_digit)
@@ -253,7 +233,6 @@ class Batch(db.Model):
         name_lenght = func.length(cls.BatchName)
         last_symbol = func.substring(cls.BatchName, name_lenght, 1)
         last_two_symbols = func.substring(cls.BatchName, name_lenght - 1, 2)
-
         return case(
             [
                 (last_symbol == "3", func.cast("201" + last_symbol, Integer)),
@@ -282,25 +261,29 @@ class Batch(db.Model):
                         Integer,
                     ),
                 ),
-                # s condition
+                # (
+                #     last_symbol == "S" and last_two_symbols != "RS",
+                #     func.cast(
+                #         "202" + func.substring(cls.BatchName, name_lenght - 1, 1),
+                #         Integer,
+                #     ),
+                # ),
+                # (
+                #     last_symbol == "S" and last_two_symbols == "RS",
+                #     func.cast(
+                #         "202" + func.substring(cls.BatchName, name_lenght - 2, 1),
+                #         Integer,
+                #     ),
+                # ),
                 (
-                    last_symbol == "S" & last_two_symbols != "RS",
-                    func.cast(
-                        "202" + func.substring(cls.BatchName, name_lenght - 1, 1),
-                        Integer,
-                    ),
-                ),
-                # rs condition
-                (
-                    last_symbol == "S" & last_two_symbols == "RS",
+                    last_two_symbols == "RS",
                     func.cast(
                         "202" + func.substring(cls.BatchName, name_lenght - 2, 1),
                         Integer,
                     ),
                 ),
-                # r condition
                 (
-                    last_symbol == "R",
+                    last_symbol == "S",
                     func.cast(
                         "202" + func.substring(cls.BatchName, name_lenght - 1, 1),
                         Integer,
@@ -308,6 +291,13 @@ class Batch(db.Model):
                 ),
                 (
                     last_symbol == "A",
+                    func.cast(
+                        "202" + func.substring(cls.BatchName, name_lenght - 1, 1),
+                        Integer,
+                    ),
+                ),
+                (
+                    last_symbol == "R",
                     func.cast(
                         "202" + func.substring(cls.BatchName, name_lenght - 1, 1),
                         Integer,
